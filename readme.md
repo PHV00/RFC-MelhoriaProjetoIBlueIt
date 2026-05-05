@@ -398,6 +398,12 @@ Abaixo pode se ver o fluxo com a melhoria proposta:
 
 ## 2.3 Requisitos Funcionais (RF)
 
+Os requsitos funcionais foram elencados tendo em mente apenas a melhoria e suas influencias no software atual, deste modo, foram elencados apenas os novos requisitos e não tratando os já existentes no sistema. 
+
+
+---
+
+
 Use a estrutura:
 
 > O sistema deve permitir que **[ator] realize [ação]**.
