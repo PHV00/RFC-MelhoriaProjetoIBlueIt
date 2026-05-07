@@ -398,8 +398,36 @@ Abaixo pode se ver o fluxo com a melhoria proposta:
 
 ## 2.3 Requisitos Funcionais (RF)
 
-Os requsitos funcionais foram elencados tendo em mente apenas a melhoria e suas influencias no software atual, deste modo, foram elencados apenas os novos requisitos e não tratando os já existentes no sistema. 
+  Em vista dos trabalhos já realizados e documentados das versões passadas do software I Blue It, está proposta de melhoria não se atem aos requisitos funcionais da versão atual do software, e sim, apenas aos pertinentes a sua melhoria, nisto consistindo na integração do módulo de monitoramento de SpO₂ para apoiar a segurança fisiológica durante as sessões de reabilitação respiratória, cujoo o qual estão presentes logo abaixo.
+  Outro adendo necessario, para diferenciar o local onde a melhoria será aplicada, do software já existente, foi nomeado a melhoria como modulo Spo2 sendo este o modulo responsável peloa captação, validação, correção e calculo de oxigenação e pulso cardiaco do paciente, e o software já existente sendo referido como software I Blue It, assim mostrando quais partes terão de fazer quais tarefas e suas respectivas interrações e responsabilidades.  
 
+| ID | Requisito Funcional |
+|----|---------------------|
+| RF01 | O sistema deve permitir que o sensor Spo2 seja conectado ao sistema, sem interromper ou comprometer funcionalidades existentes. |
+| RF02 | O sistema deve permitir que o sensor Spo2 envie dados durante a sessão a todos os modulos pertinentes do software I Blue It. |
+| RF03 | O sistema deve permitir que o sensor Spo2 envie dados de frequência cardíaca, quando disponíveis. |
+| RF04 | O sistema deve permitir que o software I Blue It receba dados do modulo Spo2 em tempo real. |
+| RF05 | O sistema deve permitir que o modulo Spo2 valide o contato do sensor ao paciente. |
+| RF06 | O sistema deve permitir que o modulo Spo2 valide a qualidade do sinal recebido. |
+| RF07 | O sistema deve permitir que o modulo Spo2 ignore leituras inválidas de oxigenação. |
+| RF08 | O sistema deve permitir que o sistema monitore a oxigenação do paciente durante a execução do jogo. |
+| RF09 | O sistema deve permitir que o terapeuta configure o limite mínimo de oxigenação. |
+| RF10 | O sistema deve permitir que o modulo Sp02 compare a oxigenação obtida, com o limite definido pelo terapeuta. |
+| RF11 | O sistema deve permitir que o modulo Sp02 alerte o software I Blue It quando a oxigenação estiver abaixo do limite definido. |
+| RF12 | O sistema deve permitir que o modulo Spo2 emita alerta quando o sensor estiver desconectado. |
+| RF13 | O sistema deve permitir que o modulo Spo2 emita alerta quando o sensor estiver mal posicionado. |
+| RF14 | O sistema deve permitir que o modulo Spo2 registre a série temporal de oxigenação da sessão no software I Blue It. |
+| RF15 | O sistema deve permitir que o modulo Spo2 registre o menor valor de oxigenação da sessão. |
+| RF16 | O sistema deve permitir que o modulo Spo2 registre eventos de queda de SpO₂. |
+| RF17 | O sistema deve permitir que o registre eventos de falha ou perda de sinal do modulo Spo2. |
+| RF18 | O sistema deve permitir que o modulo Sp02 recomende pausa ao terapeuta quando houver risco fisiológico ao paciente. |
+| RF19 | O sistema deve permitir que o modulo Sp02 pause automaticamente a sessão no software I Blue It caso a oxigenação esteja em condição crítica. |
+| RF20 | O sistema deve permitir que o terapeuta autorize a retomada da sessão após normalização da SpO₂. |
+| RF21 | O sistema deve permitir que o software I Blue It apresente o estado do monitoramento fisiológico na interface. |
+| RF22 | O sistema deve permitir que o terapeuta visualize os dados do modulo Spo2 durante e após a sessão. |
+| RF23 | O sistema deve permitir que o modulo Sp02 gere um resumo fisiológico da sessão para ser apresentado no software I Blue It. |
+| RF24 | O sistema deve permitir a associação dos dados obtidos pelo modulo Spo2 aos dados já obtidos pelo software I Blue It durante a sessão terapeutica . |
+| RF25 | O sistema deve permitir que o terapeuta consulte os registros fisiológicos de sessões anteriores. |
 
 ---
 
