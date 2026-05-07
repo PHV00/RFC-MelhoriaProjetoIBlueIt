@@ -432,11 +432,7 @@ Abaixo pode se ver o fluxo com a melhoria proposta:
 
 ---
 
-## 2.4 Requisitos Não Funcionais (RNF)
-
-deve contre lgpd, privacidade paciente medico, segurnça fisica do paciente, integridade de todasa as partes entre outros
-
-### 2.4 Requisitos Não Funcionais da Melhoria Proposta
+## 2.4 Requisitos Não Funcionais (RNF)]
 
 Os requisitos não funcionais descritos nesta seção seguem o memso principio descrito nos Funcionais onde o foco para elencalos foi tendo em mente a solução e oque ela alterará no modelo atual, porém agora estipulando metricas qualitativas de desempenho, segurança, confiabilidade, usabilidade, compatibilidade e manutenção que devem ser atendidas pela melhoria proposta.
 
