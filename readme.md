@@ -431,22 +431,36 @@ Abaixo pode se ver o fluxo com a melhoria proposta:
 
 ---
 
-
-Use a estrutura:
-
-> O sistema deve permitir que **[ator] realize [ação]**.
-
-Exemplo:
-
-RF01 — O sistema deve permitir que o usuário crie uma conta.
-
-RF02 — O sistema deve permitir que o usuário registre informações.
-
-RF03 — O sistema deve permitir que o usuário visualize dados registrados.
-
----
-
 ## 2.4 Requisitos Não Funcionais (RNF)
+
+deve contre lgpd, privacidade paciente medico, segurnça fisica do paciente, integridade de todasa as partes entre outros
+
+### 2.4 Requisitos Não Funcionais da Melhoria Proposta
+
+Os requisitos não funcionais descritos nesta seção seguem o memso principio descrito nos Funcionais onde o foco para elencalos foi tendo em mente a solução e oque ela alterará no modelo atual, porém agora estipulando metricas qualitativas de desempenho, segurança, confiabilidade, usabilidade, compatibilidade e manutenção que devem ser atendidas pela melhoria proposta.
+
+| ID | Categoria | Requisito Não Funcional |
+|----|-----------|--------------------------|
+| RNF01 | Compatibilidade | O módulo Spo2 deve ser integrado ao software I Blue It sem comprometer as funcionalidades já existentes no software ou hardware. |
+| RNF02 | Modularidade | O módulo Spo2 deve ser desenvolvido de forma independente, permitindo sua manutenção sem necessidade de alterar partes centrais do software I Blue It. |
+| RNF03 | Interoperabilidade | O módulo Spo2 deve se comunicar com o software I Blue It por meio de um formato de dados definido e compreensível pelos dois componentes. |
+| RNF04 | Desempenho | O módulo Spo2 deve atualizar os dados de oxigenação e frequência cardíaca em tempo compatível com o acompanhamento da sessão terapêutica. |
+| RNF05 | Tempo de resposta | O módulo Spo2 deve emitir alertas de risco fisiológico em tempo suficiente para que o terapeuta possa intervir durante a sessão. |
+| RNF06 | Confiabilidade | O módulo Spo2 deve evitar o uso de leituras inválidas, instáveis ou incompatíveis com um sinal fisiológico confiável. |
+| RNF07 | Robustez | A perda de conexão com o sensor Spo2 não deve causar travamento ou encerramento inesperado do software I Blue It, mas deve gerar alertas e avisos. |
+| RNF08 | Segurança fisiológica | O módulo Spo2 deve priorizar a segurança do paciente em relação à continuidade da sessão no jogo. |
+| RNF09 | Segurança operacional | O software I Blue It deve ser capaz de interromper, pausar ou sinalizar risco quando o módulo Spo2 indicar condição fisiológica crítica. |
+| RNF10 | Usabilidade | O estado do módulo Spo2 deve ser apresentado de forma clara ao terapeuta, indicando se o sensor está conectado, desconectado, válido, inválido ou em alerta. |
+| RNF11 | Clareza de interface | Os alertas relacionados à oxigenação, perda de sinal ou mau posicionamento do sensor devem ser compreensíveis para o terapeuta durante a sessão. |
+| RNF12 | Rastreabilidade | Os dados fisiológicos registrados pelo módulo Spo2 devem estar associados à sessão, ao paciente e ao momento em que foram coletados. |
+| RNF13 | Integridade dos dados | Os dados de oxigenação, frequência cardíaca e eventos de alerta devem ser armazenados sem sobrescrever ou corromper os dados já registrados pelo software I Blue It. |
+| RNF14 | Persistência | Os registros fisiológicos da sessão devem permanecer disponíveis para consulta após o encerramento do jogo. |
+| RNF15 | Privacidade | Os dados fisiológicos do paciente devem ser tratados como informações sensíveis e não devem ser expostos indevidamente. |
+| RNF16 | Manutenibilidade | O código do módulo Spo2 deve ser organizado de forma a facilitar ajustes, correções e futuras expansões. |
+| RNF17 | Testabilidade | O módulo Spo2 deve permitir testes com dados simulados, possibilitando verificar conexão, validação de sinal, alertas e registro de dados sem depender exclusivamente do sensor físico. |
+| RNF18 | Extensibilidade | A estrutura do módulo Spo2 deve permitir futura adaptação para outros sensores fisiológicos, caso necessário. |
+| RNF19 | Consistência | As nomenclaturas, unidades e formas de apresentação dos dados fisiológicos devem ser consistentes em todo o sistema. |
+| RNF20 | Recuperação de falhas | O módulo Spo2 deve permitir a retomada do monitoramento após falha temporária de conexão ou reposicionamento do sensor. |
 
 Inclua requisitos relacionados a:
 
