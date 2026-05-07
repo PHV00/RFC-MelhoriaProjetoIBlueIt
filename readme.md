@@ -455,23 +455,10 @@ Os requisitos não funcionais descritos nesta seção seguem o memso principio d
 | RNF15 | Privacidade | Os dados fisiológicos do paciente devem ser tratados como informações sensíveis e não devem ser expostos indevidamente. |
 | RNF16 | Manutenibilidade | O código do módulo Spo2 deve ser organizado de forma a facilitar ajustes, correções e futuras expansões. |
 | RNF17 | Testabilidade | O módulo Spo2 deve permitir testes com dados simulados, possibilitando verificar conexão, validação de sinal, alertas e registro de dados sem depender exclusivamente do sensor físico. |
-| RNF18 | Extensibilidade | A estrutura do módulo Spo2 deve permitir futura adaptação para outros sensores fisiológicos, caso necessário. |
+| RNF18 | Extensibilidade | A estrutura do módulo Spo2 deve tem em mente a modularidade com o fim de permitir futura adaptação para outros sensores fisiológicos, caso necessário. |
 | RNF19 | Consistência | As nomenclaturas, unidades e formas de apresentação dos dados fisiológicos devem ser consistentes em todo o sistema. |
 | RNF20 | Recuperação de falhas | O módulo Spo2 deve permitir a retomada do monitoramento após falha temporária de conexão ou reposicionamento do sensor. |
-
-Inclua requisitos relacionados a:
-
-- desempenho
-- segurança
-- disponibilidade
-- escalabilidade
-- usabilidade
-
-Exemplo:
-
-RNF01 — O sistema deve suportar 100 usuários simultâneos.  
-RNF02 — O tempo de resposta deve ser inferior a 300ms.  
-RNF03 — O sistema deve utilizar autenticação segura.
+| RNF21 | Compatibilidade | O módulo Spo2 deve ser codificado em linguagens e tecnologias já presentes no software |
 
 ---
 
