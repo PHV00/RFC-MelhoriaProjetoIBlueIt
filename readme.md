@@ -464,7 +464,44 @@ Os requisitos não funcionais descritos nesta seção seguem o memso principio d
 
 ## 2.5 Regras de Negócio
 
+As regras de negócios seguem com o mesmo foco que utilizamos para estipular as melhorias, sendo assim as regras aqui estipuladas abrangem apenas os aspectos da melhoria a ser executada e as partes que a mesma afeta no ecosistema I Blue It.
+
 Exemplos:
+
+- Uma sessão fisioterapica apenas pode ocorrem se os equipamentos de medição estiverem aptos, posicionados e captando os sinais vitais corretamente do paciente.
+- Durante as sessões o sistema deve avisar o medico de anomalias nos biosinais e em casos extremos parar a sessão fisioterapica ao se identificar riscos fisiologicos ao paciente.
+- 
+- Apenas a equipe médica e o paciente, devem ter acesso aos dados fisiologicos do paciente captados pelo sistema.
+- A leitura do modulo Spo2 só deve ser considerada válida se houver contato adequado do sensor com o paciente.
+- A sessão deve ser pausada caso ocorra mal posicionamento dos dispositivos captadores de sinais fisiologicos.
+- O sistema deve disponibilizar de forma util e eficicaz os dados captadas do paciente há equipe medica, de forma a facilitar a analise clinica do especialista.
+- Apenas o terapeuta pode definir o limite mínimo de oxigenação.
+- o terapeuta tem autonomia e total controle sobre o tratamento,e consequentemente sobre a sessão poddendo parara-lá ou adaptala a qualquer momento.
+- A sessão pausada só pode ser retomada após autorização do terapeuta.
+
+| RN02 | A leitura do módulo SpO₂ só deve ser considerada válida se houver contato adequado entre o sensor e o paciente. |
+| RN03 | Leituras inválidas, instáveis ou sem contato adequado não devem ser usadas para avaliação da oxigenação do paciente. |
+| RN04 | Falhas de sinal, perda de conexão ou mau posicionamento do sensor devem ser tratadas como falhas de leitura, e não como queda real de oxigenação. |
+| RN05 | A sessão deve ser pausada caso ocorra mal posicionamento dos dispositivos captadores de sinais fisiológicos. |
+| RN06 | A sessão deve ser pausada caso o módulo SpO₂ identifique risco fisiológico ao paciente. |
+| RN07 | Durante a sessão, o terapeuta responsável deve ser alertado quando forem identificadas anomalias nos biossinais do paciente. |
+| RN08 | Em situações fisiológicas críticas, a segurança do paciente deve prevalecer sobre a continuidade da sessão no software I Blue It. |
+| RN09 | Apenas o terapeuta responsável pode definir ou alterar o limite mínimo de oxigenação utilizado pelo módulo SpO₂. |
+| RN10 | O limite mínimo de oxigenação definido pelo terapeuta deve ser usado como referência para classificar a condição fisiológica do paciente durante a sessão. |
+| RN11 | O módulo SpO₂ só deve gerar alerta de oxigenação baixa quando a leitura for válida e estiver abaixo do limite definido pelo terapeuta. |
+| RN12 | O menor valor de oxigenação da sessão deve ser calculado apenas com base em leituras válidas. |
+| RN13 | O terapeuta responsável possui autonomia para pausar, adaptar ou encerrar a sessão a qualquer momento. |
+| RN14 | Uma sessão pausada por risco fisiológico só pode ser retomada após autorização do terapeuta responsável. |
+| RN15 | A retomada da sessão só deve ocorrer se o sinal do módulo SpO₂ estiver válido e a oxigenação do paciente estiver normalizada. |
+| RN16 | Os dados fisiológicos captados pelo módulo SpO₂ devem ser associados à sessão terapêutica correspondente no software I Blue It. |
+| RN17 | Os dados fisiológicos do paciente só devem ser acessados pelo paciente e pela equipe profissional responsável pelo acompanhamento terapêutico. |
+| RN18 | Os dados captados pelo módulo SpO₂ devem ser disponibilizados ao terapeuta de forma que auxiliem a análise clínica da sessão. |
+| RN19 | Os dados do módulo SpO₂ não devem substituir os dados respiratórios já registrados pelo software I Blue It. |
+| RN20 | O módulo SpO₂ deve atuar como complemento de segurança fisiológica, sem alterar o objetivo principal do software I Blue It como jogo sério para reabilitação respiratória. |
+| RN21 | Eventos de alerta, queda de oxigenação, perda de sinal e pausa da sessão devem ser registrados no histórico da sessão. |
+| RN22 | A frequência cardíaca só deve ser registrada quando estiver disponível no sensor utilizado. |
+| RN23 | A ausência temporária de sinal fisiológico não deve ser interpretada automaticamente como condição crítica do paciente. |
+| RN24 | O terapeuta deve ter acesso aos registros fisiológicos da sessão após seu encerramento. |
 
 - apenas usuários autenticados podem acessar determinados recursos
 - determinadas operações exigem validação adicional
