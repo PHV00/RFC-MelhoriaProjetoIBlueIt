@@ -494,6 +494,15 @@ As regras de negócios aqui presentes foram elencadas com a visão apenas da mel
 
 ## 2.6 Fora do Escopo
 
+- O sistema não realizará diagnóstico médico ou fisioterapêutico do paciente.
+- O sistema não substituirá a avaliação clínica do terapeuta responsável.
+- O sistema não prescreverá exercícios respiratórios de forma autônoma.
+- O sistema não alterará a lógica principal de jogabilidade do I Blue It.
+- O sistema não realizará monitoramento contínuo do paciente fora da sessão de uso do I Blue It.
+- O sistema não realizará integração com prontuários eletrônicos externos.
+- O sistema não utilizará inteligência artificial para tomada de decisão clínica.
+- O sistema não contemplará sensores fisiológicos adicionais além do sensor de SpO₂ e frequência cardíaca disponibilizada por ele.
+
 Liste explicitamente **o que o sistema não fará**.
 
 Isso ajuda a evitar crescimento descontrolado do projeto.
