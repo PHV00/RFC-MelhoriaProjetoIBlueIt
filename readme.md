@@ -501,7 +501,7 @@ As regras de negócios aqui presentes foram elencadas com a visão apenas da mel
 - O sistema não realizará monitoramento contínuo do paciente fora da sessão de uso do I Blue It.
 - O sistema não realizará integração com prontuários eletrônicos externos.
 - O sistema não utilizará inteligência artificial para tomada de decisão clínica.
-- O sistema não contemplará sensores fisiológicos adicionais além do sensor de SpO₂ e frequência cardíaca disponibilizada por ele.
+- O sistema não contemplará sensores fisiológicos adicionais além do sensor de Spo2 e frequência cardíaca disponibilizada por ele.
 
 Liste explicitamente **o que o sistema não fará**.
 
