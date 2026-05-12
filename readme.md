@@ -464,7 +464,7 @@ Os requisitos não funcionais descritos nesta seção seguem o memso principio d
 
 ## 2.5 Regras de Negócio
 
-As regras de negócios aqui presentes foram elencadas com a visão apenas da melhoria, tratando tanto o modulo da melhoria(módulo Spo2), quanto o ecossitema I Blue It já existente, apenas como um unico sistema unificado.
+As regras de negócios aqui presentes foram elencadas com a visão apenas da melhoria, tratando tanto o modulo da melhoria(módulo Spo2), quanto o ecossitema I Blue It já existente, apenas como um unico sistema unificado, porém abrangendo apenas os apectos presentes no I Blue IT que compentem a ser tratados na melhoria.Assim não re-retiramos as regras de negócios nos ecosistema já presente.
 
 - Apenas o terapeuta pode definir o limite mínimo de oxigenação.
 - O terapeuta responsável pode pausar ou parar a sessão a qualquer momento.
