@@ -515,7 +515,8 @@ Para descrever o fluxo do software nestá secção, utiliza-se o diagrama de seq
 
 Abaixo pode-se observar o diagrama de sequência na integra, ao qual contém o fluxo principal do sistema: 
 
-<img width="5776" height="3756" alt="image" src="https://github.com/user-attachments/assets/e4c1c168-63ae-4374-a428-ef285bb45104" />
+<img width="5784" height="3804" alt="image" src="https://github.com/user-attachments/assets/a364c9cb-7605-45e5-90ce-2392111606e4" />
+
 
 Para facilitar o entendimento podemos subdividir este fluxo em três etapas, sendo elas:
 - Primeira etapa é feita da preparação de sessão fisioterápica, nesta etapa o sistema é configurado pelo fisioterapeuta para se adequar ao paciente, além da checagem se o própio sistema está operando corretamento.
