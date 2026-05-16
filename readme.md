@@ -507,7 +507,7 @@ Aqui constam alguns pontos que está proposta não realizará, apenas ilustrados
 
 # 3. Fluxos e Comportamento do Sistema
 
-Para descrever o fluxo do software nestá secção, utiliza-se o diagrama de sequência, no qual está contido as principais funções do sistema I Blue It já com aprimoramento proposto.
+Para descrever o fluxo do software nesta secção, utiliza-se o diagrama de sequência, no qual está contido as principais funções do sistema I Blue It já com aprimoramento proposto.
 
 ---
 
@@ -517,30 +517,18 @@ Abaixo pode-se observar o diagrama de sequência na integra, ao qual contém o f
 
 <img width="5784" height="3804" alt="image" src="https://github.com/user-attachments/assets/a364c9cb-7605-45e5-90ce-2392111606e4" />
 
-
-O fluxo pode ser subdivido em três etapas distintas de operação, sendo elas:
-- Primeira etapa é feita da preparação de sessão fisioterápica, nesta etapa o sistema é configurado pelo fisioterapeuta para se adequar ao paciente, além da checagem se o própio sistema está operando corretamento.
+O fluxo principal é composto por três operaçẽos principais e distintas, sendo elas:
+- A primeira etapa é a preparação de sessão fisioterápica, nesta etapa o sistema é configurado pelo fisioterapeuta para se adequar ao paciente, além da checagem se o própio sistema está operando corretamento.
 
 <img width="5812" height="2212" alt="image" src="https://github.com/user-attachments/assets/b13b23e1-24f4-43be-947e-1a3256dd25b4" />
 
-- Segunda etapa consiste na execução da sessão fisioterapica em si, no qual o paciente realiza o exercicio superfisionado pelo fisioterapeuta, e no qual o sistema capta todos dados para analise posterior.
+- A segunda etapa consiste na execução da sessão fisioterapica em si, no qual o paciente realiza o exercicio superfisionado pelo fisioterapeuta, e no qual o sistema capta todos dados para analise posterior.
 
 <img width="5452" height="2124" alt="image" src="https://github.com/user-attachments/assets/f6bd5a6f-eca8-4b3c-a410-6e886cada184" />
 
-- Terceira etapa, nesta etapa o sistema organiza,armazena e disponibiliza para o terapeuta todos os dados obtidos pela sessão, e se necessario de sessões anteriores. 
+- Na terceira etapa o sistema organiza,armazena e disponibiliza para o terapeuta todos os dados obtidos pela sessão, e se necessario de sessões anteriores.
 
-<img width="5452" height="3632" alt="image" src="https://github.com/user-attachments/assets/dab5a250-47fb-4bcd-a7f6-6dc7aa5ef82a" />
-
-
-Apresente o fluxo principal do sistema.
-
-Utilize:
-
-- fluxogramas
-- diagramas de atividades
-- diagramas de sequência
-
-Inclua **imagens dos diagramas**.
+<img width="5452" height="1060" alt="image" src="https://github.com/user-attachments/assets/9c07fa43-6e4e-44a8-9f1f-6b280354a8de" />
 
 ---
 
