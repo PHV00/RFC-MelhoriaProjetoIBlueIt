@@ -521,9 +521,16 @@ Abaixo pode-se observar o diagrama de sequência na integra, ao qual contém o f
 Para facilitar o entendimento podemos subdividir este fluxo em três etapas, sendo elas:
 - Primeira etapa é feita da preparação de sessão fisioterápica, nesta etapa o sistema é configurado pelo fisioterapeuta para se adequar ao paciente, além da checagem se o própio sistema está operando corretamento.
 
+<img width="5812" height="2212" alt="image" src="https://github.com/user-attachments/assets/b13b23e1-24f4-43be-947e-1a3256dd25b4" />
+
 - Segunda etapa consiste na execução da sessão fisioterapica em si, no qual o paciente realiza o exercicio superfisionado pelo fisioterapeuta, e no qual o sistema capta todos dados para analise posterior.
 
+<img width="5452" height="2124" alt="image" src="https://github.com/user-attachments/assets/f6bd5a6f-eca8-4b3c-a410-6e886cada184" />
+
 - Terceira etapa, nesta etapa o sistema organiza,armazena e disponibiliza para o terapeuta todos os dados obtidos pela sessão, e se necessario de sessões anteriores. 
+
+<img width="5452" height="3632" alt="image" src="https://github.com/user-attachments/assets/dab5a250-47fb-4bcd-a7f6-6dc7aa5ef82a" />
+
 
 Apresente o fluxo principal do sistema.
 
