@@ -515,6 +515,11 @@ Use diagramas sempre que possível.
 
 ## 3.1 Fluxo Principal do Usuário
 
+fluxo de sessão fisioterapica do jogo
+- fluxo de ajuste até o jogo
+- fluxo do jogo em si
+- fluxo de analises de resultados do jogo
+
 Apresente o fluxo principal do sistema.
 
 Utilize:
@@ -528,6 +533,8 @@ Inclua **imagens dos diagramas**.
 ---
 
 ## 3.2 Fluxos Alternativos
+
+erros de conexão posicionamento, ou interrupções
 
 Descreva cenários como:
 
