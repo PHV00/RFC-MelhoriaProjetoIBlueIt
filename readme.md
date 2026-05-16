@@ -507,18 +507,22 @@ Aqui constam alguns pontos que está proposta não realizará, apenas ilustrados
 
 # 3. Fluxos e Comportamento do Sistema
 
-Esta seção demonstra **como o sistema funciona**.
-
-Use diagramas sempre que possível.
+Para descrever o fluxo do software nestá secção, utiliza-se o diagrama de sequência, no qual está contido as principais funções do sistema I Blue It já com aprimoramento proposto.
 
 ---
 
 ## 3.1 Fluxo Principal do Usuário
 
-fluxo de sessão fisioterapica do jogo
-- fluxo de ajuste até o jogo
-- fluxo do jogo em si
-- fluxo de analises de resultados do jogo
+Abaixo pode-se observar o diagrama de sequência na integra, ao qual contém o fluxo principal do sistema: 
+
+<img width="5776" height="3756" alt="image" src="https://github.com/user-attachments/assets/e4c1c168-63ae-4374-a428-ef285bb45104" />
+
+Para facilitar o entendimento podemos subdividir este fluxo em três etapas, sendo elas:
+- Primeira etapa é feita da preparação de sessão fisioterápica, nesta etapa o sistema é configurado pelo fisioterapeuta para se adequar ao paciente, além da checagem se o própio sistema está operando corretamento.
+
+- Segunda etapa consiste na execução da sessão fisioterapica em si, no qual o paciente realiza o exercicio superfisionado pelo fisioterapeuta, e no qual o sistema capta todos dados para analise posterior.
+
+- Terceira etapa, nesta etapa o sistema organiza,armazena e disponibiliza para o terapeuta todos os dados obtidos pela sessão, e se necessario de sessões anteriores. 
 
 Apresente o fluxo principal do sistema.
 
