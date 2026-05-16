@@ -518,7 +518,7 @@ Abaixo pode-se observar o diagrama de sequência na integra, ao qual contém o f
 <img width="5784" height="3804" alt="image" src="https://github.com/user-attachments/assets/a364c9cb-7605-45e5-90ce-2392111606e4" />
 
 
-Para facilitar o entendimento podemos subdividir este fluxo em três etapas, sendo elas:
+O fluxo pode ser subdivido em três etapas distintas de operação, sendo elas:
 - Primeira etapa é feita da preparação de sessão fisioterápica, nesta etapa o sistema é configurado pelo fisioterapeuta para se adequar ao paciente, além da checagem se o própio sistema está operando corretamento.
 
 <img width="5812" height="2212" alt="image" src="https://github.com/user-attachments/assets/b13b23e1-24f4-43be-947e-1a3256dd25b4" />
