@@ -534,6 +534,22 @@ O fluxo principal é composto por três operaçẽos principais e distintas, sen
 
 ## 3.2 Fluxos Alternativos
 
+O fluxo apresentadoas até então, cosistia no principal fluco do sistema, porém sem erros ou problemas em nenhum de seus modulos, assim representado o caso ideal onde apenas demosntramos as validações de modo simplificado, porém existem casos exepcionais onde o sistema possui tratativas especificas para os principais casos de erros, estes descritos abaixo:
+
+O primeiro trata-se de uma validação que ocorre no elemento numero 9 do fluxo ideal no qual a liberação do acesso se dá apenas em caso do pitaco aprimorado com todos os seus modulos demonstrem a coleta e processamento adequado dos biosinais, no qual em caso de contrario há o reposicionamento do equipamento em loop , assim permitindo o incio da sessão apenas caso o equipamento apresente exito e esteja devidademente posicionado e funcional.
+
+<img width="5828" height="1836" alt="image" src="https://github.com/user-attachments/assets/90bb9540-ffbb-45bc-95c6-2fa733884e85" />
+
+O segundo e mais problematico, trata-se da validação do estado de oxigenação do paciente no qual a cada instante apóa a sessão se iniciar, os dados coletados pelo modulo spo2 são analisados em busca de padrões que indiquem se o paciente irá sofrer ou está sofrendo com a dificuldade do exercicio, tanto em falta quanto em exesso de oxigenação, tendo como objetivo evitar casos de vadiga extrema e possiveis desmaios ocasionados pelo exercicio. 
+
+<img width="6044" height="3188" alt="image" src="https://github.com/user-attachments/assets/c511ad33-d3d0-4505-9abb-8355578113b4" />
+
+Sendo assim o fluxo acima demonstra como o sistema interrompe a sessão, implementando um sistema de pausa ao qual permite a pausa da sessão pelo sistema que salva os dados obtidos até então para analise posterior, comunica o terapeuta e permite o mesmo que ou retome a sessão no estado em que se encontrava, ou a encerre a depender da analise do profissional qualificado.
+
+interrupção por dados fisiologicos alarmantes - feito
+interrupção do terapeuta - 
+erro de posicionamento durante o loop de execução da sessão - 
+
 erros de conexão posicionamento, ou interrupções
 
 Descreva cenários como:
