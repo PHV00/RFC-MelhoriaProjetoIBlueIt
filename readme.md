@@ -546,6 +546,8 @@ O segundo e mais problematico, trata-se da validação do estado de oxigenação
 
 Sendo assim o fluxo acima demonstra como o sistema interrompe a sessão, implementando um sistema de pausa ao qual permite a pausa da sessão pelo sistema que salva os dados obtidos até então para analise posterior, comunica o terapeuta e permite o mesmo que ou retome a sessão no estado em que se encontrava, ou a encerre a depender da analise do profissional qualificado.
 
+Ainda podemos citar duas variantes, presentes no loop principal do jogo, ao qual seria o da possibilidade de pausa ou encerramento a qualquer momento da sessão, pelo fisioterapeuta, e o segundo sendo em caso de mal posicionamento após o incio do jogo, ao qual o jogo pausaria e entraria em loop de posicionamento até sendo ou encerrado a sessão, ou posicionado corretamente o equipamento, dando assim continuidade a sessão.
+
 interrupção por dados fisiologicos alarmantes - feito
 interrupção do terapeuta - 
 erro de posicionamento durante o loop de execução da sessão - 
