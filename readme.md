@@ -546,19 +546,9 @@ O segundo e mais problematico, trata-se da validação do estado de oxigenação
 
 Sendo assim o fluxo acima demonstra como o sistema interrompe a sessão, implementando um sistema de pausa ao qual permite a pausa da sessão pelo sistema que salva os dados obtidos até então para analise posterior, comunica o terapeuta e permite o mesmo que ou retome a sessão no estado em que se encontrava, ou a encerre a depender da analise do profissional qualificado.
 
+<!--
 Ainda podemos citar duas variantes, presentes no loop principal do jogo, ao qual seria o da possibilidade de pausa ou encerramento a qualquer momento da sessão, pelo fisioterapeuta, e o segundo sendo em caso de mal posicionamento após o incio do jogo, ao qual o jogo pausaria e entraria em loop de posicionamento até sendo ou encerrado a sessão, ou posicionado corretamente o equipamento, dando assim continuidade a sessão.
-
-interrupção por dados fisiologicos alarmantes - feito
-interrupção do terapeuta - 
-erro de posicionamento durante o loop de execução da sessão - 
-
-erros de conexão posicionamento, ou interrupções
-
-Descreva cenários como:
-
-- erros
-- cancelamentos
-- exceções
+-->
 
 ---
 
@@ -688,6 +678,11 @@ O foco agora é o que acontece **dentro de um único container** (como uma API e
 
 ## 5.2 Modelo de Dados
 
+O modelo abaixo contempla uma abstração DER (diagrama entidade relacionamento), das principais entidades presentes no banco de dados nosql MongoDB do ecossitema I Blue It atual, nesse escopo abaixo dela está presente a melhoria e onde e quais partes ela o afeta.
+
+<img width="4168" height="4964" alt="image" src="https://github.com/user-attachments/assets/40973eff-e7e0-45f2-a731-48feeb114420" />
+
+
 Apresente:
 
 - DER (diagrama entidade relacionamento)
@@ -708,6 +703,9 @@ Exemplo:
 - sistema de autenticação
 - módulo de processamento
 - camada de persistência
+
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/a8c3096b-7943-4a41-9470-894a4266a799" />
+
 
 ---
 
