@@ -736,7 +736,7 @@ MongoDB
  └── flowDataDevices
 ```
 
-##Suas conexões:
+### Suas conexões:
 
 <img width="4564" height="1600" alt="image" src="https://github.com/user-attachments/assets/b3c60818-b94f-4ba0-ab29-60e10749fa68" />
 
@@ -744,7 +744,7 @@ MongoDB
 
 ##Estrutura dos dados em Json:
 
-### pacients
+#### pacients
 
 ```code
 {
@@ -804,7 +804,8 @@ MongoDB
   "updated_at": "Date"
 }
 ```
-### userAccounts
+
+#### userAccounts
 ```code
 {
   "_id": "ObjectId",
@@ -827,7 +828,7 @@ MongoDB
 }
 ```
 
-### calibrationOverviews
+#### calibrationOverviews
 ```code
 {
   "_id": "ObjectId",
@@ -842,7 +843,7 @@ MongoDB
 }
 ```
 
-### gameParameters
+#### gameParameters
 ```code
 {
   "_id": "ObjectId",
@@ -875,7 +876,7 @@ MongoDB
 }
 ```
 
-### playSessions
+#### playSessions
 ```code
 {
   "_id": "ObjectId",
@@ -924,7 +925,7 @@ MongoDB
 }
 ```
 
-### plataformOverviews
+#### plataformOverviews
 ```code
 {
   "_id": "ObjectId",
@@ -984,7 +985,7 @@ MongoDB
 }
 ```
 
-### minigameOverviews
+#### minigameOverviews
 ```code
 {
   "_id": "ObjectId",
@@ -1016,7 +1017,7 @@ MongoDB
 }
 ```
 
-### sessionDeviceData
+#### sessionDeviceData
 ```code
 {
   "_id": "ObjectId",
