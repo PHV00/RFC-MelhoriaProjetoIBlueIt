@@ -1258,7 +1258,7 @@ O ecossistema I Blue It é composto por diferentes camadas tecnológicas: o jogo
 | Dashboard web | React, Material UI, Recharts, Axios |
 | Infraestrutura | Docker, Nginx |
 
-A melhoria por sua vez adiciona novo componente de hardware, novas funções e ajustes, porém tendo sempre em mente o ecosisitema em que está inserida, sendo assim priorizamos a utilização de stacks já presentes no ecossistema I Blue It.Tendo isso em mente abaixo está a lista de componentes adicionados, suas stacks e justificativas.
+A melhoria por sua vez adiciona novo componente de hardware, novas funções e ajustes, porém tendo sempre em mente o ecosisitema em que está inserida, sendo assim priorizamos e não alteramos as stacks já presentes no sitema.Tendo isso em mente abaixo está a lista de componentes adicionados, suas stacks e justificativas.
 
 #### Stack adicionada pela melhoria proposta
 
@@ -1276,15 +1276,6 @@ A melhoria por sua vez adiciona novo componente de hardware, novas funções e a
 | Logs de segurança | Node.js, MongoDB Atlas e Mongoose | Adicionados para garantir rastreabilidade dos eventos críticos, permitindo análise posterior pelo profissional ou equipe técnica. |
 
 ##
-
-Liste as tecnologias utilizadas.
-
-Para cada tecnologia explique **por que ela foi escolhida**.
-
-Exemplo:
-
-Node.js  
-Escolhido pela capacidade de lidar com alto volume de requisições I/O.
 
 ---
 
