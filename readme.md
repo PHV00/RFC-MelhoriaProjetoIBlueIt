@@ -686,7 +686,7 @@ A melhoria utiliza-se de todo o escopo demonstrado no DER, apenas alterando os a
 
 <img width="7620" height="13136" alt="image" src="https://github.com/user-attachments/assets/4329efbc-b14f-4abd-9b79-6c58fff72940" />
 
-Para simplificar a analise segue abaico uma lista das alterações que melhoria realiza no sistema atual:
+Segue abaixo uma lista das alterações que melhoria realiza no banco de dados atual:
 
 #### Renomear FLOW_DATA_DEVICE para SESSION_DEVICE_DATA
 - A estrutura deixa de representar apenas dados de fluxo respiratório.Isso foi feito porque agora a sessão também pode receber dados de outros dispositivos, como o oxímetro.
@@ -1075,7 +1075,285 @@ MongoDB
 
 ---
 
-## 5.3 Principais Componentes
+#### 5.3 Principais Componentes
+
+A melhoria proposta para o I Blue It mantém a estrutura principal do jogo sério de reabilitação respiratória, mas adiciona módulos voltados ao monitoramento de segurança do paciente, ao controle de pausa/interrupção da sessão e ao registro de tais dados de sessão pausadas ou interrompidas.
+
+Nesse escopo o ecossistema atual já possui componentes como cadastro de jogador, calibração respiratória, histórico de uso e registros de dados da plataforma e dos minigames, ia para ajuste dinamico de dificuldade e dashboards para acompanhamento do quadro por parte dos profissionais da saúde.Abaixo consta e duas partes uma lista com os componentes do sistema e suas respectivas funções ou alterações, sendo a primeira parte as alterações e ajustes no sistema atual e na segunda os novos trasidos com a melhoria. 
+
+<!--
+Além disso, sua arquitetura multimodal 123-SGR prevê módulos para gerenciamento de sinais, adaptação, interação, armazenamento e perfil do usuário.
+-->
+---
+
+#### Parte 1. Componentes já presentes no ecossistema atual
+
+#### 1.1 Jogo / Plataforma I Blue It
+
+A plataforma é o componente principal do jogo. Nela, o paciente controla o personagem Blue por meio da respiração, realizando ações como alcançar alvos e desviar de obstáculos.Na melhoria proposta, esse componente é mantido, mas passa a receber comandos de pausa ou interrupção quando o módulo de segurança identifica alguma condição de alerta na fisiologia do paciente.
+
+---
+
+#### 1.2 Cadastro e Perfil do Jogador
+
+O sistema atual já possui cadastro de jogador e carregamento dos dados do paciente. Esse componente permite identificar o jogador e associar suas sessões ao seu histórico de uso.Na melhoria, esse componente associa o perfil do jogador também aos registros de segurança da sessão, como eventos de pausa, interrupção, motivo do encerramento e sinais fisiológicos observados.
+
+---
+
+#### 1.3 Calibração Respiratória
+
+O I Blue It já possui calibração respiratória antes da execução da plataforma e dos minigames. Essa calibração permite ajustar os parâmetros respiratórios do jogo conforme a capacidade do paciente.Na melhoria, a calibração respiratória não é substituída, porém estará também associada a validação do posicionamento do equipamento para a aferir se os dados estão sendo coletados corretamente pelo novo sensor spo2.
+
+---
+
+#### 1.4 Histórico e Persistência de Dados
+
+O sistema atual já registra dados como histórico, calibração, dados da plataforma e minigames. Esses dados podem ser usados pelos profissionais como base de acompanhamento do desempenho do paciente.A melhoria se apoia nesse componente, mas amplia o tipo de informação registrada.Além dos dados de desempenho, o sistema passa a registrar dados relacionados à segurança e ao estado da sessão.
+
+| Novo dado registrado | Finalidade |
+|---|---|
+| Status da sessão | Identificar se a sessão foi concluída, pausada ou interrompida |
+| Motivo da pausa | Registrar por que o jogo foi temporariamente parado |
+| Motivo da interrupção | Justificar o encerramento antecipado |
+| SpO₂ no momento do evento | Registrar a condição fisiológica do paciente |
+| Tempo de pausa | Saber quanto tempo a sessão ficou parada |
+| Momento da interrupção | Identificar em qual fase, nível ou instante ocorreu o evento |
+| Observação do terapeuta | Permitir registro clínico complementar |
+
+---
+
+#### 1.5 Dashboards / Relatórios de Acompanhamento
+
+O ecossistema do I Blue It também possui recursos voltados à visualização de dados e acompanhamento profissional, como dashboards, gráficos e relatórios.Na melhoria, esse componente pode ser aproveitado para destacar os eventos de segurança da sessão.Os dashboards passam a apresentar não apenas dados de desempenho, mas também informações sobre pausas, interrupções, queda de saturação e condições em que a sessão foi encerrada.
+
+---
+
+#### Parte 2. Componentes adicionados
+
+#### 2.1 Módulo de Monitoramento Fisiológico
+
+Este é um dos principais componentes da melhoria. Ele recebe os dados fisiológicos do paciente durante a sessão, principalmente a saturação periférica de oxigênio (SpO₂) e, quando disponível, a frequência cardíaca.Sendo assim sua funcionalidade é monitorar continuamente os sinais fisiológicos do paciente para identificar situações que possam indicar risco, desconforto ou necessidade de intervenção.
+
+---
+
+#### 2.2 Módulo de Controle de Segurança
+
+Esse módulo interpreta os dados fisiológicos recebidos e verifica se eles estão dentro dos limites definidos para a sessão. Ele funciona como uma camada de proteção entre o paciente e a continuidade do jogo.Assim aplicando regras de segurança para decidir se o jogo deve continuar, pausar ou ser interrompido.
+
+| Condição identificada | Ação do sistema |
+|---|---|
+| SpO₂ dentro do limite seguro | Mantém a sessão em andamento |
+| SpO₂ abaixo do limite de alerta | Pausa o jogo |
+| SpO₂ abaixo do limite crítico | Interrompe a sessão |
+| Oxímetro desconectado | Pausa a sessão e solicita verificação |
+| Terapeuta decide encerrar | Registra interrupção manual |
+
+---
+
+#### 2.3 Módulo de Controle de Estado da Sessão
+
+Esse módulo controla a situação atual da sessão terapêutica. Ele permite que o sistema diferencie uma sessão concluída normalmente de uma sessão pausada ou interrompida.Assim registrando e controlando o ciclo de vida da sessão.
+
+| Estado da sessão | Descrição |
+|---|---|
+| Em andamento | Sessão ocorrendo normalmente |
+| Pausada | Sessão temporariamente parada |
+| Retomada | Sessão reiniciada após uma pausa |
+| Interrompida | Sessão encerrada antes do previsto |
+| Finalizada | Sessão concluída normalmente |
+
+Esse módulo é importante porque a melhoria não altera diretamente a dificuldade do jogo. O foco é controlar se a sessão pode continuar com segurança.
+
+---
+
+#### 2.4 Módulo de Regras de Decisão
+
+Esse módulo reúne as regras que determinam o comportamento do sistema diante dos dados recebidos. Ele recebe informações do oxímetro, do jogo, do tempo de sessão e das configurações definidas pelo terapeuta.Assim tendo comofunção transformar dados fisiológicos e dados da sessão em decisões automáticas ou semiautomáticas.
+
+Exemplo de regra:
+
+> Se a SpO₂ ficar abaixo do limite mínimo configurado, o jogo deve ser pausado e o evento deve ser registrado. Caso a queda persista ou atinja um valor crítico, a sessão deve ser interrompida.
+
+---
+
+#### 2.5 Módulo de Registro de Eventos de Segurança
+
+Esse módulo registra os eventos importantes ocorridos durante a sessão. Ele é responsável por armazenar informações sobre pausas, retomadas e interrupções, garantindo que os eventos de segurança não sejam perdidos e possam ser analisados posteriormente pelo profissional de saúde.
+
+| Dado | Exemplo |
+|---|---|
+| Tipo do evento | Pausa, retomada, interrupção |
+| Motivo | Queda de SpO₂, desconforto, decisão do terapeuta |
+| Horário do evento | 10:35 |
+| Fase e nível | Fase 2, Nível 3 |
+| SpO₂ registrada | 88% |
+| Observação | Paciente relatou cansaço |
+
+---
+
+#### 2.6 Módulo de Configuração Terapêutica de Segurança
+
+Esse módulo permite que o terapeuta configure os limites e condições da sessão antes do início do jogo, permitindo que a segurança seja parametrizada de acordo com o paciente, o protocolo terapêutico e a decisão profissional.
+
+| Parâmetro | Exemplo |
+|---|---|
+| Limite mínimo de SpO₂ | 90% |
+| Limite crítico de SpO₂ | 85% |
+| Tempo máximo de sessão | 10 minutos |
+| Permitir retomada após pausa | Sim |
+| Interromper após múltiplas pausas | Sim |
+| Motivos de interrupção manual | Cansaço, tontura, queda de saturação |
+
+---
+
+#### 2.7 Módulo de Relatório de Segurança da Sessão
+
+Esse módulo organiza os dados da sessão em uma visualização útil para o profissional. Ele complementa os relatórios já existentes, acrescentando informações sobre segurança, permitindo que o terapeuta avalie não apenas o desempenho no jogo, mas também a tolerância fisiológica do paciente durante a atividade.
+
+| Informação | Utilidade |
+|---|---|
+| Sessão finalizada ou interrompida | Saber se o exercício foi concluído |
+| Quantidade de pausas | Identificar instabilidade durante a sessão |
+| Motivos de interrupção | Apoiar decisão terapêutica |
+| Menor SpO₂ registrada | Avaliar segurança fisiológica |
+| Tempo total de pausa | Medir impacto das pausas |
+| Observações do terapeuta | Registrar contexto clínico |
+
+---
+
+#### Resumo dos componentes e alterações
+
+| Componente | Situação | Papel na melhoria |
+|---|---|---|
+| Jogo / Plataforma | Já existente | Passa a responder a comandos de pausa e interrupção |
+| Cadastro e Perfil | Já existente | Associa eventos de segurança ao paciente |
+| Calibração Respiratória | Já existente | Continua sendo usada como base respiratória da sessão |
+| Histórico e Persistência | Já existente | É ampliado para registrar eventos de segurança |
+| Dashboards / Relatórios | Já existente no ecossistema | Passa a exibir dados de pausa, interrupção e SpO₂ |
+| IA / Ajuste Dinâmico de Dificuldade | Já existente no ecossistema evoluído | Mantida como recurso separado do controle de segurança |
+| Monitoramento Fisiológico | Adicionado/aprofundado | Captura SpO₂ e sinais fisiológicos |
+| Controle de Segurança | Novo | Decide se a sessão continua, pausa ou interrompe |
+| Controle de Estado da Sessão | Novo | Registra sessão em andamento, pausada, retomada, interrompida ou finalizada |
+| Regras de Decisão | Novo | Aplica critérios para pausa/interrupção |
+| Registro de Eventos | Novo | Salva motivo, horário e contexto dos eventos |
+| Configuração Terapêutica de Segurança | Novo | Permite definir limites clínicos da sessão |
+
+---
+
+## 6. Módulo de Configuração Terapêutica
+
+Permite que o profissional configure os parâmetros da sessão antes do início do jogo. O I Blue It já permite personalização de fases e níveis, possibilitando que profissionais criem configurações de acordo com a necessidade terapêutica.
+
+Na melhoria, esse módulo também pode permitir configurar:
+
+| Parâmetro | Exemplo |
+|---|---|
+| Limite mínimo de SpO₂ | 90% |
+| Tempo máximo de sessão | 10 minutos |
+| Motivos de interrupção | Queda de saturação, desconforto, decisão profissional |
+| Permissão de retomada | Sim ou não após pausa |
+| Observações clínicas | Comentários do terapeuta |
+
+---
+
+## 7. Módulo de Persistência de Dados
+
+Esse módulo armazena os dados da sessão. O I Blue It já registra dados como início e fim de jogo, duração, resultado, fase, nível, pontuação, quantidade de alvos, obstáculos e desempenho em arquivos CSV.
+
+Na melhoria, a persistência deve ser ampliada para registrar também os dados de segurança e o estado da sessão.
+
+Novos dados sugeridos:
+
+| Dado | Finalidade |
+|---|---|
+| Status da sessão | Saber se foi finalizada, pausada ou interrompida |
+| Motivo da interrupção | Justificar clinicamente o encerramento |
+| SpO₂ mínima registrada | Avaliar segurança da sessão |
+| Frequência cardíaca média/máxima | Apoiar acompanhamento fisiológico |
+| Tempo de pausa | Saber quanto tempo o jogo ficou parado |
+| Momento da interrupção | Identificar em que fase/nível ocorreu o problema |
+| Observação do terapeuta | Registrar contexto clínico |
+
+---
+
+## 8. Módulo de Relatórios e Acompanhamento
+
+Esse módulo apresenta os dados coletados para o profissional. Ele permite visualizar o desempenho do paciente e verificar se houve pausas, interrupções ou sinais de alerta durante a sessão.
+
+A versão 3.0 do ecossistema I Blue It já incluiu recursos relacionados a gráficos e estatísticas, enquanto a versão multimodal adicionou dispositivos como cinta extensora e oxímetro.
+
+Na melhoria, o relatório deve destacar não apenas a pontuação e o desempenho respiratório, mas também os eventos de segurança.
+
+Exemplo de informações exibidas:
+
+| Informação | Uso pelo terapeuta |
+|---|---|
+| Sessões concluídas | Avaliar continuidade do tratamento |
+| Sessões interrompidas | Identificar riscos ou limitações |
+| Motivos de pausa/interrupção | Ajustar futuras sessões |
+| Evolução da SpO₂ | Acompanhar tolerância ao exercício |
+| Desempenho no jogo | Verificar progresso terapêutico |
+
+---
+
+## 9. Módulo de API
+
+A API é responsável pela comunicação entre o jogo, o banco de dados e possíveis interfaces externas, como painéis web ou módulos de relatório.
+
+Caso o sistema seja mantido apenas localmente, esse módulo pode ser simples. Caso exista integração com servidor, ele deve receber os dados da sessão, salvar registros e disponibilizar consultas para o profissional.
+
+Funções principais da API:
+
+| Função | Descrição |
+|---|---|
+| Registrar sessão | Salva os dados da partida |
+| Atualizar status da sessão | Registra pausa, retomada ou interrupção |
+| Consultar histórico | Retorna sessões anteriores do paciente |
+| Registrar sinais fisiológicos | Salva dados do oxímetro |
+| Gerar relatórios | Fornece dados para visualização profissional |
+
+---
+
+## 10. Módulo de Autenticação e Perfis de Usuário
+
+Esse módulo controla o acesso de pacientes e profissionais ao sistema. Ele é importante principalmente se houver painel web, API ou armazenamento centralizado.
+
+O perfil do usuário já é relevante na arquitetura 123-SGR, pois auxilia na adaptação das respostas do sistema conforme as características do jogador.
+
+Perfis sugeridos:
+
+| Perfil | Permissões |
+|---|---|
+| Paciente | Jogar sessões e visualizar informações básicas |
+| Terapeuta | Configurar sessões, acompanhar dados e registrar observações |
+| Administrador | Gerenciar usuários, dispositivos e configurações gerais |
+
+---
+
+## Resumo dos módulos da melhoria
+
+| Módulo | Responsabilidade principal |
+|---|---|
+| Interface do Jogo | Exibir jogo, feedbacks e alertas ao paciente |
+| Captura de Sinais | Receber dados respiratórios e fisiológicos |
+| Monitoramento de Segurança | Avaliar SpO₂ e outros sinais críticos |
+| Controle de Sessão | Pausar, retomar, finalizar ou interromper a sessão |
+| Processamento e Regras | Decidir ações com base nos dados recebidos |
+| Configuração Terapêutica | Permitir parametrização pelo profissional |
+| Persistência de Dados | Salvar histórico, sinais e status da sessão |
+| Relatórios | Exibir evolução e eventos da sessão |
+| API | Integrar jogo, banco e painéis externos |
+| Autenticação | Controlar acesso de pacientes e profissionais |
+
+---
+
+## Texto corrido para colocar no trabalho
+
+A melhoria proposta para o I Blue It é composta por módulos responsáveis por ampliar a segurança e o acompanhamento das sessões de reabilitação respiratória. O sistema mantém o módulo de interface do jogo, no qual o paciente interage com o personagem Blue por meio da respiração, e acrescenta módulos específicos para captura de sinais fisiológicos, monitoramento de segurança, controle do estado da sessão e persistência dos dados clínicos e de desempenho.
+
+O módulo de captura de sinais recebe os dados dos dispositivos respiratórios e do oxímetro. Esses dados são encaminhados ao módulo de processamento, que aplica regras de decisão para verificar se a sessão deve continuar, ser pausada ou ser interrompida. O módulo de monitoramento de segurança avalia continuamente os sinais fisiológicos do paciente, principalmente a saturação de oxigênio, permitindo que o sistema reaja a situações de risco.
+
+O módulo de controle de sessão registra o estado da sessão, permitindo diferenciar sessões em andamento, pausadas, finalizadas normalmente ou interrompidas antes do tempo previsto. Já o módulo de persistência armazena os dados da sessão, incluindo desempenho no jogo, sinais fisiológicos, motivo de interrupção e observações do profissional. Por fim, os módulos de relatório, API e autenticação permitem que o terapeuta consulte o histórico do paciente, acompanhe sua evolução e utilize os dados registrados para ajustar futuras sessões de reabilitação.
 
 Descreva os principais módulos do sistema.
 
