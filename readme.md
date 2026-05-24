@@ -678,18 +678,399 @@ O foco agora é o que acontece **dentro de um único container** (como uma API e
 
 ## 5.2 Modelo de Dados
 
-O modelo abaixo contempla uma abstração DER (diagrama entidade relacionamento), das principais entidades presentes no banco de dados nosql MongoDB do ecossitema I Blue It atual, nesse escopo abaixo dela está presente a melhoria e onde e quais partes ela o afeta.
+O modelo abaixo contempla uma abstração DER (diagrama entidade relacionamento), das principais entidades presentes no banco de dados nosql MongoDB do ecossitema I Blue It atual.Nesse escopo logo abaixo desta imagem está presente a melhoria contendo onde e quais partes ela afetará no sistema atual.
 
-<img width="4168" height="4964" alt="image" src="https://github.com/user-attachments/assets/40973eff-e7e0-45f2-a731-48feeb114420" />
+<img width="4156" height="2920" alt="image" src="https://github.com/user-attachments/assets/6a4cd675-c584-4966-bcbd-578d2f8a035c" />
 
+A melhoria utiliza-se de todo o escopo demonstrado no DER, apenas alterando os atributos das tabelas e suas conexões para suportar a feature de pausa e supensão da sessão salvando os dados em caso de interrupções, tais mudanças podem ser vistas abaixo adjunto a suas explicações.
 
-Apresente:
+<img width="7620" height="13136" alt="image" src="https://github.com/user-attachments/assets/4329efbc-b14f-4abd-9b79-6c58fff72940" />
 
-- DER (diagrama entidade relacionamento)
-- esquema relacional
-- modelo de documentos (NoSQL)
+Para simplificar a analise segue abaico uma lista das alterações que melhoria realiza no sistema atual:
 
-Inclua **diagramas do modelo de dados**.
+#### Renomear FLOW_DATA_DEVICE para SESSION_DEVICE_DATA
+- A estrutura deixa de representar apenas dados de fluxo respiratório.Isso foi feito porque agora a sessão também pode receber dados de outros dispositivos, como o oxímetro.
+
+#### Renomear DEVICE_FLOW para DEVICE_SIGNAL
+- O dispositivo passa a registrar diferentes tipos de sinais, não apenas fluxo.Isso foi feito para permitir sinais como flowValue, spo2 e heartRate.
+
+#### Renomear FLOW_SAMPLE para DEVICE_SAMPLE
+- Cada amostra passa a representar qualquer leitura de dispositivo.Isso foi feito porque uma amostra pode ser de fluxo respiratório, SpO2 ou frequência cardíaca.
+
+#### Adicionar oxímetro como dispositivo da sessão
+- O oxímetro passa a ser tratado junto aos demais dispositivos usados durante o jogo.Isso foi feito para incluir o monitoramento fisiológico sem criar uma estrutura paralela ao modelo atual.
+
+#### Adicionar campos de status em PLAY_SESSION
+- A sessão passa a armazenar estados como iniciada, pausada, finalizada ou interrompida.Isso foi feito para registrar corretamente sessões que não terminam de forma normal.
+
+#### Adicionar dados de pausa e interrupção em PLAY_SESSION
+- A sessão passa a guardar informações como quantidade de pausas, momento da interrupção e motivo.Isso foi feito para explicar por que uma sessão foi pausada ou encerrada antes do previsto.
+
+#### Adicionar limite mínimo de SpO2 na sessão
+- A sessão passa a armazenar o valor mínimo permitido de SpO2 usado durante o monitoramento.Isso foi feito para deixar claro qual regra foi usada para pausar ou interromper o jogo.
+
+#### Adicionar eventos da sessão em PLAY_SESSION
+- A sessão passa a guardar eventos como pausa por SpO2 baixa, retomada ou interrupção.Isso foi feito para manter um histórico do que aconteceu durante a execução do jogo.
+
+#### Adicionar playSessionId em PLATAFORM_OVERVIEW e MINIGAME_OVERVIEW
+- Os resultados da plataforma e dos minigames passam a estar ligados diretamente a uma sessão.Isso foi feito para saber em qual sessão cada resultado ocorreu, especialmente quando houver pausa ou interrupção.
+
+#### Remover elementos de ajuste dinâmico de dificuldade
+- O modelo não inclui alteração de fase, nível, velocidade ou parâmetros do jogo.Isso foi feito porque a melhoria proposta apenas pausa ou interrompe a sessão, sem modificar a jogabilidade.
+
+---
+
+Como já citado o banco de dados da aplicação será o nosql MongoDB, segue abaixo a lista de coleções, diagrama NoSQL/documental e por fim os Json de exempecificação.
+
+---
+
+```text
+MongoDB
+ ├── pacients
+ ├── userAccounts
+ ├── calibrationOverviews
+ ├── gameParameters
+ ├── playSessions
+ ├── plataformOverviews
+ ├── minigameOverviews
+ └── flowDataDevices
+```
+
+##Suas conexões:
+
+<img width="4564" height="1600" alt="image" src="https://github.com/user-attachments/assets/b3c60818-b94f-4ba0-ab29-60e10749fa68" />
+
+---
+
+##Estrutura dos dados em Json:
+
+### pacients
+
+```code
+{
+  "_id": "ObjectId",
+  "_gameToken": "string",
+
+  "name": "string",
+  "birthday": "Date",
+  "sex": "string",
+  "height": "number",
+  "weight": "number",
+  "condition": "string",
+  "ethnicity": "string",
+  "observations": "string",
+
+  "capacitiesPitaco": {
+    "insPeakFlow": "number",
+    "expPeakFlow": "number",
+    "insFlowDuration": "number",
+    "expFlowDuration": "number",
+    "respiratoryRate": "number"
+  },
+
+  "capacitiesMano": {
+    "insPeakFlow": "number",
+    "expPeakFlow": "number",
+    "insFlowDuration": "number",
+    "expFlowDuration": "number",
+    "respiratoryRate": "number"
+  },
+
+  "capacitiesCinta": {
+    "insPeakFlow": "number",
+    "expPeakFlow": "number",
+    "insFlowDuration": "number",
+    "expFlowDuration": "number",
+    "respiratoryRate": "number"
+  },
+
+  "unlockedLevels": "number",
+  "accumulatedScore": "number",
+  "playSessionsDone": "number",
+
+  "calibrationPitacoDone": "boolean",
+  "calibrationManoDone": "boolean",
+  "calibrationCintaDone": "boolean",
+  "howToPlayDone": "boolean",
+
+  "pitacoThreshold": "number",
+  "manoThreshold": "number",
+  "cintaThreshold": "number",
+
+  "defaultMinSpo2": "number",
+  "defaultSpo2Action": "string",
+
+  "created_at": "Date",
+  "updated_at": "Date"
+}
+```
+### userAccounts
+```code
+{
+  "_id": "ObjectId",
+
+  "fullname": "string",
+  "username": "string",
+  "password": "string",
+  "email": "string",
+  "role": "string",
+
+  "pacientId": "ObjectId",
+
+  "gameToken": {
+    "token": "string",
+    "description": "string"
+  },
+
+  "created_at": "Date",
+  "updated_at": "Date"
+}
+```
+
+### calibrationOverviews
+```code
+{
+  "_id": "ObjectId",
+  "_gameToken": "string",
+
+  "pacientId": "ObjectId",
+  "gameDevice": "string",
+  "calibrationExercise": "string",
+  "calibrationValue": "number",
+
+  "created_at": "Date"
+}
+```
+
+### gameParameters
+```code
+{
+  "_id": "ObjectId",
+
+  "pacientId": "ObjectId",
+  "stageId": "number",
+  "phase": "number",
+  "level": "number",
+
+  "ObjectSpeedFactor": "number",
+  "HeightIncrement": "number",
+  "HeightUpThreshold": "number",
+  "HeightDownThreshold": "number",
+  "SizeIncrement": "number",
+  "SizeUpThreshold": "number",
+  "SizeDownThreshold": "number",
+  "Loops": "number",
+
+  "gameScript": [
+    {
+      "ObjectType": "string",
+      "DifficultyFactor": "number",
+      "PositionYFactor": "number",
+      "PositionXSpacing": "number"
+    }
+  ],
+
+  "created_at": "Date",
+  "updated_at": "Date"
+}
+```
+
+### playSessions
+```code
+{
+  "_id": "ObjectId",
+
+  "pacientId": "ObjectId",
+  "sessionNumber": "number",
+
+  "startedAt": "Date",
+  "finishedAt": "Date",
+  "status": "string",
+
+  "wasPaused": "boolean",
+  "pauseCount": "number",
+  "totalPausedDuration": "number",
+  "lastPauseAt": "Date",
+  "lastResumeAt": "Date",
+
+  "wasInterrupted": "boolean",
+  "interruptedAt": "Date",
+  "interruptionReason": "string",
+  "interruptionDescription": "string",
+  "interruptionSource": "string",
+
+  "minSpo2Allowed": "number",
+  "actionOnLowSpo2": "string",
+
+  "sessionEvents": [
+    {
+      "eventType": "string",
+      "reason": "string",
+      "timestamp": "Date",
+      "source": "string",
+
+      "signal": "string",
+      "measuredValue": "number",
+      "thresholdValue": "number",
+      "unit": "string",
+
+      "actionTaken": "string",
+      "description": "string"
+    }
+  ],
+
+  "created_at": "Date",
+  "updated_at": "Date"
+}
+```
+
+### plataformOverviews
+```code
+{
+  "_id": "ObjectId",
+  "_gameToken": "string",
+
+  "pacientId": "ObjectId",
+  "playSessionId": "ObjectId",
+  "sessionDeviceDataId": "ObjectId",
+
+  "gameDevice": "string",
+  "devices": ["string"],
+
+  "playStart": "Date",
+  "playFinish": "Date",
+  "duration": "number",
+  "result": "string",
+
+  "sessionStatus": "string",
+  "finishReason": "string",
+
+  "stageId": "number",
+  "phase": "number",
+  "level": "number",
+  "relaxTimeSpawned": "boolean",
+
+  "score": "number",
+  "maxScore": "number",
+  "scoreRatio": "number",
+
+  "TargetsSpawned": "number",
+  "TargetsSuccess": "number",
+  "TargetsInsSuccess": "number",
+  "TargetsExpSuccess": "number",
+  "TargetsFails": "number",
+  "TargetsInsFail": "number",
+  "TargetsExpFail": "number",
+
+  "ObstaclesSpawned": "number",
+  "ObstaclesSuccess": "number",
+  "ObstaclesInsSuccess": "number",
+  "ObstaclesExpSuccess": "number",
+  "ObstaclesFail": "number",
+  "ObstaclesInsFail": "number",
+  "ObstaclesExpFail": "number",
+
+  "PlayerHp": "number",
+  "BorgScale": "number",
+
+  "deviceDataSummary": {
+    "minSpo2": "number",
+    "avgSpo2": "number",
+    "maxHeartRate": "number",
+    "respiratoryFlowPeak": "number"
+  },
+
+  "created_at": "Date"
+}
+```
+
+### minigameOverviews
+```code
+{
+  "_id": "ObjectId",
+  "_gameToken": "string",
+
+  "pacientId": "ObjectId",
+  "playSessionId": "ObjectId",
+
+  "gameDevice": "string",
+  "minigameName": "string",
+  "respiratoryExercise": "string",
+  "devices": ["string"],
+
+  "sessionStatus": "string",
+  "finishReason": "string",
+
+  "flowDataRounds": [
+    {
+      "minigameRound": "number",
+      "roundScore": "number",
+      "roundFlowScore": "number",
+      "sessionDeviceDataId": "ObjectId",
+      "roundStatus": "string",
+      "finishReason": "string"
+    }
+  ],
+
+  "created_at": "Date"
+}
+```
+
+### sessionDeviceData
+```code
+{
+  "_id": "ObjectId",
+  "_gameToken": "string",
+
+  "pacientId": "ObjectId",
+  "playSessionId": "ObjectId",
+
+  "deviceName": "string",
+  "deviceType": "string",
+  "connectionStatus": "string",
+
+  "startedAt": "Date",
+  "finishedAt": "Date",
+  "lastConnectionAt": "Date",
+  "disconnectedAt": "Date",
+
+  "deviceErrorCode": "string",
+  "deviceErrorDescription": "string",
+
+  "deviceSummary": {
+    "minValue": "number",
+    "maxValue": "number",
+    "avgValue": "number",
+    "minSpo2": "number",
+    "avgSpo2": "number",
+    "maxHeartRate": "number",
+    "signalQualityAvg": "number"
+  },
+
+  "signals": [
+    {
+      "signalName": "string",
+      "signalType": "string",
+      "unit": "string",
+      "signalRole": "string",
+      "samplingRate": "number",
+
+      "samples": [
+        {
+          "timestamp": "Date",
+          "measuredValue": "number",
+          "signalQuality": "number",
+          "isValid": "boolean",
+          "invalidReason": "string"
+        }
+      ]
+    }
+  ],
+
+  "created_at": "Date",
+  "updated_at": "Date"
+}
+```
 
 ---
 
