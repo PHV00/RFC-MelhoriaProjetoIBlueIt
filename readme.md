@@ -1275,8 +1275,6 @@ A melhoria por sua vez adiciona novo componente de hardware, novas funções e a
 | Atualização do dashboard | React, Material UI, Recharts e Axios | Adicionada para permitir que o profissional visualize pausas, interrupções e dados fisiológicos coletados durante a sessão. |
 | Logs de segurança | Node.js, MongoDB Atlas e Mongoose | Adicionados para garantir rastreabilidade dos eventos críticos, permitindo análise posterior pelo profissional ou equipe técnica. |
 
-##
-
 ---
 
 # 6. Segurança e Privacidade
