@@ -1242,6 +1242,41 @@ Esse módulo organiza os dados da sessão em uma visualização útil para o pro
 
 ## 5.4 Stack Tecnológica
 
+O ecossistema I Blue It é composto por diferentes camadas tecnológicas: o jogo sério, os dispositivos biomédicos, a comunicação entre hardware e software, o back-end, o banco de dados, o painel web e os módulos de inteligência artificial.Abaixo consta uma lista simplificada das stacks no sistema atual sem a melhoria.
+
+#### Stack atual do sistema
+
+| Camada | Tecnologias contempladas |
+|---|---|
+| Jogo sério | Unity, C# |
+| Dispositivos biomédicos | PITACO, MANO-BD, Arduino/microcontroladores |
+| Comunicação | USB/Serial |
+| Arquitetura multimodal | 123-SGR |
+| Inteligência Artificial | DeepDDA, ML-Agents, TensorFlow, PyTorch |
+| Back-end/API | Node.js, Microsoft Azure Functions |
+| Banco de dados | MongoDB Atlas, Mongoose |
+| Dashboard web | React, Material UI, Recharts, Axios |
+| Infraestrutura | Docker, Nginx |
+
+A melhoria por sua vez adiciona novo componente de hardware, novas funções e ajustes, porém tendo sempre em mente o ecosisitema em que está inserida, sendo assim priorizamos a utilização de stacks já presentes no ecossistema I Blue It.Tendo isso em mente abaixo está a lista de componentes adicionados, suas stacks e justificativas.
+
+#### Stack adicionada pela melhoria proposta
+
+| Componente adicionado | Stack / tecnologia utilizada | Justificativa |
+|---|---|---|
+| Oxímetro de pulso | Sensor biomédico / hardware de monitoramento | Adicionado para capturar dados fisiológicos do paciente durante a sessão, principalmente SpO2 e frequência cardíaca. |
+| Leitura do oxímetro | C com Idf.py | Utilizado para programar o microcontrolador responsável pela leitura dos dados do oxímetro. |
+| Integração com o jogo | Unity e C# | Utilizada para receber os dados do oxímetro dentro do jogo e acionar ações como pausa, retomada ou interrupção da sessão. |
+| Registro de eventos da sessão | Node.js e Azure Functions | Adicionado para permitir que a API registre eventos como pausa, retomada, interrupção, motivo da interrupção e horário da ocorrência. |
+| Módulo de monitoramento fisiológico | C# | Adicionado para interpretar os dados de SpO2 e frequência cardíaca, comparando-os com limites de segurança definidos para o paciente. |
+| Controle de estado da sessão | C# | Adicionado para registrar e controlar os estados da sessão, como em andamento, pausada, retomada, interrompida ou finalizada. |
+| Regras de pausa e interrupção | C# | Utilizadas para pausar ou interromper a sessão quando os sinais fisiológicos indicarem risco, sem alterar diretamente a mecânica principal do jogo. |
+| Persistência dos novos dados | MongoDB Atlas e Mongoose | Utilizada para armazenar os novos dados da melhoria, como valores fisiológicos, estado da sessão e eventos de segurança. |
+| Atualização do dashboard | React, Material UI, Recharts e Axios | Adicionada para permitir que o profissional visualize pausas, interrupções e dados fisiológicos coletados durante a sessão. |
+| Logs de segurança | Node.js, MongoDB Atlas e Mongoose | Adicionados para garantir rastreabilidade dos eventos críticos, permitindo análise posterior pelo profissional ou equipe técnica. |
+
+##
+
 Liste as tecnologias utilizadas.
 
 Para cada tecnologia explique **por que ela foi escolhida**.
