@@ -650,27 +650,25 @@ Modal de informativo de parada, ao qual o terapeuta preenche o motivo pelo qual 
 
 ## 4.3 Fluxo de Interação do Usuário
 
-Demonstre passo a passo um fluxo importante.
+O fluxo analisado referece ao fluxo de analise de dados e exportação dos mesmos, como mostrado abaixo:
 
-Exemplo:
-
-1. usuário acessa o sistema  
-2. cria conta  
-3. registra dados  
-4. visualiza resultados  
-
-Inclua **sequência de telas ou fluxo visual**.
-
----
-
-## 4.4 Feedback Inicial de Usuários (Opcional)
-
-Se possível, inclua:
-
-- comentários de usuários
-- sugestões de melhoria
-- validação inicial do mockup
-
+#### o usuário acessa o sistema
+  <img width="1365" height="634" alt="image" src="https://github.com/user-attachments/assets/b1422f6c-45af-406f-96ff-3728d2322e94" />
+#### realiza login
+  <img width="1365" height="634" alt="image" src="https://github.com/user-attachments/assets/04155bfd-bcb0-40c8-8dbe-43e1123df19b" />
+#### entra no dashboard / InfoChart  
+  <img width="197" height="634" alt="image" src="https://github.com/user-attachments/assets/b90b12dc-68e6-4b6e-bc6e-c56affa4cc1b" />
+#### seleciona o paciente  
+  <img width="197" height="634" alt="image" src="https://github.com/user-attachments/assets/c9e5e76d-fd43-4674-9673-b41b69e7505f" />
+##### visualiza o resumo dos dados do paciente  
+  <img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/cd415f66-6093-47e4-b1ff-6d6a6cc90fc8" />
+#### acessa a análise detalhada do terapeuta e filtra sessões, período ou indicadores  
+  <img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/e64c1734-0191-49cd-88c4-2b7a64df8640" />
+#### registra alterações na sessão, se necessário  
+  <img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/27869996-240b-4551-9b82-58bdfec96f35" />
+#### exporta os dados ou relatório
+  <img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/cc5320d0-35b2-49ab-8d4e-fa86d2e73326" />
+  
 ---
 
 # 5. Arquitetura do Sistema
