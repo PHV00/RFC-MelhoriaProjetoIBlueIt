@@ -716,14 +716,12 @@ No diagrama de containers apresentamos o ecossistema I Blue It com a melhoria pr
 
 ---
 
-## 3. Nível 3: Diagrama de Componentes
-O foco agora é o que acontece **dentro de um único container** (como uma API específica ou um serviço de backend).
+### 5.1.2 Nível 3 — Diagrama de Componentes
 
-* **Objetivo:** Identificar as responsabilidades internas, padrões de código e a organização lógica.
-* **O que incluir:**
-    * **Estrutura Interna:** Organização das camadas (Ex: Controladores, Serviços, Repositórios e Clientes de API).
-    * **Lógica de Negócio:** Componentes que encapsulam as regras específicas do domínio.
-    * **Interações:** Como os componentes internos se orquestram para processar e responder a uma requisição.
+O componente selecionado para o aprofundamento no nivel 3 foi, o compoente spo2 que deve ser desenvolvido para o pitaco, estando seu diagrama abaixo:
+
+<img width="6448" height="3760" alt="image" src="https://github.com/user-attachments/assets/54b82195-488a-4a96-861f-ce4b1a23e57e" />
+
 ---
 
 ## 5.2 Modelo de Dados
