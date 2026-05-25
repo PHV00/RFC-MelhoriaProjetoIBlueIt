@@ -597,7 +597,8 @@ Os Mokups foram dividos em dois fluxos o primeiro mostra as alterações feitas 
 #### PARTE 1 - Dashboard Clínico
 
 ---
-#### Adição a tela inicial da taxa de oxigenação média do paciente 
+#### Adição a tela inicial da taxa de oxigenação média do paciente
+
 <img width="1356" height="673" alt="image" src="https://github.com/user-attachments/assets/d3f7a063-2d38-471c-bf78-dd747813198d" />
 
 Esta é a tela inicial do sistema, ao qual apresenta os dados resumidamente ao usuario, ao qual foi adicionado um novo componete aos demais do dasjboard padrão, sendo  este o dado de oxigenação média do paciente.
@@ -653,20 +654,28 @@ Modal de informativo de parada, ao qual o terapeuta preenche o motivo pelo qual 
 O fluxo analisado referece ao fluxo de analise de dados e exportação dos mesmos, como mostrado abaixo:
 
 #### o usuário acessa o sistema
+
   <img width="1365" height="634" alt="image" src="https://github.com/user-attachments/assets/b1422f6c-45af-406f-96ff-3728d2322e94" />
 #### realiza login
+
   <img width="1365" height="634" alt="image" src="https://github.com/user-attachments/assets/04155bfd-bcb0-40c8-8dbe-43e1123df19b" />
 #### entra no dashboard / InfoChart  
+
   <img width="197" height="634" alt="image" src="https://github.com/user-attachments/assets/b90b12dc-68e6-4b6e-bc6e-c56affa4cc1b" />
 #### seleciona o paciente  
+
   <img width="197" height="634" alt="image" src="https://github.com/user-attachments/assets/c9e5e76d-fd43-4674-9673-b41b69e7505f" />
-##### visualiza o resumo dos dados do paciente  
+#### visualiza o resumo dos dados do paciente  
+
   <img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/cd415f66-6093-47e4-b1ff-6d6a6cc90fc8" />
 #### acessa a análise detalhada do terapeuta e filtra sessões, período ou indicadores  
+
   <img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/e64c1734-0191-49cd-88c4-2b7a64df8640" />
 #### registra alterações na sessão, se necessário  
+
   <img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/27869996-240b-4551-9b82-58bdfec96f35" />
 #### exporta os dados ou relatório
+
   <img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/cc5320d0-35b2-49ab-8d4e-fa86d2e73326" />
   
 ---
@@ -679,27 +688,29 @@ Esta seção demonstra **como o sistema será construído**.
 
 ## 5.1 Diagrama C4
 
-Apresente três níveis.
-## 1. Nível 1: Diagrama de Contexto
-É a **visão macro** do sistema. O foco aqui não é a tecnologia, mas sim como o software se encaixa no ecossistema e no mundo real.
+### 5.1.1 Nível 1 — Diagrama de Contexto
 
-* **Objetivo:** Mostrar o sistema como uma "caixa preta" e suas interações básicas com o ambiente externo.
-* **O que incluir:**
-    * **Atores:** Diferentes perfis de usuários (Ex: Cliente, Administrador, Operador).
-    * **Sistemas Externos:** Softwares legados, serviços de terceiros ou provedores de identidade.
-    * **Fluxo de Valor:** Como a informação entra, circula e sai do sistema principal.
+O diagrama de contexto apresenta o ecossistema I Blue It com a melhoria proposta como uma caixa preta central. Neste nível, tratamos todos os componentes internos do sistema, como jogo, backend, banco de dados, dashboard e sensores como um unico ecossitema. O objetivo é mostrar apenas como o sistema se relaciona com os principais atores externos.
+
+Os principais atores são o paciente, que realiza os exercícios respiratórios e recebe feedback durante a sessão, e o profissional da saúde, que configura os parâmetros terapêuticos, acompanha os dados registrados e analisa os resultados.
+
+<img width="5208" height="1048" alt="image" src="https://github.com/user-attachments/assets/cb25a766-02ff-4838-9c78-b2bc4d4f6532" />
 
 ---
+### 5.1.2 Nível 2 — Diagrama de Containers
 
-## 2. Nível 2: Diagrama de Containers
-Neste estágio, damos o primeiro **"zoom"**. Decompomos o sistema em suas unidades de execução independentes (containers).
+No diagrama de containers apresentamos o ecossistema I Blue It com a melhoria proposta desomposto.Neste nivel mostramos quais são os seus principais componentes, stacks e protocolos de comunicação, tendo um resumo em forma de tabela logo abaixo e abaixo deste o diagrama: 
 
-* **Objetivo:** Apresentar a arquitetura de alto nível e as decisões tecnológicas fundamentais.
-* **O que incluir:**
-    * **Aplicações Web/Mobile:** Interfaces de usuário (Ex: SPA em React, App Android/iOS).
-    * **Serviços de Backend:** Unidades lógicas de processamento (Ex: API Gateway, Microserviços em Node.js ou Go).
-    * **Armazenamento:** Persistência de dados (Ex: PostgreSQL, MongoDB, Redis).
-    * **Protocolos:** Como os containers se comunicam (Ex: JSON/HTTPS, gRPC, RabbitMQ).
+| Container | Função no sistema |
+|---|---|
+| **Jogo I Blue It** | Executa a sessão de reabilitação, controla o personagem, interpreta os sinais respiratórios e aplica as regras de pausa ou interrupção da sessão. |
+| **Dispositivos biomédicos** | Capturam sinais respiratórios e fisiológicos do paciente, como fluxo respiratório, pressão, expansão torácica e saturação de oxigênio. |
+| **Back-end / API** | Recebe os dados gerados pelo jogo, processa requisições do dashboard e centraliza a comunicação com o banco de dados. |
+| **Banco de Dados** | Armazena pacientes, sessões, medições, histórico de uso, eventos de pausa, eventos de interrupção e dados de segurança. |
+| **Health InfoCharts** | Interface web utilizada pelo profissional da saúde para visualizar gráficos, histórico, estatísticas e eventos relevantes da sessão. |
+| **Módulo de Exportação** | Permite gerar arquivos ou relatórios com os dados registrados, facilitando análises externas ou documentação clínica. |
+
+<img width="7040" height="2228" alt="image" src="https://github.com/user-attachments/assets/61d7fb7f-51ac-4984-8dc9-f0c608b36c23" />
 
 ---
 
