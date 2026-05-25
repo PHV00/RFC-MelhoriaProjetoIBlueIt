@@ -575,13 +575,18 @@ Ferramentas sugeridas:
 
 ## 4.1 Fluxo de Navegação
 
-Apresente um diagrama mostrando como o usuário navega entre telas.
+O ecossitema I blue It é composto por varias camadas indo desde o Iot fisico, frontend e backend até ao jogo em unity, sendo assim nesta etapa descreveremos os fluxos aos quais a melhoria interfere, sendo eles o de execução do jogo e o de dashboard clínico.
 
-Exemplo:
+Abaixo o fluxo do dashboard clinico:
+<img width="8684" height="1724" alt="image" src="https://github.com/user-attachments/assets/7f6d979d-83b9-4b8e-a35a-a33c07e57b24" />
 
-Login → Dashboard → Cadastro → Relatório
+Abaixo o fluxo do jogo:
 
-Inclua **imagem do fluxo de navegação**.
+<img width="15004" height="1604" alt="image" src="https://github.com/user-attachments/assets/9ff6dcf1-4c9c-4e93-a5c1-475e148ede3c" />
+
+link contendo o figma com as alterações no dashboard clinico, e as modais de alerta do jogo:
+
+https://www.figma.com/design/38AvtwGYmDuDnZylhIduTf/Melhoria-Iblueit?m=auto&t=n2BUf4xlO5QlKDo9-1
 
 ---
 
