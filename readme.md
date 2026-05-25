@@ -584,7 +584,7 @@ Abaixo o fluxo do jogo:
 
 <img width="15004" height="1604" alt="image" src="https://github.com/user-attachments/assets/9ff6dcf1-4c9c-4e93-a5c1-475e148ede3c" />
 
-link contendo o figma com as alterações no dashboard clinico, e as modais de alerta do jogo:
+link contendo o figma com as alterações no dashboard clinico, e as modais de alerta do jogo presentes em todo este capitulo:
 
 https://www.figma.com/design/38AvtwGYmDuDnZylhIduTf/Melhoria-Iblueit?m=auto&t=n2BUf4xlO5QlKDo9-1
 
@@ -592,25 +592,59 @@ https://www.figma.com/design/38AvtwGYmDuDnZylhIduTf/Melhoria-Iblueit?m=auto&t=n2
 
 ## 4.2 Wireframes ou Mockups das Telas
 
-Apresente os principais mockups do sistema.
+Os Mokups foram dividos em dois fluxos o primeiro mostra as alterações feitas nas telas já existentes no dashboard clinico, e o segundo mostra os modals de erro e alertas do sistema proposto pela melhoria.O sistema de dashboards pode ser acessado pelo terapeuta que pode acessar os dados de todos os seus pacientes, enquanto os pacientes apenas podem vizualizar os seus propios. 
 
-Inclua pelo menos:
+#### PARTE 1 - Dashboard Clínico
 
-- tela inicial
-- fluxo principal
-- tela de entrada de dados
-- tela de resultado ou visualização
+---
+#### Adição a tela inicial da taxa de oxigenação média do paciente 
+<img width="1356" height="673" alt="image" src="https://github.com/user-attachments/assets/d3f7a063-2d38-471c-bf78-dd747813198d" />
 
-Para cada tela inclua:
+Esta é a tela inicial do sistema, ao qual apresenta os dados resumidamente ao usuario, ao qual foi adicionado um novo componete aos demais do dasjboard padrão, sendo  este o dado de oxigenação média do paciente.
 
-- imagem
-- breve descrição da funcionalidade
-- ações principais do usuário
+---
+#### Adição a tela de calibração o dado de oxigenação do paciente
+<img width="1356" height="635" alt="image" src="https://github.com/user-attachments/assets/05ee743c-3213-4464-ab51-e49854f1cd41" />
 
-Sempre que possível:
+Esta tela mostra os dados de calibração dos sensores, ao qual foi adicionado um dado de calibração refênte a oxigenação do paciente.
 
-- inclua **links para protótipo navegável**
-- inclua **prints das telas**
+
+---
+<img width="1365" height="634" alt="image" src="https://github.com/user-attachments/assets/6ef1f920-8fb8-44cd-8174-a38bd7388db6" />
+
+Está tela adiciona um botão de acesso ao novo grafico, que possui as estatisticas de obtidas nos minijogos de oxigenação sanguinea do paciente ao longo das sessões.
+
+---
+<img width="1356" height="635" alt="image" src="https://github.com/user-attachments/assets/79b67b82-4cbe-46c7-aed6-88a09c204a00" />
+
+Está tela, mostra a configuração feita apenas pelo terapeuta das sessões que ele aplicará ao paciente, no qual foi adicionado dois campos, para definirem a taxa minima e maxima de oxigenação do paciente, dado este utilizado pelo sistema para definir o parametros de avisos e parada de sessões. 
+
+#### PARTE 2 - Modals Jogo
+---
+<img width="743" height="480" alt="image" src="https://github.com/user-attachments/assets/ef362ddb-2468-4426-9d22-da609cbd92b6" />
+
+Modal de alerta com parada da  sessão, ao paciente e terapeuta, para o terapeuta analisar e reposicionarem o dispositivo de maneira que a captura de dados se normalize.
+
+---
+<img width="743" height="480" alt="image" src="https://github.com/user-attachments/assets/db1a5e84-db50-45b8-9649-059310092135" />
+
+Modal de alerta para oxigenação do paciente em estado critico, com parada do sistema, ao qual permite o terapeuta analisar o paciente e decidir ou pelo encerramento da sessão ou ṕela continuidade 
+
+---
+<img width="743" height="480" alt="image" src="https://github.com/user-attachments/assets/065ccba5-52df-484b-a2e5-f8f1d0ad710c" />
+
+Modal de alerta para oxigenação do paciente em estado critico, com parada do sistema, ao qual permite o terapeuta analisar o paciente e decidir ou pelo encerramento da sessão ou ṕela continuidade
+
+---
+<img width="743" height="480" alt="image" src="https://github.com/user-attachments/assets/b4002980-6968-4f3b-a6d2-c643bf9f618d" />
+
+Modal de aviso de iminente oxigenação do paciente em estado anormal, sem parada do sistema, ao qual permite o terapeuta analisar o paciente e decidir ou pelo fechamento do alerta ou pausa da sessão.
+
+---
+
+<img width="743" height="480" alt="image" src="https://github.com/user-attachments/assets/6cf9aa99-399b-4c43-b19c-bbaf83f69573" />
+
+Modal de informativo de parada, ao qual o terapeuta preenche o motivo pelo qual o ele pausou, ou encerrou prematuramente a sessão.
 
 ---
 
