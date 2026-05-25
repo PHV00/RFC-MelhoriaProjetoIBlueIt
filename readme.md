@@ -704,13 +704,15 @@ No diagrama de containers apresentamos o ecossistema I Blue It com a melhoria pr
 | Container | Função no sistema |
 |---|---|
 | **Jogo I Blue It** | Executa a sessão de reabilitação, controla o personagem, interpreta os sinais respiratórios e aplica as regras de pausa ou interrupção da sessão. |
-| **Dispositivos biomédicos** | Capturam sinais respiratórios e fisiológicos do paciente, como fluxo respiratório, pressão, expansão torácica e saturação de oxigênio. |
+| **Dispositivos biomédicos** | Capturam sinais respiratórios e fisiológicos do paciente, como fluxo respiratório, pressão, expansão torácica. |
+| **Oximetro** | Novo componete ao pitaco, tem como retorno os dados de saturação de oxigênio e frequência cardiaca|
 | **Back-end / API** | Recebe os dados gerados pelo jogo, processa requisições do dashboard e centraliza a comunicação com o banco de dados. |
 | **Banco de Dados** | Armazena pacientes, sessões, medições, histórico de uso, eventos de pausa, eventos de interrupção e dados de segurança. |
 | **Health InfoCharts** | Interface web utilizada pelo profissional da saúde para visualizar gráficos, histórico, estatísticas e eventos relevantes da sessão. |
 | **Módulo de Exportação** | Permite gerar arquivos ou relatórios com os dados registrados, facilitando análises externas ou documentação clínica. |
+<!-- <img width="7040" height="2228" alt="image" src="https://github.com/user-attachments/assets/61d7fb7f-51ac-4984-8dc9-f0c608b36c23" /> -->
 
-<img width="7040" height="2228" alt="image" src="https://github.com/user-attachments/assets/61d7fb7f-51ac-4984-8dc9-f0c608b36c23" />
+<img width="7040" height="2768" alt="image" src="https://github.com/user-attachments/assets/2999079d-73b7-4ad7-8fb0-7623eb79ec14" />
 
 ---
 
