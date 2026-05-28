@@ -1327,13 +1327,36 @@ A melhoria por sua vez adiciona novo componente de hardware, novas funções e a
 
 # 6. Segurança e Privacidade
 
-Inclua preocupações básicas de segurança.
+O ecossistema I Blue It, em sua versão 5.0, manipula dados sensíveis relacionados ao acompanhamento terapêutico de pacientes em sessões de reabilitação respiratória. Esses dados incluem informações de cadastro, calibração respiratória, histórico de sessões, desempenho no jogo, parâmetros definidos pelo fisioterapeuta e sinais fisiológicos utilizados pelo sistema para adaptação da dificuldade.Tais dados são utilizados em diversas camadas de tecnologias e protocolos, aos quais já foram citados ao longo deste documenta, abaixo podemos ver uma abstração das  principais preocupação de segurança e como são sanadas já pelo modelo atual: 
 
-Exemplos:
+| Preocupação de segurança                          | Aplicação no I Blue It 5.0                                                                                                                                                                            |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Autenticação de usuários**                      | O sistema atual utiliza acesso por **e-mail e senha**, permitindo que apenas usuários cadastrados acessem o ambiente.                                                                                 |
+| **Autorização por roles**                         | O sistema diferencia os perfis de acesso por **roles**, principalmente entre **paciente** e **fisioterapeuta**, limitando as ações disponíveis para cada tipo de usuário.                             |
+| **Controle de acesso do paciente**                | O paciente acessa apenas os próprios dados, como histórico, sessões e informações relacionadas ao seu acompanhamento.                                                                                 |
+| **Controle de acesso do fisioterapeuta**          | O fisioterapeuta acessa os dados dos pacientes vinculados ao seu acompanhamento, podendo visualizar informações de sessões e exportar dados quando autorizado.                                        |
+| **Exportação controlada em CSV**                  | Os dados podem ser exportados em **CSV** pelo fisioterapeuta autorizado, mantendo a retirada de informações restrita ao perfil profissional responsável.                                              |
+| **Comunicação segura via HTTPS**                  | A comunicação entre o sistema web, o backend e os serviços associados ocorre por **HTTPS/TLS**, protegendo os dados trafegados contra interceptação durante a transmissão.                            |
+| **Arquitetura cliente-servidor**                  | O sistema separa interface, backend e banco de dados. Com isso, pacientes e fisioterapeutas não acessam diretamente a base de dados, mas passam pela aplicação.                                       |
+| **Comunicação frontend-backend**                  | A aplicação web se comunica com o backend por requisições HTTP seguras, com envio de dados estruturados, como JSON, permitindo que o backend valide usuário, role e dados solicitados.                |
+| **Backend como camada intermediária**             | O backend centraliza as regras de acesso, valida as requisições e controla quais dados podem ser consultados, gravados ou exportados.                                                                 |
+| **Comunicação jogo-backend**                      | Após a sessão, o jogo envia os dados coletados ao backend, mantendo o vínculo entre jogo, paciente, sessão e registros armazenados.                                                                   |
+| **Envio controlado da sessão**                    | Os dados da sessão não são enviados de forma isolada; eles são associados ao paciente, à sessão e ao contexto terapêutico correspondente.                                                             |
+| **Comunicação local com dispositivos de captura** | Dispositivos como o **PITACO** se comunicam localmente com o jogo por conexão física/local, como USB/serial, reduzindo a exposição direta do sensor na rede.                                          |
+| **Separação entre sensor, jogo e banco**          | O dispositivo captura os sinais respiratórios, o jogo processa a sessão e o backend armazena os dados, evitando que o sensor tenha acesso direto ao banco de dados.                                   |
+| **Banco de dados centralizado**                   | Os dados são armazenados em **MongoDB em nuvem**, acessado pela aplicação/backend e não diretamente pelos usuários finais.                                                                            |
+| **Restrição de acesso ao banco**                  | O acesso ao banco ocorre por credenciais da aplicação/backend, reduzindo a possibilidade de acesso direto por paciente, fisioterapeuta ou jogo fora do fluxo esperado.                                |
+| **Organização por sessão**                        | Os dados coletados são vinculados à sessão realizada, permitindo relacionar paciente, fisioterapeuta, desempenho e histórico terapêutico.                                                             |
+| **Rastreabilidade por usuário autenticado**       | Como o acesso ocorre por usuários identificados, ações como visualização, exportação e consulta podem ser relacionadas ao perfil responsável.                                                         |
+| **Proteção dos dados em trânsito**                | O uso de **HTTPS/TLS** protege os dados durante o tráfego entre cliente, backend e serviços do sistema.                                                                                               |
+| **Proteção contra falhas de controle de acesso**  | A separação entre paciente e fisioterapeuta atua como proteção contra falhas de controle de acesso, uma das categorias tratadas pela OWASP Top 10.                                                    |
+| **Proteção contra falhas criptográficas**         | O uso de HTTPS/TLS no tráfego dos dados contribui para mitigar falhas criptográficas relacionadas à exposição de dados sensíveis em trânsito.                                                         |
+| **Proteção contra injeção e dados inválidos**     | Como as requisições passam pelo backend antes de chegar ao banco, o sistema possui uma camada central para validação dos dados recebidos do jogo e da aplicação web.                                  |
+| **Proteção contra exposição direta do banco**     | O banco de dados não é acessado diretamente pela interface do usuário, mas por meio do backend, reduzindo riscos de exposição indevida.                                                               |
 
-- proteção contra OWASP Top 10
-- autenticação e autorização
-- criptografia de dados sensíveis
+O modelo atual contempla medidas associadas a autenticação, autorização, criptografia em trânsito, controle de acesso e separação de camadas, que se relacionam com riscos presentes na OWASP Top 10, assim já aprensentando nativamente um sistema robusto e seguro.
+
+Ao se adicionar o novo modulo spo2 ao pitaco, e todas os ajuste em cada modulo que isto necessite, esperamos manter o mesmo rigor no tratamento, coleta e armazenamento de dados existente.Nesse sentido vale resaltar que o modulo iot spo2 será desenvolvido com o mesmo sistema de transmissão usb serial, que mitiga vazamentos de informaçẽos, além de após as  alterações pertinentes nos modulos subsequenstes para comportar a melhoria(tais como o jogo, o infochart e o backend), esperamos manter o mesmo nivel de segurança já presente no ecossitema I Blue It.
 
 ---
 
