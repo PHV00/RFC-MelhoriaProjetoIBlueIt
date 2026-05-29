@@ -5,10 +5,10 @@
 # Identificação
 
 - **Título do Projeto:**  
-  Melhorias no projeto I Blue It.
+  Sistema de Monitoramento e Detecção de Anomalias da Oximetria durante a Fisioterapia Respiratória usando o Jogo Sério Ativo I Blue It.
 
 - **Linha de Projeto (Direction):**  
-  IA / IoT / Dados
+  IA / IoT / Dados e Jogos Sérios.
 
 - **Autor:**  
   Pedro Henrique Vitoreti
@@ -23,19 +23,17 @@
 
 # 1. Visão do Produto e Impacto (O Problema)
   
-Este projeto tem como fim melhorar o já consolidado jogo sério I Blue It, um software desenvolvido pela Universidade do Estado de Santa Catarina (UDESC) com o princípio de auxiliar na fisioterapia de pacientes com problemas respiratórios, isso por meio da gamificação dos seus exercícios e análises dos resultados. Assim o projeto pretende aplicar as melhorias que foram encontradas, tanto técnicas, como de demandas da comunidade que já o utiliza.
+Este projeto tem como fim melhorar o jogo sério I Blue It, um sistema biomédico composto por dispositivos, jogos sérios e telemetria desenvolvido pela Universidade do Estado de Santa Catarina (UDESC) com o princípio de auxiliar na fisioterapia de pacientes com problemas respiratórios, isso por meio dos seus exercícios e análises obtidas dos resultados. Assim o projeto pretende aplicar as melhorias tanto no hardware como no software do sistema biomédico.
 
 ---
 
 ## 1.1 Contexto e Problema
 
-A reabilitação respiratória é um processo terapêutico onde pacientes com disfunções respiratórias, usam de uma abordagem de longo prazo, sistemática e repetitiva, o que pode levar a reduzir a adesão do paciente ao tratamento. Nesse contexto os jogos sérios surgem como uma forma de tornar os exercícios mais motivadores, lúdicos e engajadores aos pacientes.
+A reabilitação respiratória é um processo terapêutico onde pacientes com disfunções respiratórias, usam de uma abordagem sistemática e repetitiva, o que pode levar a reduzir a adesão do paciente ao tratamento. Nesse contexto os jogos sérios surgem como uma forma de tornar os exercícios mais motivadores, lúdicos e engajadores aos pacientes.(ADD REF)
 
 Nesse âmbito o software já desenvolvido pela iniciativa de pesquisa da Udesc, I Blue It gamifica o tratamento e retorna dados úteis ao profissional da saúde que aplica o tratamento sobre paciente. O ecossistema do I Blue It pode ser dividido em três áreas distintas sendo elas os jogos, onde possuímos o jogo principal de mesmo nome do projeto e mais alguns minigames, os dispositivos IoT chamados PITACO e Mano-BD responsáveis pela captura dos dados de respiração do paciente e o dashboard responsável por fornecer ao profissional da saúde dados relevantes dos seus pacientes. 
 
 O jogo principal consiste em um jogo de plataforma, onde o usuário por meio de sua respiração no dispositivo PITACO movimenta verticalmente o personagem para desviar dos obstáculos, inspirando para subir e expirando para descer assim movimentando o personagem "Blue" (o golfinho), além disso possui outros minigames com mesmo conceito para exercitar o paciente, sendo os dados destes exercícios utilizado pelo profissional de saúde para regular e avaliar o estado do paciente.
-
-Assim a solução que já está na versão 5.0 já contempla calibração, histórico do jogador, armazenamento de dados e customização de parâmetros por profissionais.
 
 <img width="675" height="318" alt="image" src="https://github.com/user-attachments/assets/27040498-d538-4f3c-86c5-6c2aa9d87c31" />
 
