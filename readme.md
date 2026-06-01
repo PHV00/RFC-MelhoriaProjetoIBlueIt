@@ -37,16 +37,19 @@ O jogo utiliza a respiração do paciente como forma de controle, por meio de um
 
 Abaixo consta um dispositivo pitaco em sua versão mais recente:
 <!-- <img width="755" height="366" alt="Captura de tela de 2026-06-01 14-12-55" src="https://github.com/user-attachments/assets/824ec7cd-f083-4813-8073-c3a78c45b97e" />  -->
+
 [FonteArtigoLeonardoAindaNãoPublicado]
 
 O sistema biomedico atual possui uma serie de jogos e exercicios terapeuticos, dentre eles o que leva o própio nome do sistema, o I Blue It, no qual o paciente interage com o personagem principal, o golfinho Blue, realizando ações respiratórias de inspirar e expirar, que por sua vez movimentam o personagem no ambiente do jogo.[2]
 
 <img width="603" height="338" alt="Captura de tela de 2026-06-01 14-03-33" src="https://github.com/user-attachments/assets/8503ea1c-c196-44d7-8324-19510f13c5cf" />
+
 [Figura 2. jogo I Blue It.]
 
 O sistema também possui um módulo de análise de dados, ao qual permite médico responsável analisar os dados de calibração e desempenho de seus pacientes,em todos os jogos aplicados, além de possibilitar a exportação dos mesmos em formato csv. 
 
 <img width="2732" height="1272" alt="image" src="https://github.com/user-attachments/assets/44560434-3fdb-45a8-afa3-0a0f77bb0edb" />
+
 [Figura 3. iblueit health Infocharts, pagina para processo de envio dos dados sobre os pacientes.]
 
 Na versão 5.0 descrita por Dias (2024), o I Blue It passa a ser tratado como uma plataforma multimodal voltada ao Flow Psicofisiológico, conceito que busca ajustar a dificuldade dos exercícios considerando tanto o desempenho do paciente no jogo quanto sinais associados ao seu estado físico e psíquico. Para isso, o sistema utiliza o módulo DeepDDA, um agente de inteligencia artificial baseado em aprendizado por reforço profundo, capaz de adaptar dinamicamente os desafios do exergame a partir dos dados coletados durante a sessão. Nesse modelo, dispositivos como o PITACO continuam fornecendo dados respiratórios relacionados à execução dos exercícios, enquanto sensores fisiológicos, como o oxímetro, podem fornecer informações complementares sobre a condição do paciente, especialmente para fins de monitoramento e segurança. [2]
