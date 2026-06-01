@@ -14,40 +14,44 @@
   Pedro Henrique Vitoreti
 
 - **Data da Proposta:**  
-  12/04/2026
+  1/06/2026
 
 - **Versão:**  
-  1.0
+  1.1
 
 ---
 
 # 1. Visão do Produto e Impacto (O Problema)
   
-Este projeto tem como fim melhorar o jogo sério I Blue It, um sistema biomédico composto por dispositivos, jogos sérios e telemetria desenvolvido pela Universidade do Estado de Santa Catarina (UDESC) com o princípio de auxiliar na fisioterapia de pacientes com problemas respiratórios, isso por meio dos seus exercícios e análises obtidas dos resultados. Assim o projeto pretende aplicar as melhorias tanto no hardware como no software do sistema biomédico.
+Este projeto tem como finalidade aprimorar o jogo sério I Blue It, um sistema biomédico composto por dispositivos, jogos sérios e telemetria, desenvolvido pelo LAboratory for Research on Visual Applications (LARVA) da Universidade do Estado de Santa Catarina (UDESC) com o objetivo de auxiliar na fisioterapia de pacientes com problemas respiratórios. Esse auxílio ocorre por meio de exercícios respiratórios e da análise dos resultados obtidos durante sua execução. Assim, o projeto propõe a aplicação de melhorias tanto no hardware quanto no software do sistema biomédico.
 
 ---
 
 ## 1.1 Contexto e Problema
 
-A reabilitação respiratória é um processo terapêutico onde pacientes com disfunções respiratórias, usam de uma abordagem sistemática e repetitiva, o que pode levar a reduzir a adesão do paciente ao tratamento. Nesse contexto os jogos sérios surgem como uma forma de tornar os exercícios mais motivadores, lúdicos e engajadores aos pacientes.(ADD REF)
+A reabilitação respiratória(RR) é um processo fisioterapêutico voltado a pacientes com doenças ou disfunções respiratórias,tendo como finalidade minimizar sintomas, melhorar a capacidade funcional e auxiliar na qualidade de vida dos pacientes.Entretanto frequentemente este processo envolve exercício sistemático, repetitivo e de longo prazo, o que pode torná-los monótono e exaustivo, assim reduzindo a adesão do paciente ao tratamento. Nesse contexto os jogos sérios surgem como uma forma de tornar a reabilitação mais atrativa, utilizando elementos lúdicos, feedback e desafios progressivos para aumentar o engajamento do paciente durante as sessões terapêuticas.[1]
 
-Nesse âmbito o software já desenvolvido pela iniciativa de pesquisa da Udesc, I Blue It gamifica o tratamento e retorna dados úteis ao profissional da saúde que aplica o tratamento sobre paciente. O ecossistema do I Blue It pode ser dividido em três áreas distintas sendo elas os jogos, onde possuímos o jogo principal de mesmo nome do projeto e mais alguns minigames, os dispositivos IoT chamados PITACO e Mano-BD responsáveis pela captura dos dados de respiração do paciente e o dashboard responsável por fornecer ao profissional da saúde dados relevantes dos seus pacientes. (ADD REF)
+Nesse âmbito o sistema biomédico desenvolvido pela iniciativa de pesquisa do LAboratory for Research on Visual Applications (LARVA) da Universidade do Estado de Santa Catarina(Udesc), chamado I Blue It, foi desenvolvido como um jogo sério ativo voltado à reabilitação respiratória, com o objetivo de auxiliar pacientes durante exercícios respiratórios por meio da gamificação do tratamento.[1]
 
-O jogo principal consiste em um jogo de plataforma, onde o usuário por meio de sua respiração no dispositivo PITACO movimenta verticalmente o personagem para desviar dos obstáculos, inspirando para subir e expirando para descer assim movimentando o personagem "Blue" (o golfinho), além disso possui outros minigames com mesmo conceito para exercitar o paciente, sendo os dados destes exercícios utilizado pelo profissional de saúde para regular e avaliar o estado do paciente.
+O jogo utiliza a respiração do paciente como forma de controle, por meio de um do dispositivo de hardware chamado PITACO, um hardware criado baseado no funcionamento de um pneumotacógrafo, que permite capturar sinais relacionados ao fluxo de ar do paciente e disponibilizá-los ao jogo em tempo real.[1]
 
-<img width="675" height="318" alt="image" src="https://github.com/user-attachments/assets/27040498-d538-4f3c-86c5-6c2aa9d87c31" />
+Abaixo consta um dispositivo pitaco em sua versão mais recente:
+<!-- <img width="755" height="366" alt="Captura de tela de 2026-06-01 14-12-55" src="https://github.com/user-attachments/assets/824ec7cd-f083-4813-8073-c3a78c45b97e" />  -->
+[FonteArtigoLeonardoAindaNãoPublicado]
 
-[Imagem do jogo I Blue It da versão 2.0]
+O sistema biomedico atual possui uma serie de jogos e exercicios terapeuticos, dentre eles o que leva o própio nome do sistema, o I Blue It, no qual o paciente interage com o personagem principal, o golfinho Blue, realizando ações respiratórias de inspirar e expirar, que por sua vez movimentam o personagem no ambiente do jogo.[2]
 
-<img width="676" height="350" alt="image" src="https://github.com/user-attachments/assets/560cfbed-2ad8-4cab-9aac-4f24ad650252" />
+<img width="603" height="338" alt="Captura de tela de 2026-06-01 14-03-33" src="https://github.com/user-attachments/assets/8503ea1c-c196-44d7-8324-19510f13c5cf" />
+[Figura 2. jogo I Blue It.]
 
-[Imagem dos dispositivos IoT]
+O sistema também possui um módulo de análise de dados, ao qual permite médico responsável analisar os dados de calibração e desempenho de seus pacientes,em todos os jogos aplicados, além de possibilitar a exportação dos mesmos em formato csv. 
 
-link auxiliar para mais informações sobre o software: https://udescmove2learn.wordpress.com/2018/04/26/i-blue-it/
+<img width="2732" height="1272" alt="image" src="https://github.com/user-attachments/assets/44560434-3fdb-45a8-afa3-0a0f77bb0edb" />
+[Figura 3. iblueit health Infocharts, pagina para processo de envio dos dados sobre os pacientes.]
 
-Porém mesmo com todas estas versões e melhorias, foram identificadas algumas lacunas, percebeu-se um risco em potencial ao paciente, dado que os dados capturados atualmente não contemplam e nem fornecem em sua totalidade o necessario para um ajuste dinamico da dificuldade de maneira totalmente confiavel assim havendo o eventual risco de ou subdimencionar a dificuldade e comprometendo a terapia em curso, ou hiperdimencionar o exercicio, podendo acabar em casos extremos com desmaios, tonturas ou fadiga extrema por parte do paciente.
+Na versão 5.0 descrita por Dias (2024), o I Blue It passa a ser tratado como uma plataforma multimodal voltada ao Flow Psicofisiológico, conceito que busca ajustar a dificuldade dos exercícios considerando tanto o desempenho do paciente no jogo quanto sinais associados ao seu estado físico e psíquico. Para isso, o sistema utiliza o módulo DeepDDA, um agente de inteligencia artificial baseado em aprendizado por reforço profundo, capaz de adaptar dinamicamente os desafios do exergame a partir dos dados coletados durante a sessão. Nesse modelo, dispositivos como o PITACO continuam fornecendo dados respiratórios relacionados à execução dos exercícios, enquanto sensores fisiológicos, como o oxímetro, podem fornecer informações complementares sobre a condição do paciente, especialmente para fins de monitoramento e segurança. [2]
 
-O que nos leva à decisão de implementar o módulo novo no IoT adicionando ao projeto, no qual sua adição acarreta em mudanças e ajustes diretos aos módulos de dashboards médicos e IA de ajuste de dificuldade ao novo componente.
+Com base nessa estrutura, a melhoria proposta neste RFC concentra-se na integração do módulo de oximetria ao dispositivo PITACO, permitindo que dados de saturação de oxigênio sejam coletados, transmitidos, armazenados e disponibilizados ao sistema de forma segura. A proposta não busca alterar a mecânica principal do jogo, mas aprimorar a camada de monitoramento fisiológico, ampliando a capacidade do I Blue It de acompanhar sinais relevantes durante a execução dos exercícios respiratórios.
 
 ---
 
@@ -1408,6 +1412,9 @@ Defina os principais marcos de desenvolvimento.
 ---
 
 # 8. Referências
+
+[1]SANTOS, Adam Mews dos; GRIMES, Renato Hartmann; HOUNSELL, Marcelo da Silva; NOVELETTO, Fabrício; SOARES, Antônio Vinícius; SILVA, Helton Eckermann da. I Blue It: Um Jogo Sério para auxiliar na Reabilitação Respiratória. SBGames, 2018.
+[2] DIAS, Claudinei. Flow Psicofisiológico em Jogos Digitais: Inteligência Artificial em Jogos Sérios Multimodais para Reabilitação Respiratória. Tese de Doutorado, UDESC, 2024.
 
 Inclua:
 
