@@ -170,12 +170,11 @@ Tais mudanças acarretam em alterações imediatas no sistema biomédico atual, 
 
 ### Objetivos Específicos
 
-Tendo em vista a problemática apresentada, este projeto tem como fim sanar as lacunas identificadas pela comunidade com fim de entregar uma plataforma mais completa e otimizada. Baseando-se nisso segue abaixo os objetivos a serem tratados:
+Tendo em vista a problemática apresentada, este projeto tem como fim sanar as lacunas identificadas com fim de entregar ao final, um sistema biomédico mais completo. Baseando-se nisso segue abaixo os objetivos a serem tratados:
 
-- Integrar o sensor de Spo2 ao ecossistema do jogo para monitoramento fisiológico complementar.
-- Atualizar o módulo de ajuste dinâmico de dificuldade para suportar o novo parametro de Saturação Sanguinea.
-- Atualizar o dashboard clínico para exibir e correlacionar dados respiratórios, do Spo2 e de desempenho no jogo.
-[2018 - Santos - I Blue It Um Jogo Sério para auxiliar na Reabilitação Respiratória (2).pdf](https://github.com/user-attachments/files/26648094/2018.-.Santos.-.I.Blue.It.Um.Jogo.Serio.para.auxiliar.na.Reabilitacao.Respiratoria.2.pdf)
+- Integrar o hardware existente do PITACO ao sensor de Spo2 para monitoramento fisiológico complementar, atrávez da saturação sanguinea, e se possivel o batimento cardiáco.
+- Atualizar o módulo de ajuste dinâmico por inteligência artificial responsável pela dificuldade, para suportar o novo parâmetro de Saturação Sanguínea.
+- Atualizar o dashboard clínico para exibir e correlacionar dados respiratórios, da oxigenação e de desempenho nos jogos e sessões.
 
 ---
 
