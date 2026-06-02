@@ -160,7 +160,11 @@ Profissional de saúde: fisioterapeutas respiratórios, fisioterapeutas clínico
 
 ### Objetivo Geral
 
-O projeto se propõe por meio da incorporação de um novo módulo de captura de dados do paciente o Spo2 (sensor responsável pela captura da saturação sanguínea do paciente), oque acarreta em mudanças imediatas em partes já consolidadas do codigo, como o os modulos de dahboard medico (para fornecer mais um dado importante para tomada de decisão) e Ia de ajuste de dificuldade dinamica (que recebera mais um parametro para se adequar ao paciente em tratamento).
+O projeto se propõe a adicionar funções e modulos, tanto ao hardware como ao software, de modo a cobrir primariamente a segurança e monitoramento da saturação sanguinea do paciente em tempo de execução das sessões, e sua coleta e processamento dos dados oriundos da oximetria, para auxiliar os profissionais responsáveis na tomada de decisões .
+
+Pretende-se assim adicionar um novo sensor de oximetria(spo2) ao aparelho de catação de dados existente PITACO, ao qual seram utilizado tais dados de saturação sanguínea para a criação de um modulo, responsável pelo monitoramento e seguraça do paciente durante a sessão.
+
+Tais mudanças acarretam em alterações imediatas no sistema biomédico atual, como a adição ao dashboard clínico do dado de saturação sanguinea do paciente, com a finalidade de fornecer ao profissional da saúde responsável mais um dado em sua tomada decisão.Também será necessario alterar a Ia de monitoramento e detecção de anomalias, responsável pela avaliação do estado do paciente em tempo de execução, passando agr a se utilizar de um novo parametro o biosinal de saturação sanguínea em seu processo, e retornando , recomendações de pausa ou interrupção imediata.  
 
 ---
 
