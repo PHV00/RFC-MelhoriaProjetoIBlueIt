@@ -36,7 +36,7 @@ Nesse âmbito o sistema biomédico desenvolvido pela iniciativa de pesquisa do L
 O jogo utiliza a respiração do paciente como forma de controle, por meio de um do dispositivo de hardware chamado PITACO, um hardware criado baseado no funcionamento de um pneumotacógrafo, que permite capturar sinais relacionados ao fluxo de ar do paciente e disponibilizá-los ao jogo em tempo real.[1]
 
 Abaixo consta um dispositivo pitaco em sua versão mais recente:
-<!-- <img width="755" height="366" alt="Captura de tela de 2026-06-01 14-12-55" src="https://github.com/user-attachments/assets/824ec7cd-f083-4813-8073-c3a78c45b97e" />  -->
+<img width="755" height="366" alt="Captura de tela de 2026-06-01 14-12-55" src="https://github.com/user-attachments/assets/824ec7cd-f083-4813-8073-c3a78c45b97e" />
 
 [FonteArtigoLeonardoAindaNãoPublicado]
 
@@ -44,14 +44,14 @@ O sistema biomedico atual possui uma serie de jogos e exercicios terapeuticos, d
 
 <img width="603" height="338" alt="Captura de tela de 2026-06-01 14-03-33" src="https://github.com/user-attachments/assets/8503ea1c-c196-44d7-8324-19510f13c5cf" />
 
-[Figura 2. jogo I Blue It.]
+[Figura 2. jogo I Blue It.][2]
 
 O sistema também possui um módulo de análise de dados, ao qual permite médico responsável analisar os dados de calibração e desempenho de seus pacientes,em todos os jogos aplicados, além de possibilitar a exportação dos mesmos em formato csv. 
 
 <img width="5464" height="2544" alt="image" src="https://github.com/user-attachments/assets/b5e8b6ac-99cc-453b-9763-f462f7fa86c4" />
 
 
-[Figura 3. iblueit health Infocharts, pagina para processo de envio dos dados sobre os pacientes.]
+[Figura 3. iblueit health Infocharts, pagina para processo de envio dos dados sobre os pacientes.][Fonte própia autoria]
 
 Na versão 5.0 descrita por Dias (2024), o I Blue It passa a ser tratado como uma plataforma multimodal voltada ao Flow Psicofisiológico, conceito que busca ajustar a dificuldade dos exercícios considerando tanto o desempenho do paciente no jogo quanto sinais associados ao seu estado físico e psíquico. Para isso, o sistema utiliza o módulo DeepDDA, um agente de inteligencia artificial baseado em aprendizado por reforço profundo, capaz de adaptar dinamicamente os desafios do exergame a partir dos dados coletados durante a sessão.
 Nesse modelo, dispositivos como o PITACO continuam fornecendo dados respiratórios relacionados à execução dos exercícios, enquanto sensores fisiológicos, como o oxímetro, podem fornecer informações complementares sobre a condição do paciente, especialmente para fins de monitoramento e segurança do paciente, tendo como fim para tais dados o ajuste da sessão a situação fisiologica do paciente, pondendo levar a diminuição da dificuldade ou em casos de oxigenação baixissima, pausa ou encerramento da sessão. [2]
