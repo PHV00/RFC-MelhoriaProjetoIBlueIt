@@ -48,7 +48,8 @@ O sistema biomedico atual possui uma serie de jogos e exercicios terapeuticos, d
 
 O sistema também possui um módulo de análise de dados, ao qual permite médico responsável analisar os dados de calibração e desempenho de seus pacientes,em todos os jogos aplicados, além de possibilitar a exportação dos mesmos em formato csv. 
 
-<img width="2732" height="1272" alt="image" src="https://github.com/user-attachments/assets/44560434-3fdb-45a8-afa3-0a0f77bb0edb" />
+<img width="5464" height="2544" alt="image" src="https://github.com/user-attachments/assets/b5e8b6ac-99cc-453b-9763-f462f7fa86c4" />
+
 
 [Figura 3. iblueit health Infocharts, pagina para processo de envio dos dados sobre os pacientes.]
 
