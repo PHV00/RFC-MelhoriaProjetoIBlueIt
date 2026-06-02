@@ -64,11 +64,11 @@ Com base nessa estrutura, a melhoria proposta neste RFC concentra-se na integra�
 
 ## 1.2 Origem da Demanda e Evidências
 
-O projeto se origina em uma iniciativa do (LARVA) Laboratory for Research on Visual Applications da UDESC em colaboração com profissionais da área de fisioterapia respiratória e áreas correlatas, com o objetivo de atender a problemáticas reais do domínio clínico. Sendo assim desde o princípio o sistema tem como foco atender as necessidades de ferramentas que auxiliem no processo de atendimento médico e tratamento de pacientes com problemas respiratórios.
+A concepção do tema desta pesquisa surge no Laboratory for Research on Visual Applications (LARVA) da UDESC em colaboração com profissionais da área de fisioterapia respiratória e áreas correlatas, com o objetivo de atender a problemáticas reais do domínio clínico. Sendo assim desde o princípio o sistema tem como foco atender as necessidades de ferramentas que auxiliem no processo de atendimento médico e tratamento de pacientes com problemas respiratórios.[1]
 
-O programa que foi concebido em 2018 já se utilizava de mais de 80 profissionais da saúde (fisioterapeutas, médicos pneumologistas, fisioterapeutas respiratórios, neurologistas) os quais atuavam como conselheiros com a finalidade de garantir a efetividade e utilidade da ferramenta ao longo do próprio desenvolvimento e que ao final o avaliaram, obtendo um resultado muito satisfatório uma nota 4.1 de 5, demonstrando grande satisfação por parte dos envolvidos. [2018 - Santos - I Blue It Um Jogo Sério para auxiliar na Reabilitação Respiratória]
+Os pimeiros resultados surgiram em 2018, a pesquisa sendo feita com a particiação de 80 profissionais da saúde (fisioterapeutas, médicos pneumologistas, fisioterapeutas respiratórios, neurologistas) os quais atuavam com a finalidade de garantir a efetividade da ferramenta ao longo do próprio desenvolvimento, e que ao final o avaliaram, obtendo um resultado muito satisfatório, uma nota 4.1 de 5, demonstrando grande satisfação por parte dos envolvidos. [1]
 
-Desde sua fase inicial até agora houveram diversas melhorias em cada uma das versões, onde podemos montar um histórico de versões de maneira resumida:
+Desde sua fase inicial até agora houveram diversas melhorias em cada uma das versões, segue um histórico de versões de maneira resumida:
 
 - versão 01 - I Blue It / Pitaco (2018):
   - Criação do dispositivo Pitaco (responsável por medir fluxo de ar) e do jogo "Blue"
@@ -78,12 +78,14 @@ Desde sua fase inicial até agora houveram diversas melhorias em cada uma das ve
   - Adição de módulo de análise clínica do paciente (Histórico e resultados dos jogos mostrados e armazenados)
 - versão 04 - I Blue It / Multimodal (2020):
   - Incorporação de arquitetura Multimodal 123-SGR o que permitiu a incorporação de dispositivos distintos como Pitaco e ManoBD
-- versão 04 - I Blue It / Multimodal redesign (2023):
+- versão 04.5 - I Blue It / Multimodal redesign (2023):
   - Redesign para a incorporação de IA ao projeto
 - versão 05 - I Blue It / Flow Psicofisiológico (2024):
   - Incorporação de Flow Psicofisiológico (busca equilibrar a parte motivadora psíquica, com a parte fisiológica do paciente) e IA ao projeto com o fim de controlar o Flow Psicofisiológico
 
-Neste contexto este projeto de melhoria tem como ponto de partida dar continuidade no aprimoramento de uma ferramenta que auxilia a comunidade médica na recuperação de pacientes com problemas respiratórios, por meio de uma bolsa de Iniciação Científica adjunto a Udesc, tratando as lacunas encontradas e dando continuidade ao trabalho técnico acadêmico já desenvolvido.
+Apesar dos avanços já alcançados no ecossistema I Blue It, ainda existem melhorias a serem desenvolvidas no sistema biomédico, especialmente quanto à integração de novos recursos de monitoramento fisiológico e ao aprimoramento de seus componentes de hardware e software. Nesse contexto, por meio de uma bolsa de Iniciação Científica vinculada à UDESC, este projeto tem como proposta dar continuidade ao desenvolvimento da ferramenta, realizando a integração de um oxímetro ao dispositivo PITACO e promovendo ajustes complementares no sistema.
+
+Assim, o projeto de melhoria parte da continuidade de um trabalho técnico-acadêmico já consolidado, buscando tratar lacunas identificadas e contribuir para o aprimoramento de uma solução voltada ao apoio da comunidade fisioterapêutica na reabilitação de pacientes com problemas respiratórios.
 
 ## 1.3 Análise de Soluções Existentes (Benchmark)
 
