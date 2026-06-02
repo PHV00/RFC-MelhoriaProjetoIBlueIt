@@ -183,9 +183,11 @@ Tendo em vista a problemática apresentada, este projeto tem como fim sanar as l
 As Metricas de sucesso estipuladas são:
 
 - Registro correto de sessões com dados respiratórios do novo componente SpO2 mantendo a velocidade e metricas do sistema atual.
-- Ajuste dinâmico com delay de até 300ms na dificuldade durante a sessão, ao utilizar a nova IA que suporta todos os modulos IOT.
-- Tempo de resposta do sistema inferior a 300 ms para feedback em gameplay.
+- Acurácia da IA de monitoramento fisiológico superior a 85%.
+- Ajuste dinâmico com delay de até 800ms na dificuldade durante a sessão, ao utilizar a IA de monitoramento fisiológico .
+- Tempo de resposta do sistema inferior a 800 ms para feedback em gameplay.
 - Adição dos dados obtidos pelo Sp02 ao dashboard apresentando todos os dados já existente e novos pertinentes, mantendo o tempo de resposta atual.
+- Acuracia dos calculos do sensor Spo2 sobre saturação sanguínea igualada a equipamentos homologados.
 
 ---
 
