@@ -569,24 +569,6 @@ Ainda podemos citar duas variantes, presentes no loop principal do jogo, ao qual
 ---
 
 # 4. Mockups e Experiência do Usuário (UX)
-
-Esta seção apresenta **a visualização inicial do produto antes da implementação**.
-
-Mockups ajudam a validar:
-
-- fluxo de navegação
-- organização da interface
-- interações do usuário
-- clareza da experiência
-
-Ferramentas sugeridas:
-
-- Figma
-- Excalidraw
-- Balsamiq
-- Whimsical
-- protótipos desenhados à mão
-
 ---
 
 ## 4.1 Fluxo de Navegação
