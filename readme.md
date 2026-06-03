@@ -681,7 +681,8 @@ O fluxo analisado referece ao fluxo de analise de dados e exportação dos mesmo
   
 #### exporta os dados ou relatório
 
-  <img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/cc5320d0-35b2-49ab-8d4e-fa86d2e73326" />
+  
+  <img width="5464" height="2544" alt="image" src="https://github.com/user-attachments/assets/b5e8b6ac-99cc-453b-9763-f462f7fa86c4" />
   
 ---
 
