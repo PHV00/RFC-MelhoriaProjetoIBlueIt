@@ -590,7 +590,7 @@ https://www.figma.com/design/38AvtwGYmDuDnZylhIduTf/Melhoria-Iblueit?m=auto&t=n2
 
 ## 4.2 Wireframes ou Mockups das Telas
 
-Os Mokups foram dividos em dois fluxos o primeiro mostra as alterações feitas nas telas já existentes no dashboard clinico, e o segundo mostra os modals de erro e alertas do sistema proposto pela melhoria.O sistema de dashboards pode ser acessado pelo terapeuta que pode acessar os dados de todos os seus pacientes, enquanto os pacientes apenas podem vizualizar os seus propios. 
+Os Mokups foram dividos em dois fluxos, o primeiro mostra as alterações feitas nas telas já existentes no dashboard clinico, enquanto o segundo mostra os modals de erro e alertas do sistema de monitoramento proposto pela melhoria durante a sessão.O sistema de dashboards pode ser acessado pelo terapeuta, que por sua vez pode acessar os dados de todos os seus pacientes, enquanto os pacientes apenas podem vizualizar os seus própios. 
 
 #### PARTE 1 - Dashboard Clínico
 
@@ -651,27 +651,34 @@ Modal de informativo de parada, ao qual o terapeuta preenche o motivo pelo qual 
 
 O fluxo analisado referece ao fluxo de analise de dados e exportação dos mesmos, como mostrado abaixo:
 
-#### o usuário acessa o sistema
+#### O usuário acessa o sistema
 
   <img width="1365" height="634" alt="image" src="https://github.com/user-attachments/assets/b1422f6c-45af-406f-96ff-3728d2322e94" />
+  
 #### realiza login
 
   <img width="1365" height="634" alt="image" src="https://github.com/user-attachments/assets/04155bfd-bcb0-40c8-8dbe-43e1123df19b" />
+  
 #### entra no dashboard / InfoChart  
 
   <img width="197" height="634" alt="image" src="https://github.com/user-attachments/assets/b90b12dc-68e6-4b6e-bc6e-c56affa4cc1b" />
+  
 #### seleciona o paciente  
 
   <img width="197" height="634" alt="image" src="https://github.com/user-attachments/assets/c9e5e76d-fd43-4674-9673-b41b69e7505f" />
+  
 #### visualiza o resumo dos dados do paciente  
 
   <img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/cd415f66-6093-47e4-b1ff-6d6a6cc90fc8" />
+  
 #### acessa a análise detalhada do terapeuta e filtra sessões, período ou indicadores  
 
   <img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/e64c1734-0191-49cd-88c4-2b7a64df8640" />
+  
 #### registra alterações na sessão, se necessário  
 
   <img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/27869996-240b-4551-9b82-58bdfec96f35" />
+  
 #### exporta os dados ou relatório
 
   <img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/cc5320d0-35b2-49ab-8d4e-fa86d2e73326" />
@@ -1406,8 +1413,8 @@ Defina os principais marcos de desenvolvimento.
 
 # 8. Referências
 
-[1]SANTOS, Adam Mews dos; GRIMES, Renato Hartmann; HOUNSELL, Marcelo da Silva; NOVELETTO, Fabrício; SOARES, Antônio Vinícius; SILVA, Helton Eckermann da. I Blue It: Um Jogo Sério para auxiliar na Reabilitação Respiratória. SBGames, 2018.
-[2] DIAS, Claudinei. Flow Psicofisiológico em Jogos Digitais: Inteligência Artificial em Jogos Sérios Multimodais para Reabilitação Respiratória. Tese de Doutorado, UDESC, 2024.
+- [1]SANTOS, Adam Mews dos; GRIMES, Renato Hartmann; HOUNSELL, Marcelo da Silva; NOVELETTO, Fabrício; SOARES, Antônio Vinícius; SILVA, Helton Eckermann da. I Blue It: Um Jogo Sério para auxiliar na Reabilitação Respiratória. SBGames, 2018.
+- [2] DIAS, Claudinei. Flow Psicofisiológico em Jogos Digitais: Inteligência Artificial em Jogos Sérios Multimodais para Reabilitação Respiratória. Tese de Doutorado, UDESC, 2024.
 
 Inclua:
 
