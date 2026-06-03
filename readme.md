@@ -721,7 +721,7 @@ No diagrama de containers apresentamos o ecossistema I Blue It com a melhoria pr
 
 ### 5.1.2 Nível 3 — Diagrama de Componentes
 
-O componente selecionado para o aprofundamento no nivel 3 foi, o compoente spo2 que deve ser desenvolvido para o pitaco, estando seu diagrama abaixo:
+O componente selecionado para o aprofundamento no nivel 3, foi o anexo do sensor spo2(oxímetro) ao dispositivo pitaco, estando seu diagrama abaixo:
 
 <img width="6448" height="3760" alt="image" src="https://github.com/user-attachments/assets/54b82195-488a-4a96-861f-ce4b1a23e57e" />
 
@@ -791,13 +791,14 @@ MongoDB
 
 <img width="4564" height="1600" alt="image" src="https://github.com/user-attachments/assets/b3c60818-b94f-4ba0-ab29-60e10749fa68" />
 
----
+## Estrutura dos dados em JSON:
 
-##Estrutura dos dados em Json:
+<details>
+<summary><strong>pacients</strong></summary>
 
 #### pacients
 
-```code
+```json
 {
   "_id": "ObjectId",
   "_gameToken": "string",
@@ -856,8 +857,14 @@ MongoDB
 }
 ```
 
+</details>
+
+<details>
+<summary><strong>userAccounts</strong></summary>
+
 #### userAccounts
-```code
+
+```json
 {
   "_id": "ObjectId",
 
@@ -879,8 +886,14 @@ MongoDB
 }
 ```
 
+</details>
+
+<details>
+<summary><strong>calibrationOverviews</strong></summary>
+
 #### calibrationOverviews
-```code
+
+```json
 {
   "_id": "ObjectId",
   "_gameToken": "string",
@@ -894,8 +907,14 @@ MongoDB
 }
 ```
 
+</details>
+
+<details>
+<summary><strong>gameParameters</strong></summary>
+
 #### gameParameters
-```code
+
+```json
 {
   "_id": "ObjectId",
 
@@ -927,8 +946,14 @@ MongoDB
 }
 ```
 
+</details>
+
+<details>
+<summary><strong>playSessions</strong></summary>
+
 #### playSessions
-```code
+
+```json
 {
   "_id": "ObjectId",
 
@@ -976,8 +1001,14 @@ MongoDB
 }
 ```
 
+</details>
+
+<details>
+<summary><strong>plataformOverviews</strong></summary>
+
 #### plataformOverviews
-```code
+
+```json
 {
   "_id": "ObjectId",
   "_gameToken": "string",
@@ -1036,8 +1067,14 @@ MongoDB
 }
 ```
 
+</details>
+
+<details>
+<summary><strong>minigameOverviews</strong></summary>
+
 #### minigameOverviews
-```code
+
+```json
 {
   "_id": "ObjectId",
   "_gameToken": "string",
@@ -1068,8 +1105,14 @@ MongoDB
 }
 ```
 
+</details>
+
+<details>
+<summary><strong>sessionDeviceData</strong></summary>
+
 #### sessionDeviceData
-```code
+
+```json
 {
   "_id": "ObjectId",
   "_gameToken": "string",
@@ -1123,6 +1166,8 @@ MongoDB
   "updated_at": "Date"
 }
 ```
+
+</details>
 
 ---
 
