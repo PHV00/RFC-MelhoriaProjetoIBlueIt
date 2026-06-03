@@ -679,9 +679,6 @@ O fluxo analisado referece ao fluxo de analise de dados e exportação dos mesmo
 ---
 
 # 5. Arquitetura do Sistema
-
-Esta seção demonstra **como o sistema será construído**.
-
 ---
 
 ## 5.1 Diagrama C4
