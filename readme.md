@@ -749,7 +749,10 @@ flowchart TD
 
 O diagrama de contexto apresenta o sistema biomédico I Blue It com a melhoria proposta como uma caixa preta central. Neste nível, tratamos todos os componentes internos do sistema, como jogo, backend, banco de dados, dashboard e sensores como um unico ecossitema. O objetivo é mostrar apenas como o sistema se relaciona com os principais atores externos.
 
-Os principais atores são o paciente, que realiza os exercícios respiratórios e recebe feedback durante a sessão, e o profissional da saúde, que configura os parâmetros terapêuticos, acompanha os dados registrados e analisa os resultados.
+Os principais atores são: 
+
+- Paciente, que realiza os exercícios respiratórios e recebe feedback durante a sessão,
+- Profissional da saúde, que configura os parâmetros terapêuticos, acompanha os dados registrados e análisa os resultados.
 
 <img width="5208" height="1048" alt="image" src="https://github.com/user-attachments/assets/cb25a766-02ff-4838-9c78-b2bc4d4f6532" />
 
@@ -783,7 +786,7 @@ Neste nivel selecionamos para o aprofundamento e detalhamento, a estrutura e org
 
 ## 5.2 Modelo de Dados
 
-O modelo abaixo contempla uma abstração DER (diagrama entidade relacionamento), das principais entidades presentes no banco de dados nosql MongoDB do ecossitema I Blue It atual.Nesse escopo logo abaixo desta imagem está presente a melhoria contendo onde e quais partes ela afetará no sistema atual.
+O modelo abaixo contempla uma abstração DER (diagrama entidade relacionamento), das principais entidades presentes no banco de dados nosql MongoDB do ecossitema I Blue It atual.Nesse escopo logo abaixo desta imagem, está presente a melhoria, contendo onde e quais partes ela afetará no sistema atual.
 
 <img width="4156" height="2920" alt="image" src="https://github.com/user-attachments/assets/6a4cd675-c584-4966-bcbd-578d2f8a035c" />
 
@@ -825,7 +828,7 @@ Segue abaixo uma lista das alterações que melhoria realiza no banco de dados a
 
 ---
 
-Como já citado o banco de dados da aplicação será o nosql MongoDB, segue abaixo a lista de coleções, diagrama NoSQL/documental e por fim os Json de exempecificação.
+Como já citado o banco de dados da aplicação será o nosql MongoDB, segue abaixo a lista de coleções, diagrama NoSQL/documental e por fim os Json de exempliificação.
 
 ---
 
