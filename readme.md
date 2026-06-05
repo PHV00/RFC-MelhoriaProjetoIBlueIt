@@ -550,17 +550,17 @@ O fluxo principal é composto por três operaçẽos principais e distintas, sen
 
 ## 3.2 Fluxos Alternativos
 
-O fluxo apresentadoas até então, cosistia no principal fluco do sistema, porém sem erros ou problemas em nenhum de seus modulos, assim representado o caso ideal onde apenas demosntramos as validações de modo simplificado, porém existem casos exepcionais onde o sistema possui tratativas especificas para os principais casos de erros, estes descritos abaixo:
+O fluxo apresentadoas até então, cosistia no principal fluxo do sistema, porém sem erros ou problemas em nenhum de seus módulos, assim representado o caso ideal onde apenas demosntramos as validações de modo simplificado, porém existem casos exepcionais onde o sistema possui tratativas especificas para os principais casos de erros, estes descritos abaixo:
 
 O primeiro trata-se de uma validação que ocorre no elemento numero 9 do fluxo ideal no qual a liberação do acesso se dá apenas em caso do pitaco aprimorado com todos os seus modulos demonstrem a coleta e processamento adequado dos biosinais, no qual em caso de contrario há o reposicionamento do equipamento em loop , assim permitindo o incio da sessão apenas caso o equipamento apresente exito e esteja devidademente posicionado e funcional.
 
 <img width="5828" height="1836" alt="image" src="https://github.com/user-attachments/assets/90bb9540-ffbb-45bc-95c6-2fa733884e85" />
 
-O segundo e mais problematico, trata-se da validação do estado de oxigenação do paciente no qual a cada instante apóa a sessão se iniciar, os dados coletados pelo modulo spo2 são analisados em busca de padrões que indiquem se o paciente irá sofrer ou está sofrendo com a dificuldade do exercicio, tanto em falta quanto em exesso de oxigenação, tendo como objetivo evitar casos de vadiga extrema e possiveis desmaios ocasionados pelo exercicio. 
+O segundo e mais problematico, trata-se da validação do estado de oxigenação do paciente no qual a cada instante apóa a sessão se iniciar, os dados coletados pelo modulo spo2 são analisados em busca de padrões que indiquem se o paciente irá sofrer ou está sofrendo com a dificuldade do exercicio, tanto em falta quanto em exesso de oxigenação, tendo como objetivo evitar casos de fadiga extrema e possíveis desmaios ocasionados pelo exercício. 
 
 <img width="6044" height="3188" alt="image" src="https://github.com/user-attachments/assets/c511ad33-d3d0-4505-9abb-8355578113b4" />
 
-Sendo assim o fluxo acima demonstra como o sistema interrompe a sessão, implementando um sistema de pausa ao qual permite a pausa da sessão pelo sistema que salva os dados obtidos até então para analise posterior, comunica o terapeuta e permite o mesmo que ou retome a sessão no estado em que se encontrava, ou a encerre a depender da analise do profissional qualificado.
+Sendo assim o fluxo acima demonstra como o sistema interrompe a sessão, implementando um sistema de pausa ao qual permite a pausa da sessão pelo sistema, qo qual salva os dados obtidos até então para analíse posterior, comunica o terapeuta e permite que o mesmo ou retome a sessão no estado em que se encontrava, ou a encerre a depender da análise do profissional qualificado.
 
 <!--
 Ainda podemos citar duas variantes, presentes no loop principal do jogo, ao qual seria o da possibilidade de pausa ou encerramento a qualquer momento da sessão, pelo fisioterapeuta, e o segundo sendo em caso de mal posicionamento após o incio do jogo, ao qual o jogo pausaria e entraria em loop de posicionamento até sendo ou encerrado a sessão, ou posicionado corretamente o equipamento, dando assim continuidade a sessão.
@@ -573,7 +573,7 @@ Ainda podemos citar duas variantes, presentes no loop principal do jogo, ao qual
 
 ## 4.1 Fluxo de Navegação
 
-O sistema biomédico I blue It é composto por varias camadas indo desde o Iot fisico, frontend e backend até ao jogo em unity, sendo assim nesta etapa descreveremos os fluxos visuais aos quais a melhoria interfere, sendo eles o de execução do jogo e o de dashboard clínico.
+O sistema biomédico I blue It é composto por varias camadas indo desde o Iot fisico, frontend e backend até ao jogo em unity, sendo assim nesta etapa descreveremos os fluxos visuais, os quais a melhoria interfere, sendo eles o de execução do jogo e o de dashboard clínico.
 
 Abaixo o fluxo do dashboard clinico:
 <img width="8684" height="1724" alt="image" src="https://github.com/user-attachments/assets/7f6d979d-83b9-4b8e-a35a-a33c07e57b24" />
@@ -592,47 +592,47 @@ https://www.figma.com/design/38AvtwGYmDuDnZylhIduTf/Melhoria-Iblueit?m=auto&t=n2
 
 Os Mokups foram dividos em dois fluxos, o primeiro mostra as alterações feitas nas telas já existentes no dashboard clinico, enquanto o segundo mostra os modals de erro e alertas do sistema de monitoramento proposto pela melhoria durante a sessão.O sistema de dashboards pode ser acessado pelo terapeuta, que por sua vez pode acessar os dados de todos os seus pacientes, enquanto os pacientes apenas podem vizualizar os seus própios. 
 
-#### PARTE 1 - Dashboard Clínico
+#### 4.2.1 - Dashboard Clínico
 
 ---
 #### Adição a tela inicial da taxa de oxigenação média do paciente
 
 <img width="1356" height="673" alt="image" src="https://github.com/user-attachments/assets/d3f7a063-2d38-471c-bf78-dd747813198d" />
 
-Esta é a tela inicial do sistema, ao qual apresenta os dados resumidamente ao usuario, ao qual foi adicionado um novo componete aos demais do dasjboard padrão, sendo  este o dado de oxigenação média do paciente.
+Esta é a tela inicial do sistema, ao qual apresenta os dados resumidamente ao usuario, na qual foi adicionado um novo componete aos demais do dashboard padrão, sendo  este o dado de oxigenação média do paciente.
 
 ---
-#### Adição a tela de calibração o dado de oxigenação do paciente
+#### Adição na tela de calibração o dado de oxigenação do paciente
 <img width="1356" height="635" alt="image" src="https://github.com/user-attachments/assets/05ee743c-3213-4464-ab51-e49854f1cd41" />
 
-Esta tela mostra os dados de calibração dos sensores, ao qual foi adicionado um dado de calibração refênte a oxigenação do paciente.
+Esta tela mostra os dados de calibração dos sensores, ao qual foi adicionado um dado de calibração refêrente a oxigenação do paciente.
 
 
 ---
 <img width="1365" height="634" alt="image" src="https://github.com/user-attachments/assets/6ef1f920-8fb8-44cd-8174-a38bd7388db6" />
 
-Está tela adiciona um botão de acesso ao novo grafico, que possui as estatisticas de obtidas nos minijogos de oxigenação sanguinea do paciente ao longo das sessões.
+Está tela adiciona um botão de acesso ao novo gráfico, que possui as estatísticas obtidas nos minijogos de oxigenação sanguínea do paciente ao longo das sessões.
 
 ---
 <img width="1356" height="635" alt="image" src="https://github.com/user-attachments/assets/79b67b82-4cbe-46c7-aed6-88a09c204a00" />
 
-Está tela, mostra a configuração feita apenas pelo terapeuta das sessões que ele aplicará ao paciente, no qual foi adicionado dois campos, para definirem a taxa minima e maxima de oxigenação do paciente, dado este utilizado pelo sistema para definir o parametros de avisos e parada de sessões. 
+Está tela, mostra a configuração feita apenas pelo terapeuta, das sessões que ele aplicará ao paciente, no qual foi adicionado dois campos, para definirem a taxa minima e maxima de oxigenação do paciente, dado este utilizado pelo sistema para definir os parâmetros de avisos e parada de sessões. 
 
-#### PARTE 2 - Modals Jogo
+#### 4.2.2- Modals Jogo
 ---
 <img width="743" height="480" alt="image" src="https://github.com/user-attachments/assets/ef362ddb-2468-4426-9d22-da609cbd92b6" />
 
-Modal de alerta com parada da  sessão, ao paciente e terapeuta, para o terapeuta analisar e reposicionarem o dispositivo de maneira que a captura de dados se normalize.
+Modal de alerta com parada da sessão, ao paciente e terapeuta, para o terapeuta análisar e reposicionar o dispositivo de maneira que a captura de dados se normalize.
 
 ---
 <img width="743" height="480" alt="image" src="https://github.com/user-attachments/assets/db1a5e84-db50-45b8-9649-059310092135" />
 
-Modal de alerta para oxigenação do paciente em estado critico, com parada do sistema, ao qual permite o terapeuta analisar o paciente e decidir ou pelo encerramento da sessão ou ṕela continuidade 
+Modal de alerta para oxigenação do paciente em estado crítico, com parada do sistema, ao qual permite o terapeuta análisar o paciente e decidir ou pelo encerramento da sessão ou ṕela continuidade.
 
 ---
 <img width="743" height="480" alt="image" src="https://github.com/user-attachments/assets/065ccba5-52df-484b-a2e5-f8f1d0ad710c" />
 
-Modal de alerta para oxigenação do paciente em estado critico, com parada do sistema, ao qual permite o terapeuta analisar o paciente e decidir ou pelo encerramento da sessão ou ṕela continuidade
+Modal de alerta para oxigenação do paciente em estado crético, com parada do sistema, ao qual permite o terapeuta análisar o paciente e decidir ou pelo encerramento da sessão ou ṕela continuidade.
 
 ---
 <img width="743" height="480" alt="image" src="https://github.com/user-attachments/assets/b4002980-6968-4f3b-a6d2-c643bf9f618d" />
@@ -649,7 +649,7 @@ Modal de informativo de parada, ao qual o terapeuta preenche o motivo pelo qual 
 
 ## 4.3 Fluxo de Interação do Usuário
 
-O fluxo abaixo demonstra o fluxo que o terapeuta realiza, para analisar os dados em forma de dashboards e exportar tais dados dos pacientes em formato de csv.
+O fluxo abaixo, demonstra o fluxo que o terapeuta realiza para analisar os dados obtidos, em forma de dashboards e posteriormente, exportar tais dados dos pacientes em uma planilha csv.
 
 ### Fluxo de acesso e análise no sistema
 
