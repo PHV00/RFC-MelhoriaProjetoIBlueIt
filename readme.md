@@ -649,7 +649,7 @@ Modal de informativo de parada, ao qual o terapeuta preenche o motivo pelo qual 
 
 ## 4.3 Fluxo de Interação do Usuário
 
-O fluxo analisado referece ao fluxo de analise de dados e exportação dos mesmos, como mostrado abaixo:
+O fluxo abaixo demonstra o fluxo que o terapeuta realiza, para analisar os dados em forma de dashboards e exportar tais dados dos pacientes em formato de csv.
 
 #### O usuário acessa o sistema
 
@@ -693,7 +693,7 @@ O fluxo analisado referece ao fluxo de analise de dados e exportação dos mesmo
 
 ### 5.1.1 Nível 1 — Diagrama de Contexto
 
-O diagrama de contexto apresenta o ecossistema I Blue It com a melhoria proposta como uma caixa preta central. Neste nível, tratamos todos os componentes internos do sistema, como jogo, backend, banco de dados, dashboard e sensores como um unico ecossitema. O objetivo é mostrar apenas como o sistema se relaciona com os principais atores externos.
+O diagrama de contexto apresenta o sistema biomédico I Blue It com a melhoria proposta como uma caixa preta central. Neste nível, tratamos todos os componentes internos do sistema, como jogo, backend, banco de dados, dashboard e sensores como um unico ecossitema. O objetivo é mostrar apenas como o sistema se relaciona com os principais atores externos.
 
 Os principais atores são o paciente, que realiza os exercícios respiratórios e recebe feedback durante a sessão, e o profissional da saúde, que configura os parâmetros terapêuticos, acompanha os dados registrados e analisa os resultados.
 
@@ -702,7 +702,7 @@ Os principais atores são o paciente, que realiza os exercícios respiratórios 
 ---
 ### 5.1.2 Nível 2 — Diagrama de Containers
 
-No diagrama de containers apresentamos o ecossistema I Blue It com a melhoria proposta desomposto.Neste nivel mostramos quais são os seus principais componentes, stacks e protocolos de comunicação, tendo um resumo em forma de tabela logo abaixo e abaixo deste o diagrama: 
+Neste nivel mostramos quais são os seus principais componentes, stacks e protocolos de comunicação, tendo um resumo em forma de tabela logo abaixo e abaixo deste o diagrama referente: 
 
 | Container | Função no sistema |
 |---|---|
@@ -721,7 +721,7 @@ No diagrama de containers apresentamos o ecossistema I Blue It com a melhoria pr
 
 ### 5.1.2 Nível 3 — Diagrama de Componentes
 
-O componente selecionado para o aprofundamento no nivel 3, foi o anexo do sensor spo2(oxímetro) ao dispositivo pitaco, estando seu diagrama abaixo:
+Neste nivel selecionamos para o aprofundamento e detalhamento, a estrutura e organização do novo sensor ao PITACO, o spo2(oxímetro), presente abaixo:
 
 <img width="6448" height="3760" alt="image" src="https://github.com/user-attachments/assets/54b82195-488a-4a96-861f-ce4b1a23e57e" />
 
