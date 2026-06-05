@@ -663,7 +663,7 @@ flowchart TD
     E --> F[Acessa a análise detalhada do terapeuta]
     F --> G[Filtra sessões, período ou indicadores]
     G --> H[Registra alterações na sessão, se necessário]
-    H --> I[Exporta os dados ou relatório]
+    H --> I[Exporta os dados]
 ```
 
 <details>
@@ -730,7 +730,7 @@ flowchart TD
 </details>
 
 <details>
-<summary><strong>Exporta os dados ou relatório</strong></summary>
+<summary><strong>Exporta os dados</strong></summary>
 
 <br>
 
