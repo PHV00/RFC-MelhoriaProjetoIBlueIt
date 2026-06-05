@@ -1229,36 +1229,33 @@ MongoDB
 
 #### 5.3 Principais Componentes
 
-A melhoria proposta para o I Blue It mantém a estrutura principal do jogo sério de reabilitação respiratória, mas adiciona módulos voltados ao monitoramento de segurança do paciente, ao controle de pausa/interrupção da sessão e ao registro de tais dados de sessão pausadas ou interrompidas.
+A melhoria proposta para o I Blue It mantém a estrutura principal do sistema biomédico atual, mas adiciona módulos voltados ao monitoramento de segurança do paciente, ao controle de pausa/interrupção da sessão e ao registro de tais dados.
 
-Nesse escopo o ecossistema atual já possui componentes como cadastro de jogador, calibração respiratória, histórico de uso e registros de dados da plataforma e dos minigames, ia para ajuste dinamico de dificuldade e dashboards para acompanhamento do quadro por parte dos profissionais da saúde.Abaixo consta e duas partes uma lista com os componentes do sistema e suas respectivas funções ou alterações, sendo a primeira parte as alterações e ajustes no sistema atual e na segunda os novos trasidos com a melhoria. 
+Nesse escopo o sistema atual já possui componentes como cadastro de jogador, calibração respiratória, histórico de uso e registros de dados da plataforma e dos minigames, ia para ajuste dinamico de dificuldade e dashboards para acompanhamento do quadro por parte dos profissionais da saúde.Abaixo consta em duas partes uma lista com os componentes do sistema e suas respectivas funções ou alterações feitas pela melhoria, consistindo na primeira parte as alterações e ajustes no modelo atual e na segunda os novos módulos adicionados pela melhoria. 
 
-<!--
-Além disso, sua arquitetura multimodal 123-SGR prevê módulos para gerenciamento de sinais, adaptação, interação, armazenamento e perfil do usuário.
--->
 ---
 
-#### Parte 1. Componentes já presentes no ecossistema atual
+#### 5.3.1 - Componentes já presentes no ecossistema atual
 
-#### 1.1 Jogo / Plataforma I Blue It
+#### Jogo / Plataforma I Blue It
 
 A plataforma é o componente principal do jogo. Nela, o paciente controla o personagem Blue por meio da respiração, realizando ações como alcançar alvos e desviar de obstáculos.Na melhoria proposta, esse componente é mantido, mas passa a receber comandos de pausa ou interrupção quando o módulo de segurança identifica alguma condição de alerta na fisiologia do paciente.
 
 ---
 
-#### 1.2 Cadastro e Perfil do Jogador
+#### Cadastro e Perfil do Jogador
 
 O sistema atual já possui cadastro de jogador e carregamento dos dados do paciente. Esse componente permite identificar o jogador e associar suas sessões ao seu histórico de uso.Na melhoria, esse componente associa o perfil do jogador também aos registros de segurança da sessão, como eventos de pausa, interrupção, motivo do encerramento e sinais fisiológicos observados.
 
 ---
 
-#### 1.3 Calibração Respiratória
+#### Calibração Respiratória
 
 O I Blue It já possui calibração respiratória antes da execução da plataforma e dos minigames. Essa calibração permite ajustar os parâmetros respiratórios do jogo conforme a capacidade do paciente.Na melhoria, a calibração respiratória não é substituída, porém estará também associada a validação do posicionamento do equipamento para a aferir se os dados estão sendo coletados corretamente pelo novo sensor spo2.
 
 ---
 
-#### 1.4 Histórico e Persistência de Dados
+#### Histórico e Persistência de Dados
 
 O sistema atual já registra dados como histórico, calibração, dados da plataforma e minigames. Esses dados podem ser usados pelos profissionais como base de acompanhamento do desempenho do paciente.A melhoria se apoia nesse componente, mas amplia o tipo de informação registrada.Além dos dados de desempenho, o sistema passa a registrar dados relacionados à segurança e ao estado da sessão.
 
@@ -1274,15 +1271,15 @@ O sistema atual já registra dados como histórico, calibração, dados da plata
 
 ---
 
-#### 1.5 Dashboards / Relatórios de Acompanhamento
+#### Dashboards / Relatórios de Acompanhamento
 
 O ecossistema do I Blue It também possui recursos voltados à visualização de dados e acompanhamento profissional, como dashboards, gráficos e relatórios.Na melhoria, esse componente pode ser aproveitado para destacar os eventos de segurança da sessão.Os dashboards passam a apresentar não apenas dados de desempenho, mas também informações sobre pausas, interrupções, queda de saturação e condições em que a sessão foi encerrada.
 
 ---
 
-#### Parte 2. Componentes adicionados
+#### 5.3.2 - Componentes adicionados
 
-#### 2.1 Módulo de Monitoramento Fisiológico
+####  Módulo de Monitoramento Fisiológico
 
 Este é um dos principais componentes da melhoria. Ele recebe os dados fisiológicos do paciente durante a sessão, principalmente a saturação periférica de oxigênio (SpO₂) e, quando disponível, a frequência cardíaca.Sendo assim sua funcionalidade é monitorar continuamente os sinais fisiológicos do paciente para identificar situações que possam indicar risco, desconforto ou necessidade de intervenção.
 
@@ -1302,7 +1299,7 @@ Esse módulo interpreta os dados fisiológicos recebidos e verifica se eles est�
 
 ---
 
-#### 2.3 Módulo de Controle de Estado da Sessão
+#### Módulo de Controle de Estado da Sessão
 
 Esse módulo controla a situação atual da sessão terapêutica. Ele permite que o sistema diferencie uma sessão concluída normalmente de uma sessão pausada ou interrompida.Assim registrando e controlando o ciclo de vida da sessão.
 
@@ -1318,9 +1315,9 @@ Esse módulo é importante porque a melhoria não altera diretamente a dificulda
 
 ---
 
-#### 2.4 Módulo de Regras de Decisão
+#### Módulo de Regras de Decisão
 
-Esse módulo reúne as regras que determinam o comportamento do sistema diante dos dados recebidos. Ele recebe informações do oxímetro, do jogo, do tempo de sessão e das configurações definidas pelo terapeuta.Assim tendo comofunção transformar dados fisiológicos e dados da sessão em decisões automáticas ou semiautomáticas.
+Esse módulo reúne as regras que determinam o comportamento do sistema diante dos dados recebidos. Ele recebe informações do oxímetro, do jogo, do tempo de sessão e das configurações definidas pelo terapeuta.Assim tendo como função transformar dados fisiológicos e dados da sessão em decisões automáticas ou semiautomáticas.
 
 Exemplo de regra:
 
@@ -1328,7 +1325,7 @@ Exemplo de regra:
 
 ---
 
-#### 2.5 Módulo de Registro de Eventos de Segurança
+#### Módulo de Registro de Eventos de Segurança
 
 Esse módulo registra os eventos importantes ocorridos durante a sessão. Ele é responsável por armazenar informações sobre pausas, retomadas e interrupções, garantindo que os eventos de segurança não sejam perdidos e possam ser analisados posteriormente pelo profissional de saúde.
 
@@ -1343,7 +1340,7 @@ Esse módulo registra os eventos importantes ocorridos durante a sessão. Ele é
 
 ---
 
-#### 2.6 Módulo de Configuração Terapêutica de Segurança
+#### Módulo de Configuração Terapêutica de Segurança
 
 Esse módulo permite que o terapeuta configure os limites e condições da sessão antes do início do jogo, permitindo que a segurança seja parametrizada de acordo com o paciente, o protocolo terapêutico e a decisão profissional.
 
@@ -1358,7 +1355,7 @@ Esse módulo permite que o terapeuta configure os limites e condições da sess�
 
 ---
 
-#### 2.7 Módulo de Relatório de Segurança da Sessão
+#### Módulo de Relatório de Segurança da Sessão
 
 Esse módulo organiza os dados da sessão em uma visualização útil para o profissional. Ele complementa os relatórios já existentes, acrescentando informações sobre segurança, permitindo que o terapeuta avalie não apenas o desempenho no jogo, mas também a tolerância fisiológica do paciente durante a atividade.
 
@@ -1394,7 +1391,7 @@ Esse módulo organiza os dados da sessão em uma visualização útil para o pro
 
 ## 5.4 Stack Tecnológica
 
-O ecossistema I Blue It é composto por diferentes camadas tecnológicas: o jogo sério, os dispositivos biomédicos, a comunicação entre hardware e software, o back-end, o banco de dados, o painel web e os módulos de inteligência artificial.Abaixo consta uma lista simplificada das stacks no sistema atual sem a melhoria.
+O sistema I Blue It é composto por diferentes camadas tecnológicas: o jogo sério, os dispositivos biomédicos, a comunicação entre hardware e software, o back-end, o banco de dados, o painel web e os módulos de inteligência artificial.Abaixo consta uma lista simplificada das stacks no sistema atual sem a melhoria.
 
 #### Stack atual do sistema
 
