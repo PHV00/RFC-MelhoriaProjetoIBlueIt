@@ -355,7 +355,7 @@ O sistema permite que o profissional da saúde interrompa a sessão quando achar
 
 ---
 
-Logo abaixo pode-se ver o diagrama que representa tais casos de uso e suas correlações: 
+Logo abaixo consta o diagrama de tais casos de uso e suas respectivas correlações: 
 
 <img width="3404" height="4328" alt="image" src="https://github.com/user-attachments/assets/cef341ac-0b1d-4151-b5bc-1792789c4cc3" />
 
@@ -414,8 +414,8 @@ Abaixo pode se ver o fluxo com a melhoria proposta:
 
 ## 2.3 Requisitos Funcionais (RF)
 
-  Em vista dos trabalhos já realizados e documentados das versões passadas do software I Blue It, está proposta de melhoria não se atem aos requisitos funcionais da versão atual do software, e sim, apenas aos pertinentes a sua melhoria, nisto consistindo na integração do módulo de monitoramento de SpO₂ para apoiar a segurança fisiológica durante as sessões de reabilitação respiratória, cujoo o qual estão presentes logo abaixo.
-  Outro adendo necessario, para diferenciar o local onde a melhoria será aplicada, do software já existente, foi nomeado a melhoria como modulo Spo2 sendo este o modulo responsável peloa captação, validação, correção e calculo de oxigenação e pulso cardiaco do paciente, e o software já existente sendo referido como software I Blue It, assim mostrando quais partes terão de fazer quais tarefas e suas respectivas interrações e responsabilidades.  
+  Em vista dos trabalhos já realizados e documentados das versões passadas do software I Blue It, está proposta de melhoria não se atem aos requisitos funcionais da versão atual do software, e sim, apenas aos pertinentes a sua melhoria, nisto consistindo na integração do módulo de monitoramento de SpO₂ para apoiar a segurança fisiológica durante as sessões de reabilitação respiratória, cujo o qual estão presentes logo abaixo.
+  Outro adendo necessario, para diferenciar o local onde a melhoria será aplicada, do software já existente, foi nomeado a melhoria como modulo Spo2 sendo este o modulo responsável peloa captação, validação, correção e calculo de oxigenação e estipulação do pulso cardiaco do paciente, e o sistema já existente sendo referido como sistema I Blue It, assim mostrando quais partes terão de fazer quais tarefas, e suas respectivas interrações e responsabilidades.  
 
 | ID | Requisito Funcional |
 |----|---------------------|
@@ -450,7 +450,7 @@ Abaixo pode se ver o fluxo com a melhoria proposta:
 
 ## 2.4 Requisitos Não Funcionais (RNF)]
 
-Os requisitos não funcionais descritos nesta seção seguem o memso principio descrito nos Funcionais onde o foco para elencalos foi tendo em mente a solução e oque ela alterará no modelo atual, porém agora estipulando metricas qualitativas de desempenho, segurança, confiabilidade, usabilidade, compatibilidade e manutenção que devem ser atendidas pela melhoria proposta.
+Os requisitos não funcionais descritos nesta seção seguem o mesmo principio descrito nos Funcionais onde o foco para elencalos foi ter em mente a solução e oque ela alterará no modelo atual, porém agora estipulando métricas qualitativas de desempenho, segurança, confiabilidade, usabilidade, compatibilidade e manutenção que devem ser atendidas pela melhoria proposta.
 
 | ID | Categoria | Requisito Não Funcional |
 |----|-----------|--------------------------|
@@ -480,7 +480,7 @@ Os requisitos não funcionais descritos nesta seção seguem o memso principio d
 
 ## 2.5 Regras de Negócio
 
-As regras de negócios aqui presentes foram elencadas com a visão apenas da melhoria, tratando tanto o modulo da melhoria(módulo Spo2), quanto o ecossitema I Blue It já existente, apenas como um unico sistema unificado, porém abrangendo apenas os apectos presentes no I Blue IT que compentem a ser tratados na melhoria.Assim não re-retiramos as regras de negócios nos ecosistema já presente.
+As regras de negócios aqui presentes foram elencadas com memo ímpito de mostrar apenas a melhoria, tratando tanto o modulo da melhoria(módulo Spo2), quanto o sistema I Blue It já existente, apenas como um unico sistema unificado, porém abrangendo apenas os apectos presentes no I Blue IT que compétem a ser tratados na melhoria.Assim não remodelamos as regras de negócios do sistema biomédico existente.
 
 - Apenas o terapeuta pode definir o limite mínimo de oxigenação.
 - O terapeuta responsável pode pausar ou parar a sessão a qualquer momento.
@@ -523,7 +523,7 @@ Aqui constam alguns pontos que está proposta não realizará, apenas ilustrados
 
 # 3. Fluxos e Comportamento do Sistema
 
-Para descrever o fluxo do software nesta secção, utiliza-se o diagrama de sequência, no qual está contido as principais funções do sistema I Blue It já com aprimoramento proposto.
+Para descrever o fluxo do software nesta secção, utiliza-se o diagrama de sequência, no qual está contido as principais funções do sistema biomédico I Blue It, já com o aprimoramento proposto.
 
 ---
 
@@ -538,7 +538,7 @@ O fluxo principal é composto por três operaçẽos principais e distintas, sen
 
 <img width="5812" height="2212" alt="image" src="https://github.com/user-attachments/assets/b13b23e1-24f4-43be-947e-1a3256dd25b4" />
 
-- A segunda etapa consiste na execução da sessão fisioterapica em si, no qual o paciente realiza o exercicio superfisionado pelo fisioterapeuta, e no qual o sistema capta todos dados para analise posterior.
+- A segunda etapa consiste na execução da sessão fisioterapica em si, no qual o paciente realiza o exercicio superfisionado pelo fisioterapeuta, e no qual o sistema capta todos dados para análise posterior.
 
 <img width="5452" height="2124" alt="image" src="https://github.com/user-attachments/assets/f6bd5a6f-eca8-4b3c-a410-6e886cada184" />
 
