@@ -193,11 +193,11 @@ As Metricas de sucesso estipuladas são:
 
 # 2. Engenharia de Requisitos
 
-Este segmento define oque o sitema realizara para atender as melhorias no projeto I Blue It, tendo em vista a problematica, na qual os dados fornecidos pelo modelo atual não podem atender e nem garentir uma dificuldade automatica confiavel para evitar tanto a sua extrapolações quanto a sua atenuação ao nivel fisiologico suportado pelo paciente durante as sessões de exercicios, o projeto nesse sentido nessecita de um acrescimo , um novo modulo de monitoramento fisiologico com o fim de sanar está exata lacuna.
+Este segmento define oque a melhoria realizará para atender as novas necessidades de monitoramento e segurança do paciente, sobre o sistema biomédico I Blue It.Nesse sentido os dados atualmente fornecidos, são insuficientes para a utilização do módulo de IA(inteligência artificial), de modo a monitorar a segurança biofisiologica do paciente e garantilá durante as sessões.
 
-Para este fim é proposto que nesse novo modulo de monitoramento fisiologico que possua um componente spo2(sensor de saturação sanguinea) adicionado diretamente ao dispositivo pitaco versão 2.0 que está em processo de patenteamento,e que neese processo acarreta em mudanças imediatas nos modulos de Dashboard clinico e de dificuldade ajustada por Inteligencia Artificial, sendo respectividamente acrecimos de informações clinicas para analise dos profissionais de saude, e parametro utilizado pela inteligencia artifical para estipular a dificuldade adequada dos exercicios.(adicionar referncia Ney 2024 e pitaco patenteado)
+Sendo assim a melhoria abrange duas frentes, a primeira, adicionar a coleta de tais dados, sendo feita por meio de um incremento do sensor spo2(sensor de oximetria) ao dispositivo PITACO, e a segunda sendo os ajustes necessarios no sistema biomédico atual para suportar tais mudanças, ajustes estes como, adicionar parâmetros de oximetria a IA de flowpsicologico, assim ajustando ou interrompendo as sessões em casos identificados como  anomalos ou de iminente risco fisiológico ao paciente, e aprimoração com a adição dos novos dados aos dashboards clínicos, utilizados pela equipe médica na tomada de decisão.Assim buscamos em ultima instância garantir que a sessões sejam realizadas na dificuldade adequada ao paciente, por meio do monitoramento contínuo e em casos anomâlos parando a mesma.
 
-O projeto tem como premisa que o software I Blue It já possui uma  base funcional composta por jogo sério, dispositivos IoT para captura respiratória, armazenamento de dados, calibração por iteligencia artificial e acompanhamento por profissional.Sendo assim os requisitos estipulados abaixo descrevem as funcionalidades necessarios para a integração do novo modulo proposto, saturação sanguinea ao ecossitema existente. 
+O projeto tem como premisa que o software I Blue It já possui uma  base funcional composta por jogo sério, dispositivos IoT para captura respiratória, armazenamento de dados, calibração por iteligencia artificial e acompanhamento por profissional.Sendo assim os requisitos estipulados abaixo descrevem as funcionalidades necessarios para a integração do novo módulo proposto, saturação sanguinea ao sistema existente. 
 
 ---
 
@@ -243,7 +243,7 @@ Dr. Marcos atua em uma clínica voltada ao tatamento fisioterapico, na area resp
 
 ## 2.2 Casos de Uso Principais
 
-Considerando o estado atual em que o software se encontra, com suas inumeras funcionalidades e aprimoramentos de cada versão, foram abstraidos as suas principais funções e caracteristicas para a criação de dois fluxos, consistindo em primasia uma abstração geral sobre o software I Blue It, e posteriormente a derivação de outro  para fins comparativos, contendo este as princiapis mudanças e impactos no fluxo que a melhoria se propẽm a realizar.
+Considerando o estado atual em que o software se encontra, com suas inumeras funcionalidades e aprimoramentos de cada versão, foram abstraidos as suas principais funções e caracteristicas para a criação de dois fluxos, consistindo em primasia uma abstração geral sobre o modelo atual do sistema I Blue It, e posteriormente uma derivação para fins comparativos, contendo este as princiapis mudanças e impactos no fluxo que a melhoria se propẽm a realizar.
 
 Para o atual estado do software foram elencado as seguintes funcionalidades:
 
