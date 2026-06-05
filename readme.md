@@ -573,7 +573,7 @@ Ainda podemos citar duas variantes, presentes no loop principal do jogo, ao qual
 
 ## 4.1 Fluxo de Navegação
 
-O ecossitema I blue It é composto por varias camadas indo desde o Iot fisico, frontend e backend até ao jogo em unity, sendo assim nesta etapa descreveremos os fluxos aos quais a melhoria interfere, sendo eles o de execução do jogo e o de dashboard clínico.
+O sistema biomédico I blue It é composto por varias camadas indo desde o Iot fisico, frontend e backend até ao jogo em unity, sendo assim nesta etapa descreveremos os fluxos visuais aos quais a melhoria interfere, sendo eles o de execução do jogo e o de dashboard clínico.
 
 Abaixo o fluxo do dashboard clinico:
 <img width="8684" height="1724" alt="image" src="https://github.com/user-attachments/assets/7f6d979d-83b9-4b8e-a35a-a33c07e57b24" />
