@@ -763,9 +763,8 @@ Neste nivel mostramos quais são os seus principais componentes, stacks e protoc
 
 | Container | Função no sistema |
 |---|---|
-| **Jogo I Blue It** | Executa a sessão de reabilitação, controla o personagem, interpreta os sinais respiratórios e aplica as regras de pausa ou interrupção da sessão. |
-| **Dispositivos biomédicos** | Capturam sinais respiratórios e fisiológicos do paciente, como fluxo respiratório, pressão, expansão torácica. |
-| **Oximetro** | Novo componete ao pitaco, tem como retorno os dados de saturação de oxigênio e frequência cardiaca|
+| **Jogo I Blue It** | Executa a sessão de reabilitação, controla o personagem, ajusta dinamicamente a dificuldade, interpreta os sinais respiratórios e aplica as regras de pausa ou interrupção da sessão.|
+| **Dispositivos biomédicos** | Capturam sinais respiratórios e fisiológicos do paciente, como fluxo respiratório, pressão, expansão torácica , saturação sanguínea e frequência cardíaca. |
 | **Back-end / API** | Recebe os dados gerados pelo jogo, processa requisições do dashboard e centraliza a comunicação com o banco de dados. |
 | **Banco de Dados** | Armazena pacientes, sessões, medições, histórico de uso, eventos de pausa, eventos de interrupção e dados de segurança. |
 | **Health InfoCharts** | Interface web utilizada pelo profissional da saúde para visualizar gráficos, histórico, estatísticas e eventos relevantes da sessão. |
