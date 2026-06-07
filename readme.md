@@ -782,52 +782,60 @@ Neste nivel selecionamos para o aprofundamento e detalhamento, a estrutura e org
 <img width="6448" height="3760" alt="image" src="https://github.com/user-attachments/assets/54b82195-488a-4a96-861f-ce4b1a23e57e" />
 
 ---
-
 ## 5.2 Modelo de Dados
 
-O modelo abaixo contempla uma abstração DER (diagrama entidade relacionamento), das principais entidades presentes no banco de dados nosql MongoDB do ecossitema I Blue It atual.Nesse escopo logo abaixo desta imagem, está presente a melhoria, contendo onde e quais partes ela afetará no sistema atual.
+O modelo abaixo contempla uma abstração DER (diagrama entidade-relacionamento) das principais entidades presentes no banco de dados NoSQL MongoDB do ecossistema I Blue It atual. Nesse escopo, logo abaixo desta imagem, está presente a melhoria, contendo onde e quais partes ela afetará no sistema atual.
 
 <img width="4156" height="2920" alt="image" src="https://github.com/user-attachments/assets/6a4cd675-c584-4966-bcbd-578d2f8a035c" />
 
-A melhoria utiliza-se de todo o escopo demonstrado no DER, apenas alterando os atributos das tabelas e suas conexões para suportar a feature de pausa e supensão da sessão salvando os dados em caso de interrupções, tais mudanças podem ser vistas abaixo adjunto a suas explicações.
+A melhoria utiliza-se de todo o escopo demonstrado no DER, porém estende os atributos das entidades e suas conexões para suportar o Flow Psicofisiológico com DeepDDA. Dessa forma, o modelo passa a registrar não apenas os dados da sessão, dos dispositivos e dos resultados do jogo, mas também os dados psicofisiológicos observados pela IA, as decisões tomadas pelo agente, as ações aplicadas no jogo, as recompensas calculadas e os parâmetros antes e depois dos ajustes dinâmicos. Tais mudanças podem ser vistas abaixo, junto às suas explicações.
 
 <img width="7620" height="13136" alt="image" src="https://github.com/user-attachments/assets/4329efbc-b14f-4abd-9b79-6c58fff72940" />
 
-Segue abaixo uma lista das alterações que melhoria realiza no banco de dados atual:
+Segue abaixo uma lista das alterações que a melhoria realiza no banco de dados atual:
 
 #### Renomear FLOW_DATA_DEVICE para SESSION_DEVICE_DATA
-- A estrutura deixa de representar apenas dados de fluxo respiratório.Isso foi feito porque agora a sessão também pode receber dados de outros dispositivos, como o oxímetro.
+- A estrutura deixa de representar apenas dados de fluxo respiratório. Isso foi feito porque agora a sessão também pode receber dados de outros dispositivos, como o oxímetro, além dos dispositivos respiratórios já utilizados no sistema.
 
 #### Renomear DEVICE_FLOW para DEVICE_SIGNAL
-- O dispositivo passa a registrar diferentes tipos de sinais, não apenas fluxo.Isso foi feito para permitir sinais como flowValue, spo2 e heartRate.
+- O dispositivo passa a registrar diferentes tipos de sinais, não apenas fluxo. Isso foi feito para permitir sinais como flowValue, spo2, heartRate e respiratoryRate.
 
 #### Renomear FLOW_SAMPLE para DEVICE_SAMPLE
-- Cada amostra passa a representar qualquer leitura de dispositivo.Isso foi feito porque uma amostra pode ser de fluxo respiratório, SpO2 ou frequência cardíaca.
+- Cada amostra passa a representar qualquer leitura de dispositivo. Isso foi feito porque uma amostra pode ser de fluxo respiratório, SpO2, frequência cardíaca ou outro sinal fisiológico usado no Flow Psicofisiológico.
 
 #### Adicionar oxímetro como dispositivo da sessão
-- O oxímetro passa a ser tratado junto aos demais dispositivos usados durante o jogo.Isso foi feito para incluir o monitoramento fisiológico sem criar uma estrutura paralela ao modelo atual.
+- O oxímetro passa a ser tratado junto aos demais dispositivos usados durante o jogo. Isso foi feito para incluir o monitoramento fisiológico sem criar uma estrutura paralela ao modelo atual.
 
 #### Adicionar campos de status em PLAY_SESSION
-- A sessão passa a armazenar estados como iniciada, pausada, finalizada ou interrompida.Isso foi feito para registrar corretamente sessões que não terminam de forma normal.
+- A sessão passa a armazenar estados como iniciada, em andamento, pausada, finalizada, interrompida ou com erro. Isso foi feito para registrar corretamente sessões que não terminam de forma normal.
 
 #### Adicionar dados de pausa e interrupção em PLAY_SESSION
-- A sessão passa a guardar informações como quantidade de pausas, momento da interrupção e motivo.Isso foi feito para explicar por que uma sessão foi pausada ou encerrada antes do previsto.
+- A sessão passa a guardar informações como quantidade de pausas, momento da interrupção, origem da interrupção e motivo. Isso foi feito para explicar por que uma sessão foi pausada ou encerrada antes do previsto.
 
-#### Adicionar limite mínimo de SpO2 na sessão
-- A sessão passa a armazenar o valor mínimo permitido de SpO2 usado durante o monitoramento.Isso foi feito para deixar claro qual regra foi usada para pausar ou interromper o jogo.
+#### Adicionar limites fisiológicos da sessão
+- A sessão passa a armazenar valores usados para monitoramento, como limite mínimo de SpO2, ação em caso de SpO2 baixa e demais parâmetros de segurança. Isso foi feito para deixar claro quais regras foram usadas pelo sistema durante a execução da sessão.
 
 #### Adicionar eventos da sessão em PLAY_SESSION
-- A sessão passa a guardar eventos como pausa por SpO2 baixa, retomada ou interrupção.Isso foi feito para manter um histórico do que aconteceu durante a execução do jogo.
+- A sessão passa a guardar eventos como pausa por SpO2 baixa, retomada, interrupção, alerta fisiológico ou ação gerada pela IA. Isso foi feito para manter um histórico do que aconteceu durante a execução do jogo.
 
 #### Adicionar playSessionId em PLATAFORM_OVERVIEW e MINIGAME_OVERVIEW
-- Os resultados da plataforma e dos minigames passam a estar ligados diretamente a uma sessão.Isso foi feito para saber em qual sessão cada resultado ocorreu, especialmente quando houver pausa ou interrupção.
+- Os resultados da plataforma e dos minigames passam a estar ligados diretamente a uma sessão. Isso foi feito para saber em qual sessão cada resultado ocorreu, especialmente quando houver pausa, interrupção ou ajuste dinâmico durante o uso do jogo.
 
-#### Remover elementos de ajuste dinâmico de dificuldade
-- O modelo não inclui alteração de fase, nível, velocidade ou parâmetros do jogo.Isso foi feito porque a melhoria proposta apenas pausa ou interrompe a sessão, sem modificar a jogabilidade.
+#### Adicionar suporte ao Flow Psicofisiológico com DeepDDA
+- O modelo passa a registrar se a sessão utilizou o módulo DeepDDA, qual modelo de IA foi usado, quais observações foram feitas, quais ações foram tomadas e quais recompensas foram calculadas. Isso foi feito porque o Flow Psicofisiológico considera dados multimodais, multidados e inteligência artificial para ajustar o esforço exigido ao estado do paciente.
+
+#### Adicionar registro de decisões do DeepDDA
+- Cada decisão tomada pela IA passa a ser registrada com os dados observados, a ação escolhida, o estado resultante e a recompensa recebida. Isso foi feito para garantir rastreabilidade e permitir análise posterior das decisões tomadas pelo agente.
+
+#### Adicionar snapshots dos parâmetros do jogo
+- Os parâmetros do jogo passam a ser registrados antes e depois de ajustes realizados pela IA. Isso foi feito para saber quais configurações estavam ativas no momento da decisão e quais alterações foram aplicadas.
+
+#### Adicionar elementos de ajuste dinâmico de dificuldade
+- O modelo passa a incluir alteração de fase, nível, velocidade, tamanho, posição, repetição ou outros parâmetros do jogo, quando definidos pelo DeepDDA. Isso foi feito porque a melhoria proposta implementa o Flow Psicofisiológico, e não apenas pausa ou interrupção da sessão.
 
 ---
 
-Como já citado o banco de dados da aplicação será o nosql MongoDB, segue abaixo a lista de coleções, diagrama NoSQL/documental e por fim os Json de exempliificação.
+Como já citado, o banco de dados da aplicação será o NoSQL MongoDB. Segue abaixo a lista de coleções, diagrama NoSQL/documental e, por fim, os JSONs de exemplificação.
 
 ---
 
@@ -840,7 +848,10 @@ MongoDB
  ├── playSessions
  ├── plataformOverviews
  ├── minigameOverviews
- └── flowDataDevices
+ ├── sessionDeviceData
+ ├── deepDdaModels
+ ├── deepDdaDecisions
+ └── gameParameterSnapshots
 ```
 
 ### Suas conexões:
@@ -997,6 +1008,11 @@ MongoDB
     }
   ],
 
+  "source": "string",
+  "basedOnParameterId": "ObjectId",
+  "appliedDuringSessionId": "ObjectId",
+  "changeReason": "string",
+
   "created_at": "Date",
   "updated_at": "Date"
 }
@@ -1034,6 +1050,22 @@ MongoDB
 
   "minSpo2Allowed": "number",
   "actionOnLowSpo2": "string",
+
+  "deepDdaEnabled": "boolean",
+  "deepDdaModelId": "ObjectId",
+  "initialGameParameterId": "ObjectId",
+  "finalGameParameterId": "ObjectId",
+
+  "flowPsychophysiologicalSummary": {
+    "avgPsychicFlow": "number",
+    "avgPhysiologicalFlow": "number",
+    "minSpo2": "number",
+    "avgSpo2": "number",
+    "maxHeartRate": "number",
+    "avgRespiratoryRate": "number",
+    "totalDdaAdjustments": "number",
+    "totalSafetyEvents": "number"
+  },
 
   "sessionEvents": [
     {
@@ -1088,6 +1120,13 @@ MongoDB
   "phase": "number",
   "level": "number",
   "relaxTimeSpawned": "boolean",
+
+  "deepDdaUsed": "boolean",
+  "initialPhase": "number",
+  "initialLevel": "number",
+  "finalPhase": "number",
+  "finalLevel": "number",
+  "ddaAdjustmentsCount": "number",
 
   "score": "number",
   "maxScore": "number",
@@ -1145,6 +1184,11 @@ MongoDB
 
   "sessionStatus": "string",
   "finishReason": "string",
+
+  "deepDdaUsed": "boolean",
+  "ddaAdjustmentsCount": "number",
+  "initialDifficulty": "number",
+  "finalDifficulty": "number",
 
   "flowDataRounds": [
     {
@@ -1220,6 +1264,152 @@ MongoDB
 
   "created_at": "Date",
   "updated_at": "Date"
+}
+```
+
+</details>
+
+<details>
+<summary><strong>deepDdaModels</strong></summary>
+
+#### deepDdaModels
+
+```json
+{
+  "_id": "ObjectId",
+
+  "name": "string",
+  "version": "string",
+  "algorithm": "string",
+  "framework": "string",
+  "modelFile": "string",
+
+  "observationSpace": [
+    "scoreRatio",
+    "targetsSuccessRate",
+    "obstaclesFailRate",
+    "spo2",
+    "heartRate",
+    "respiratoryRate",
+    "borgScale",
+    "flowPsychic",
+    "flowPhysiological"
+  ],
+
+  "actionSpace": [
+    "KEEP_DIFFICULTY",
+    "INCREASE_DIFFICULTY",
+    "DECREASE_DIFFICULTY",
+    "PAUSE_SESSION",
+    "INTERRUPT_SESSION"
+  ],
+
+  "isActive": "boolean",
+
+  "created_at": "Date",
+  "updated_at": "Date"
+}
+```
+
+</details>
+
+<details>
+<summary><strong>deepDdaDecisions</strong></summary>
+
+#### deepDdaDecisions
+
+```json
+{
+  "_id": "ObjectId",
+
+  "playSessionId": "ObjectId",
+  "pacientId": "ObjectId",
+  "deepDdaModelId": "ObjectId",
+
+  "timestamp": "Date",
+
+  "observation": {
+    "phase": "number",
+    "level": "number",
+    "scoreRatio": "number",
+    "targetsSuccessRate": "number",
+    "obstaclesFailRate": "number",
+
+    "spo2": "number",
+    "heartRate": "number",
+    "respiratoryRate": "number",
+    "borgScale": "number",
+
+    "flowPsychic": "number",
+    "flowPhysiological": "number"
+  },
+
+  "action": {
+    "actionType": "string",
+    "description": "string"
+  },
+
+  "previousGameParameterId": "ObjectId",
+  "newGameParameterId": "ObjectId",
+
+  "reward": {
+    "value": "number",
+    "reason": "string"
+  },
+
+  "resultingState": {
+    "phase": "number",
+    "level": "number",
+    "spo2": "number",
+    "heartRate": "number",
+    "scoreRatio": "number"
+  },
+
+  "created_at": "Date"
+}
+```
+
+</details>
+
+<details>
+<summary><strong>gameParameterSnapshots</strong></summary>
+
+#### gameParameterSnapshots
+
+```json
+{
+  "_id": "ObjectId",
+
+  "playSessionId": "ObjectId",
+  "pacientId": "ObjectId",
+
+  "source": "string",
+  "basedOnParameterId": "ObjectId",
+
+  "stageId": "number",
+  "phase": "number",
+  "level": "number",
+
+  "ObjectSpeedFactor": "number",
+  "HeightIncrement": "number",
+  "HeightUpThreshold": "number",
+  "HeightDownThreshold": "number",
+  "SizeIncrement": "number",
+  "SizeUpThreshold": "number",
+  "SizeDownThreshold": "number",
+  "Loops": "number",
+
+  "gameScript": [
+    {
+      "ObjectType": "string",
+      "DifficultyFactor": "number",
+      "PositionYFactor": "number",
+      "PositionXSpacing": "number"
+    }
+  ],
+
+  "changeReason": "string",
+  "created_at": "Date"
 }
 ```
 
