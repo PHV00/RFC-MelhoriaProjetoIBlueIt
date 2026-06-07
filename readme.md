@@ -786,11 +786,11 @@ Neste nivel selecionamos para o aprofundamento e detalhamento, a estrutura e org
 
 O modelo abaixo contempla uma abstração DER (diagrama entidade-relacionamento) das principais entidades presentes no banco de dados NoSQL MongoDB do ecossistema I Blue It atual. Nesse escopo, logo abaixo desta imagem, está presente a melhoria, contendo onde e quais partes ela afetará no sistema atual.
 
-<img width="4156" height="2920" alt="image" src="https://github.com/user-attachments/assets/6a4cd675-c584-4966-bcbd-578d2f8a035c" />
+<img width="8376" height="2852" alt="image" src="https://github.com/user-attachments/assets/6ce79146-12af-4020-8890-97dbf21b4430" />
 
 A melhoria utiliza-se de todo o escopo demonstrado no DER, porém estende os atributos das entidades e suas conexões para suportar o Flow Psicofisiológico com DeepDDA. Dessa forma, o modelo passa a registrar não apenas os dados da sessão, dos dispositivos e dos resultados do jogo, mas também os dados psicofisiológicos observados pela IA, as decisões tomadas pelo agente, as ações aplicadas no jogo, as recompensas calculadas e os parâmetros antes e depois dos ajustes dinâmicos. Tais mudanças podem ser vistas abaixo, junto às suas explicações.
 
-<img width="7620" height="13136" alt="image" src="https://github.com/user-attachments/assets/4329efbc-b14f-4abd-9b79-6c58fff72940" />
+<img width="11472" height="13528" alt="image" src="https://github.com/user-attachments/assets/00151e1e-1dde-4abc-9d5b-adb594d2bb4b" />
 
 Segue abaixo uma lista das alterações que a melhoria realiza no banco de dados atual:
 
@@ -856,7 +856,7 @@ MongoDB
 
 ### Suas conexões:
 
-<img width="4564" height="1600" alt="image" src="https://github.com/user-attachments/assets/b3c60818-b94f-4ba0-ab29-60e10749fa68" />
+<img width="4976" height="1972" alt="image" src="https://github.com/user-attachments/assets/2d7cde95-61d9-42c8-a823-301e7e90630c" />
 
 ## Estrutura dos dados em JSON:
 
