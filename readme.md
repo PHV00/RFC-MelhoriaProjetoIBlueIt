@@ -1846,7 +1846,6 @@ O cronograma foi organizado em marcos de desenvolvimento, priorizando primeiro a
 
 - [1]SANTOS, Adam Mews dos; GRIMES, Renato Hartmann; HOUNSELL, Marcelo da Silva; NOVELETTO, Fabrício; SOARES, Antônio Vinícius; SILVA, Helton Eckermann da. I Blue It: Um Jogo Sério para auxiliar na Reabilitação Respiratória. SBGames, 2018.
 - [2] DIAS, Claudinei. Flow Psicofisiológico em Jogos Digitais: Inteligência Artificial em Jogos Sérios Multimodais para Reabilitação Respiratória. Tese de Doutorado, UDESC, 2024.
-- 
 - [3] GRIMES, Renato Hartmann. **Sistema Biomédico com Jogo Sério e Dispositivo Especial para Reabilitação Respiratória**. Dissertação de Mestrado, Universidade do Estado de Santa Catarina, Joinville, 2018.
 
 - [4] DIAS, Claudinei; ROMAGNO, Amilto; HOUNSELL, Marcelo da Silva; SOMA, Rodrigo Yuji Seto; TONDORF, Diego Fellipe; LEAL, André Bittencourt; ENGLEITNER, Matheus. **Uso da Inteligência Artificial em Jogos Digitais aplicados à Reabilitação Respiratória: um mapeamento sistemático da literatura**. SBGames, 2020.
