@@ -1419,9 +1419,13 @@ MongoDB
 
 #### 5.3 Principais Componentes
 
-A melhoria proposta para o I Blue It mantém a estrutura principal do sistema biomédico atual, mas adiciona módulos voltados ao monitoramento de segurança do paciente, ao controle de pausa/interrupção da sessão e ao registro de tais dados.
+A melhoria proposta para o I Blue It mantém a estrutura principal do sistema biomédico atual, mas adiciona componentes voltados ao Flow Psicofisiológico com DeepDDA, permitindo que o sistema utilize dados do jogo, dados respiratórios, biossinais e percepção de esforço para apoiar o ajuste dinâmico de dificuldade durante a sessão terapêutica.
 
-Nesse escopo o sistema atual já possui componentes como cadastro de jogador, calibração respiratória, histórico de uso e registros de dados da plataforma e dos minigames, ia para ajuste dinamico de dificuldade e dashboards para acompanhamento do quadro por parte dos profissionais da saúde.Abaixo consta em duas partes uma lista com os componentes do sistema e suas respectivas funções ou alterações feitas pela melhoria, consistindo na primeira parte as alterações e ajustes no modelo atual e na segunda os novos módulos adicionados pela melhoria. 
+Como demonstrado por Dias Claudiney(2024) 
+
+Nesse escopo, o sistema atual já possui componentes como cadastro de jogador, calibração respiratória, histórico de uso, registros de dados da plataforma e dos minigames, além de dashboards para acompanhamento do quadro por parte dos profissionais da saúde. A melhoria amplia esse sistema ao incorporar o monitoramento fisiológico, o registro das decisões da IA, o controle de segurança e os ajustes dinâmicos de dificuldade realizados pelo DeepDDA.
+
+Abaixo consta, em duas partes, uma lista com os componentes do sistema e suas respectivas funções ou alterações feitas pela melhoria, consistindo na primeira parte os componentes já presentes no ecossistema atual e, na segunda, os novos módulos adicionados ou aprofundados pela melhoria.
 
 ---
 
@@ -1429,69 +1433,188 @@ Nesse escopo o sistema atual já possui componentes como cadastro de jogador, ca
 
 #### Jogo / Plataforma I Blue It
 
-A plataforma é o componente principal do jogo. Nela, o paciente controla o personagem Blue por meio da respiração, realizando ações como alcançar alvos e desviar de obstáculos.Na melhoria proposta, esse componente é mantido, mas passa a receber comandos de pausa ou interrupção quando o módulo de segurança identifica alguma condição de alerta na fisiologia do paciente.
+A plataforma é o componente principal do jogo. Nela, o paciente controla o personagem Blue por meio da respiração, realizando ações como alcançar alvos e desviar de obstáculos.
+
+Na melhoria proposta, esse componente é mantido, mas passa a se comunicar com o módulo DeepDDA. Dessa forma, além de executar a sessão terapêutica, o jogo passa a fornecer dados de desempenho, fase, nível, pontuação, acertos, erros, alvos, obstáculos e estado atual da sessão para que a IA possa avaliar o desempenho psicofisiológico do paciente.
+
+Além disso, o jogo pode receber ações da IA relacionadas ao ajuste dinâmico de dificuldade, como manter, aumentar ou reduzir o desafio, alterar parâmetros do exergame, pausar a sessão ou interrompê-la em caso de risco fisiológico.
 
 ---
 
 #### Cadastro e Perfil do Jogador
 
-O sistema atual já possui cadastro de jogador e carregamento dos dados do paciente. Esse componente permite identificar o jogador e associar suas sessões ao seu histórico de uso.Na melhoria, esse componente associa o perfil do jogador também aos registros de segurança da sessão, como eventos de pausa, interrupção, motivo do encerramento e sinais fisiológicos observados.
+O sistema atual já possui cadastro de jogador e carregamento dos dados do paciente. Esse componente permite identificar o jogador e associar suas sessões ao seu histórico de uso.
+
+Na melhoria, esse componente passa a associar o perfil do jogador também aos dados psicofisiológicos usados pelo DeepDDA. Assim, o histórico do paciente pode ser utilizado para análise de desempenho, recomendação de parâmetros, acompanhamento da evolução terapêutica e registro das decisões tomadas pela IA durante as sessões.
 
 ---
 
 #### Calibração Respiratória
 
-O I Blue It já possui calibração respiratória antes da execução da plataforma e dos minigames. Essa calibração permite ajustar os parâmetros respiratórios do jogo conforme a capacidade do paciente.Na melhoria, a calibração respiratória não é substituída, porém estará também associada a validação do posicionamento do equipamento para a aferir se os dados estão sendo coletados corretamente pelo novo sensor spo2.
+O I Blue It já possui calibração respiratória antes da execução da plataforma e dos minigames. Essa calibração permite ajustar os parâmetros respiratórios do jogo conforme a capacidade do paciente.
+
+Na melhoria, a calibração respiratória não é substituída. Ela passa a compor o conjunto de dados iniciais utilizados pelo Flow Psicofisiológico, servindo como base para o setup inicial do exergame e para a avaliação do desempenho fisiológico durante a sessão.
+
+Além dos dados respiratórios já existentes, a sessão passa a considerar também biossinais, como Spo2 e frequência cardíaca, quando disponíveis, para que o DeepDDA tenha uma visão mais completa do estado do paciente.
 
 ---
 
 #### Histórico e Persistência de Dados
 
-O sistema atual já registra dados como histórico, calibração, dados da plataforma e minigames. Esses dados podem ser usados pelos profissionais como base de acompanhamento do desempenho do paciente.A melhoria se apoia nesse componente, mas amplia o tipo de informação registrada.Além dos dados de desempenho, o sistema passa a registrar dados relacionados à segurança e ao estado da sessão.
+O sistema atual já registra dados como histórico, calibração, dados da plataforma e minigames. Esses dados podem ser usados pelos profissionais como base de acompanhamento do desempenho do paciente.
+
+A melhoria se apoia nesse componente, mas amplia o tipo de informação registrada. Além dos dados de desempenho, o sistema passa a registrar dados psicofisiológicos, decisões da IA, ações aplicadas no jogo, recompensas calculadas e parâmetros antes e depois dos ajustes realizados pelo DeepDDA.
 
 | Novo dado registrado | Finalidade |
 |---|---|
 | Status da sessão | Identificar se a sessão foi concluída, pausada ou interrompida |
-| Motivo da pausa | Registrar por que o jogo foi temporariamente parado |
-| Motivo da interrupção | Justificar o encerramento antecipado |
-| SpO₂ no momento do evento | Registrar a condição fisiológica do paciente |
-| Tempo de pausa | Saber quanto tempo a sessão ficou parada |
-| Momento da interrupção | Identificar em qual fase, nível ou instante ocorreu o evento |
+| Dados de biossinais | Registrar SpO₂, frequência cardíaca e outros sinais fisiológicos |
+| Observações do DeepDDA | Armazenar o estado analisado pela IA |
+| Ação escolhida pela IA | Registrar se a dificuldade foi mantida, aumentada, reduzida, pausada ou interrompida |
+| Recompensa calculada | Registrar a avaliação usada no aprendizado por reforço |
+| Parâmetros anteriores | Saber qual configuração estava ativa antes da decisão |
+| Parâmetros novos | Registrar o ajuste aplicado pela IA |
+| Motivo da decisão | Justificar a ação tomada pelo agente |
+| Momento da decisão | Identificar em qual fase, nível ou instante ocorreu o ajuste |
 | Observação do terapeuta | Permitir registro clínico complementar |
 
 ---
 
 #### Dashboards / Relatórios de Acompanhamento
 
-O ecossistema do I Blue It também possui recursos voltados à visualização de dados e acompanhamento profissional, como dashboards, gráficos e relatórios.Na melhoria, esse componente pode ser aproveitado para destacar os eventos de segurança da sessão.Os dashboards passam a apresentar não apenas dados de desempenho, mas também informações sobre pausas, interrupções, queda de saturação e condições em que a sessão foi encerrada.
+O ecossistema do I Blue It também possui recursos voltados à visualização de dados e acompanhamento profissional, como dashboards, gráficos e relatórios.
+
+Na melhoria, esse componente pode ser aproveitado para destacar não apenas os dados de desempenho, mas também os dados relacionados ao Flow Psicofisiológico. Assim, os dashboards passam a apresentar informações sobre biossinais, ajustes dinâmicos, decisões do DeepDDA, evolução da dificuldade, pausas, interrupções e tolerância fisiológica do paciente durante a atividade.
 
 ---
 
-#### 5.3.2 - Componentes adicionados
+#### IA / Ajuste Dinâmico de Dificuldade
 
-####  Módulo de Monitoramento Fisiológico
+No escopo da melhoria, a IA deixa de ser tratada como um recurso separado e passa a ser o núcleo do Flow Psicofisiológico. O DeepDDA atua durante a sessão, analisando dados do jogo, dados respiratórios, biossinais e percepção de esforço para ajustar dinamicamente a dificuldade do exergame.
 
-Este é um dos principais componentes da melhoria. Ele recebe os dados fisiológicos do paciente durante a sessão, principalmente a saturação periférica de oxigênio (SpO₂) e, quando disponível, a frequência cardíaca.Sendo assim sua funcionalidade é monitorar continuamente os sinais fisiológicos do paciente para identificar situações que possam indicar risco, desconforto ou necessidade de intervenção.
+Esse componente tem como objetivo manter o equilíbrio entre desafio, segurança, conforto físico, conforto motivacional e diversão, evitando que o paciente fique em um estado de fadiga, marasmo, frustração ou tédio.
 
 ---
 
-#### 2.2 Módulo de Controle de Segurança
+#### 5.3.2 - Componentes adicionados ou aprofundados pela melhoria
 
-Esse módulo interpreta os dados fisiológicos recebidos e verifica se eles estão dentro dos limites definidos para a sessão. Ele funciona como uma camada de proteção entre o paciente e a continuidade do jogo.Assim aplicando regras de segurança para decidir se o jogo deve continuar, pausar ou ser interrompido.
+#### Módulo de Monitoramento Psicofisiológico
 
-| Condição identificada | Ação do sistema |
+Este é um dos principais componentes da melhoria. Ele recebe os dados fisiológicos e respiratórios do paciente durante a sessão, principalmente fluxo respiratório, Spo2, frequência cardíaca, frequência respiratória.
+
+Sua função é fornecer ao DeepDDA uma visão do estado atual do paciente. Esses dados são utilizados para avaliar se o desafio do jogo está adequado à condição fisiológica e psíquica do paciente durante a sessão.
+
+---
+
+#### Módulo DeepDDA
+
+O módulo DeepDDA é o agente de Inteligência Artificial responsável por realizar o ajuste dinâmico de dificuldade no I Blue It. Ele observa o estado atual da sessão, interpreta os dados do paciente e decide qual ação deve ser tomada no jogo.
+
+Esse módulo utiliza dados como desempenho no jogo, fase, nível, pontuação, acertos, erros, SpO₂, frequência cardíaca, frequência respiratória, escala de Borg e demais informações psicofisiológicas disponíveis.
+
+| Entrada analisada | Finalidade |
 |---|---|
-| SpO₂ dentro do limite seguro | Mantém a sessão em andamento |
-| SpO₂ abaixo do limite de alerta | Pausa o jogo |
+| Pontuação | Avaliar desempenho geral no jogo |
+| Acertos e erros | Medir sucesso nas tarefas propostas |
+| Fase e nível | Identificar o desafio atual |
+| Dados respiratórios | Avaliar execução do exercício terapêutico |
+| SpO₂ | Verificar segurança fisiológica |
+| Frequência cardíaca | Apoiar análise de esforço |
+| Escala de Borg | Considerar percepção subjetiva de esforço |
+| Histórico do paciente | Apoiar decisões mais personalizadas |
+
+---
+
+#### Módulo de Observação do Estado
+
+Esse módulo organiza os dados que serão enviados ao DeepDDA em cada momento da sessão. Ele transforma os dados coletados pelo jogo e pelos dispositivos em um estado observável pela IA.
+
+Esse estado pode conter dados de desempenho, dados fisiológicos, dados respiratórios e dados subjetivos do paciente. A partir dessa observação, o DeepDDA decide se deve manter, aumentar ou reduzir a dificuldade, ou se deve acionar uma pausa/interrupção por segurança.
+
+Exemplo de estado observado:
+
+| Dado observado | Exemplo |
+|---|---|
+| Fase atual | Fase 2 |
+| Nível atual | Nível 3 |
+| Desempenho | 78% |
+| SpO₂ | 93% |
+| Frequência cardíaca | 110 bpm |
+| Escala de Borg | 4 |
+| Erros em obstáculos | 3 |
+| Acertos em alvos | 12 |
+
+---
+
+#### Módulo de Decisão do DeepDDA
+
+Esse módulo representa a etapa em que a IA escolhe uma ação com base no estado observado. A decisão pode envolver a manutenção da dificuldade, o aumento do desafio, a redução do desafio, a pausa da sessão ou a interrupção por segurança.
+
+| Condição identificada | Ação possível do sistema |
+|---|---|
+| Desempenho adequado e sinais estáveis | Mantém a dificuldade |
+| Desempenho alto e sinais estáveis | Aumenta gradualmente a dificuldade |
+| Desempenho baixo ou sinais de esforço elevado | Reduz a dificuldade |
+| SpO₂ abaixo do limite de alerta | Pausa a sessão ou reduz o desafio |
 | SpO₂ abaixo do limite crítico | Interrompe a sessão |
-| Oxímetro desconectado | Pausa a sessão e solicita verificação |
-| Terapeuta decide encerrar | Registra interrupção manual |
+| Sinal fisiológico inválido ou desconectado | Pausa a sessão e solicita verificação |
+
+---
+
+#### Módulo de Ação no Jogo
+
+Esse módulo aplica no jogo a decisão tomada pelo DeepDDA. Ele é responsável por transformar a ação da IA em alterações concretas na sessão.
+
+As ações podem envolver ajustes de dificuldade, alteração de parâmetros do jogo ou controle da sessão.
+
+| Ação da IA | Efeito no jogo |
+|---|---|
+| Manter dificuldade | O jogo continua com a configuração atual |
+| Aumentar dificuldade | A fase, nível, velocidade ou desafio pode ser elevado |
+| Reduzir dificuldade | A fase, nível, velocidade ou desafio pode ser reduzido |
+| Pausar sessão | O jogo é temporariamente interrompido |
+| Interromper sessão | A sessão é encerrada antes do previsto |
+
+---
+
+#### Módulo de Recompensa
+
+Esse módulo calcula a recompensa usada pelo aprendizado por reforço. A recompensa indica se a ação tomada pela IA foi adequada ou não para o estado do paciente.
+
+A recompensa pode considerar desempenho, segurança, conforto físico, conforto motivacional e equilíbrio da dificuldade. Assim, o DeepDDA aprende a buscar ações que mantenham o paciente em um estado adequado de Flow Psicofisiológico.
+
+| Situação | Tipo de recompensa |
+|---|---|
+| Bom desempenho com sinais estáveis | Recompensa positiva |
+| Desafio adequado à capacidade do paciente | Recompensa positiva |
+| SpO₂ em queda | Penalidade |
+| Excesso de esforço percebido | Penalidade |
+| Dificuldade muito baixa | Penalidade por marasmo/tédio |
+| Dificuldade muito alta | Penalidade por fadiga/frustração |
+
+---
+
+#### Módulo de Snapshots de Parâmetros
+
+Esse módulo registra os parâmetros do jogo antes e depois das decisões tomadas pela IA. Ele permite rastrear como o DeepDDA modificou a sessão durante o uso.
+
+Esse registro é importante porque o sistema precisa saber qual configuração estava ativa antes da decisão, qual nova configuração foi aplicada e por qual motivo o ajuste ocorreu.
+
+| Dado registrado | Finalidade |
+|---|---|
+| Parâmetro anterior | Saber como o jogo estava configurado |
+| Novo parâmetro | Saber o que foi alterado |
+| Motivo da alteração | Justificar a decisão da IA |
+| Momento da alteração | Identificar quando o ajuste ocorreu |
+| Sessão associada | Relacionar o ajuste ao histórico do paciente |
 
 ---
 
 #### Módulo de Controle de Estado da Sessão
 
-Esse módulo controla a situação atual da sessão terapêutica. Ele permite que o sistema diferencie uma sessão concluída normalmente de uma sessão pausada ou interrompida.Assim registrando e controlando o ciclo de vida da sessão.
+Esse módulo controla a situação atual da sessão terapêutica. Ele permite que o sistema diferencie uma sessão concluída normalmente de uma sessão pausada, retomada ou interrompida.
+
+No escopo do Flow Psicofisiológico, esse módulo não substitui o DeepDDA. Ele apenas registra e controla o estado da sessão conforme as decisões tomadas pelo sistema ou pelo terapeuta.
 
 | Estado da sessão | Descrição |
 |---|---|
@@ -1501,61 +1624,55 @@ Esse módulo controla a situação atual da sessão terapêutica. Ele permite qu
 | Interrompida | Sessão encerrada antes do previsto |
 | Finalizada | Sessão concluída normalmente |
 
-Esse módulo é importante porque a melhoria não altera diretamente a dificuldade do jogo. O foco é controlar se a sessão pode continuar com segurança.
-
 ---
 
-#### Módulo de Regras de Decisão
+#### Módulo de Registro de Decisões e Eventos
 
-Esse módulo reúne as regras que determinam o comportamento do sistema diante dos dados recebidos. Ele recebe informações do oxímetro, do jogo, do tempo de sessão e das configurações definidas pelo terapeuta.Assim tendo como função transformar dados fisiológicos e dados da sessão em decisões automáticas ou semiautomáticas.
-
-Exemplo de regra:
-
-> Se a SpO₂ ficar abaixo do limite mínimo configurado, o jogo deve ser pausado e o evento deve ser registrado. Caso a queda persista ou atinja um valor crítico, a sessão deve ser interrompida.
-
----
-
-#### Módulo de Registro de Eventos de Segurança
-
-Esse módulo registra os eventos importantes ocorridos durante a sessão. Ele é responsável por armazenar informações sobre pausas, retomadas e interrupções, garantindo que os eventos de segurança não sejam perdidos e possam ser analisados posteriormente pelo profissional de saúde.
+Esse módulo registra os eventos importantes ocorridos durante a sessão. Ele armazena tanto eventos de segurança, como pausas e interrupções, quanto decisões do DeepDDA relacionadas ao ajuste dinâmico de dificuldade.
 
 | Dado | Exemplo |
 |---|---|
-| Tipo do evento | Pausa, retomada, interrupção |
-| Motivo | Queda de SpO₂, desconforto, decisão do terapeuta |
+| Tipo do evento | Ajuste de dificuldade, pausa, retomada, interrupção |
+| Motivo | Queda de SpO₂, baixo desempenho, esforço elevado |
 | Horário do evento | 10:35 |
 | Fase e nível | Fase 2, Nível 3 |
 | SpO₂ registrada | 88% |
+| Ação da IA | Reduzir dificuldade |
+| Recompensa | -0.5 |
 | Observação | Paciente relatou cansaço |
 
 ---
 
-#### Módulo de Configuração Terapêutica de Segurança
+#### Módulo de Setup Terapêutico e Parâmetros do Exergame
 
-Esse módulo permite que o terapeuta configure os limites e condições da sessão antes do início do jogo, permitindo que a segurança seja parametrizada de acordo com o paciente, o protocolo terapêutico e a decisão profissional.
+Esse módulo permite definir os parâmetros iniciais da sessão antes do início do jogo. Ele pode utilizar dados de calibração respiratória, histórico do paciente, perfil clínico e recomendações do sistema para configurar o setup inicial.
+
+Esses parâmetros servem como ponto de partida para o DeepDDA, que poderá ajustá-los dinamicamente durante a sessão.
 
 | Parâmetro | Exemplo |
 |---|---|
+| Fase inicial | Fase 1 |
+| Nível inicial | Nível 2 |
+| Velocidade dos objetos | 1.0 |
 | Limite mínimo de SpO₂ | 90% |
-| Limite crítico de SpO₂ | 85% |
 | Tempo máximo de sessão | 10 minutos |
-| Permitir retomada após pausa | Sim |
-| Interromper após múltiplas pausas | Sim |
-| Motivos de interrupção manual | Cansaço, tontura, queda de saturação |
+| Escala de Borg inicial | 3 |
+| Permitir ajustes automáticos | Sim |
 
 ---
 
-#### Módulo de Relatório de Segurança da Sessão
+#### Módulo de Relatório Psicofisiológico da Sessão
 
-Esse módulo organiza os dados da sessão em uma visualização útil para o profissional. Ele complementa os relatórios já existentes, acrescentando informações sobre segurança, permitindo que o terapeuta avalie não apenas o desempenho no jogo, mas também a tolerância fisiológica do paciente durante a atividade.
+Esse módulo organiza os dados da sessão em uma visualização útil para o profissional. Ele complementa os relatórios já existentes, acrescentando informações sobre Flow Psicofisiológico, decisões da IA, ajustes de dificuldade, segurança e tolerância fisiológica do paciente durante a atividade.
 
 | Informação | Utilidade |
 |---|---|
 | Sessão finalizada ou interrompida | Saber se o exercício foi concluído |
-| Quantidade de pausas | Identificar instabilidade durante a sessão |
-| Motivos de interrupção | Apoiar decisão terapêutica |
+| Quantidade de ajustes da IA | Identificar quanto o jogo precisou se adaptar |
+| Motivos dos ajustes | Apoiar decisão terapêutica |
 | Menor SpO₂ registrada | Avaliar segurança fisiológica |
-| Tempo total de pausa | Medir impacto das pausas |
+| Evolução da dificuldade | Observar progressão ou redução do desafio |
+| Recompensas calculadas | Avaliar resposta do agente |
 | Observações do terapeuta | Registrar contexto clínico |
 
 ---
@@ -1564,21 +1681,25 @@ Esse módulo organiza os dados da sessão em uma visualização útil para o pro
 
 | Componente | Situação | Papel na melhoria |
 |---|---|---|
-| Jogo / Plataforma | Já existente | Passa a responder a comandos de pausa e interrupção |
-| Cadastro e Perfil | Já existente | Associa eventos de segurança ao paciente |
-| Calibração Respiratória | Já existente | Continua sendo usada como base respiratória da sessão |
-| Histórico e Persistência | Já existente | É ampliado para registrar eventos de segurança |
-| Dashboards / Relatórios | Já existente no ecossistema | Passa a exibir dados de pausa, interrupção e SpO₂ |
-| IA / Ajuste Dinâmico de Dificuldade | Já existente no ecossistema evoluído | Mantida como recurso separado do controle de segurança |
-| Monitoramento Fisiológico | Adicionado/aprofundado | Captura SpO₂ e sinais fisiológicos |
-| Controle de Segurança | Novo | Decide se a sessão continua, pausa ou interrompe |
-| Controle de Estado da Sessão | Novo | Registra sessão em andamento, pausada, retomada, interrompida ou finalizada |
-| Regras de Decisão | Novo | Aplica critérios para pausa/interrupção |
-| Registro de Eventos | Novo | Salva motivo, horário e contexto dos eventos |
-| Configuração Terapêutica de Segurança | Novo | Permite definir limites clínicos da sessão |
+| Jogo / Plataforma | Já existente | Passa a enviar dados ao DeepDDA e receber ações de ajuste |
+| Cadastro e Perfil | Já existente | Associa paciente, histórico, sessões e decisões da IA |
+| Calibração Respiratória | Já existente | Continua sendo usada como base respiratória e entrada do setup |
+| Histórico e Persistência | Já existente | É ampliado para registrar biossinais, decisões, recompensas e parâmetros |
+| Dashboards / Relatórios | Já existente no ecossistema | Passa a exibir dados psicofisiológicos, ajustes e decisões da IA |
+| IA / Ajuste Dinâmico de Dificuldade | Aprofundado pela melhoria | Torna-se o núcleo do Flow Psicofisiológico com DeepDDA |
+| Monitoramento Psicofisiológico | Adicionado/aprofundado | Captura SpO₂, frequência cardíaca, frequência respiratória e percepção de esforço |
+| Módulo DeepDDA | Novo/aprofundado | Observa o estado da sessão e decide ações de dificuldade ou segurança |
+| Observação do Estado | Novo | Organiza os dados que serão analisados pela IA |
+| Decisão do DeepDDA | Novo | Define manter, aumentar, reduzir, pausar ou interromper |
+| Ação no Jogo | Novo | Aplica no jogo a ação decidida pela IA |
+| Recompensa | Novo | Avalia se a ação tomada foi adequada ao estado do paciente |
+| Snapshots de Parâmetros | Novo | Registra parâmetros antes e depois dos ajustes |
+| Controle de Estado da Sessão | Novo/aprofundado | Registra sessão em andamento, pausada, retomada, interrompida ou finalizada |
+| Registro de Decisões e Eventos | Novo | Salva decisões da IA, eventos, motivos e contexto |
+| Setup Terapêutico e Parâmetros | Novo/aprofundado | Define configuração inicial para a sessão e para o DeepDDA |
+| Relatório Psicofisiológico | Novo/aprofundado | Exibe desempenho, biossinais, ajustes e segurança da sessão |
 
 ---
-
 ## 5.4 Stack Tecnológica
 
 O sistema I Blue It é composto por diferentes camadas tecnológicas: o jogo sério, os dispositivos biomédicos, a comunicação entre hardware e software, o back-end, o banco de dados, o painel web e os módulos de inteligência artificial.Abaixo consta uma lista simplificada das stacks no sistema atual sem a melhoria.
