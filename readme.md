@@ -582,9 +582,7 @@ Abaixo o fluxo do jogo:
 
 <img width="15004" height="1604" alt="image" src="https://github.com/user-attachments/assets/9ff6dcf1-4c9c-4e93-a5c1-475e148ede3c" />
 
-link contendo o figma com as alterações no dashboard clinico, e as modais de alerta do jogo presentes em todo este capitulo:
-
-https://www.figma.com/design/38AvtwGYmDuDnZylhIduTf/Melhoria-Iblueit?m=auto&t=n2BUf4xlO5QlKDo9-1
+[17]
 
 ---
 
@@ -1848,27 +1846,47 @@ O cronograma foi organizado em marcos de desenvolvimento, priorizando primeiro a
 
 - [1]SANTOS, Adam Mews dos; GRIMES, Renato Hartmann; HOUNSELL, Marcelo da Silva; NOVELETTO, Fabrício; SOARES, Antônio Vinícius; SILVA, Helton Eckermann da. I Blue It: Um Jogo Sério para auxiliar na Reabilitação Respiratória. SBGames, 2018.
 - [2] DIAS, Claudinei. Flow Psicofisiológico em Jogos Digitais: Inteligência Artificial em Jogos Sérios Multimodais para Reabilitação Respiratória. Tese de Doutorado, UDESC, 2024.
+- 
+- [3] GRIMES, Renato Hartmann. **Sistema Biomédico com Jogo Sério e Dispositivo Especial para Reabilitação Respiratória**. Dissertação de Mestrado, Universidade do Estado de Santa Catarina, Joinville, 2018.
 
-Inclua:
+- [4] DIAS, Claudinei; ROMAGNO, Amilto; HOUNSELL, Marcelo da Silva; SOMA, Rodrigo Yuji Seto; TONDORF, Diego Fellipe; LEAL, André Bittencourt; ENGLEITNER, Matheus. **Uso da Inteligência Artificial em Jogos Digitais aplicados à Reabilitação Respiratória: um mapeamento sistemático da literatura**. SBGames, 2020.
 
-- artigos
-- documentação técnica
-- ferramentas utilizadas
-- repositórios
+- [5] NERY, Jhonatan Thallisson Cabral; HENRIQUE, Yuri Andreas May; HOUNSELL, Marcelo da Silva. **123-SGR: Uma Arquitetura para Jogos Sérios Multimodais para Reabilitação**. SBGames, 2020.
+
+- [6] UDESC-LARVA. **iblueit-health-Infocharts**. GitHub, [s.d.]. Disponível em: https://github.com/UDESC-LARVA/iblueit-health-Infocharts. Acesso em: 7 jun. 2026.
+
+- [7] UDESC-LARVA. **iblueit-multimodal**. GitHub, [s.d.]. Disponível em: https://github.com/UDESC-LARVA/iblueit-multimodal. Acesso em: 7 jun. 2026.
+
+- [8] UDESC-LARVA. **iblueit-psychophysiological-flow**. GitHub, [s.d.]. Disponível em: https://github.com/UDESC-LARVA/iblueit-psychophysiological-flow. Acesso em: 7 jun. 2026.
+
+- [9] UDESC-LARVA. **BlueApiFunctions**. GitHub, [s.d.]. Disponível em: https://github.com/UDESC-LARVA/BlueApiFunctions. Acesso em: 7 jun. 2026.
+
+- [10] UDESC-LARVA. **BlueApiFront**. GitHub, [s.d.]. Disponível em: https://github.com/UDESC-LARVA/BlueApiFront. Acesso em: 7 jun. 2026.
 
 ---
 
 # 9. Apêndices
 
-Podem incluir:
+- [11] HCILAB. **BubbleBreather: breathing exercise games for pneumonia recovery**. GitHub.  
+  Link: https://github.com/hcilab/BubbleBreather
 
-- mockups adicionais
-- resultados de pesquisa
-- entrevistas com usuários
-- diagramas complementares
-- links para protótipos ou repositórios
+- [12] CAMBRIDGE JUDGE BUSINESS SCHOOL. **PlayPhysio venture profile**.  
+  Link: https://www.jbs.cam.ac.uk/ventures/playphysio/
 
-Sempre que possível inclua **imagens, protótipos ou referências visuais**.
+- [13] PLAYPHYSIO. **PlayPhysio official website**.  
+  Link: https://play.physio/
+
+- [13] ACCELERATED CARE PLUS. **ACPlus Respiratory Assessment**.  
+  Link: https://acplus.com/acplus-respiratory-assessment-lp/
+
+- [15] ACCELERATED CARE PLUS. **OmniFlow: respiratory therapy technology**.  
+  Link: https://acplus.com/technology/omniflow/
+
+- [16] ACCELERATED CARE PLUS. **OmniFlow in action: restoring speech, confidence and connection**.  
+  Link: https://acplus.com/blog/success-stories/omniflow-in-action-restoring-speech-confidence-and-connection/
+
+- [17] O protótipo visual da melhoria pode ser consultado no Figma:
+  Link: https://www.figma.com/design/38AvtwGYmDuDnZylhIduTf/Melhoria-Iblueit?m=auto&t=n2BUf4xlO5QlKDo9-1
 
 ---
 
