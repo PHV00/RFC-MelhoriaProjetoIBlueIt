@@ -1811,13 +1811,36 @@ Assim todos os dados são centralizados no banco de dados mongodb, oque permitem
 
 # 7. Planejamento do Projeto
 
-Defina os principais marcos de desenvolvimento.
+O cronograma foi organizado em marcos de desenvolvimento, priorizando primeiro a preparação do ambiente e a prova de conceito do módulo SpO₂, depois a integração com o jogo, backend, banco de dados, dashboard e, por fim, a etapa de testes, ajustes e documentação.
 
 | Marco | Descrição | Prazo |
 |---|---|---|
-| M1 | Setup do ambiente e prova de conceito | Semana X |
-| M2 | MVP funcional | Semana Y |
-| M3 | Testes e melhorias | Semana Z |
+| M1 | Setup do ambiente de desenvolvimento, análise do código existente do I Blue It, definição dos pontos de integração com o PITACO, Unity, backend, banco de dados e dashboard. | 27/07/2026 a 07/08/2026 |
+| M2 | Prova de conceito da leitura do sensor SpO₂ integrado ao PITACO ampliado, incluindo captura inicial de saturação, frequência cardíaca, validação de contato e testes com dados simulados. | 10/08/2026 a 21/08/2026 |
+| M3 | Integração inicial entre o módulo SpO₂ e o jogo I Blue It, permitindo que o Unity receba dados fisiológicos em tempo de execução sem comprometer a captura respiratória já existente. | 24/08/2026 a 04/09/2026 |
+| M4 | Implementação da validação, filtragem e tratamento dos sinais fisiológicos, incluindo identificação de leituras inválidas, perda de sinal, mau posicionamento do sensor e inconsistências nos dados. | 07/09/2026 a 18/09/2026 |
+| M5 | Implementação das regras de monitoramento fisiológico, alertas de segurança, recomendação de pausa e interrupção automática da sessão em casos críticos de SpO₂. | 21/09/2026 a 02/10/2026 |
+| M6 | Atualização do backend, API e modelo de dados para registrar SpO₂, frequência cardíaca, eventos de alerta, pausas, interrupções e associação desses dados à sessão terapêutica. | 05/10/2026 a 16/10/2026 |
+| M7 | Integração dos dados fisiológicos ao módulo DeepDDA, permitindo que a IA utilize SpO₂ e demais biossinais como parâmetros adicionais no ajuste dinâmico de dificuldade e nas decisões de segurança. | 19/10/2026 a 30/10/2026 |
+| M8 | Atualização do dashboard clínico Health InfoCharts para exibir dados de oxigenação, eventos de pausa/interrupção, resumo fisiológico da sessão e histórico dos novos registros. | 02/11/2026 a 13/11/2026 |
+| M9 | Consolidação do MVP funcional da melhoria, integrando PITACO ampliado, módulo SpO₂, jogo, backend, banco de dados, dashboard e registros de eventos da sessão. | 16/11/2026 a 20/11/2026 |
+| M10 | Testes funcionais, testes de integração, testes com dados simulados, verificação dos requisitos funcionais e não funcionais, correções e ajustes finais. | 23/11/2026 a 04/12/2026 |
+| M11 | Finalização da documentação técnica, revisão do RFC, organização dos resultados, preparação da apresentação e entrega final da melhoria. | 07/12/2026 a 11/12/2026 |
+
+## 7.1 Entregas Esperadas por Etapa
+
+| Etapa | Entrega esperada |
+|---|---|
+| Setup e estudo do sistema | Ambiente configurado e pontos de integração identificados |
+| Prova de conceito do SpO₂ | Leitura inicial do sensor validada com dados reais ou simulados |
+| Integração com o jogo | Unity recebendo dados fisiológicos durante a sessão |
+| Monitoramento fisiológico | Regras de alerta, pausa e interrupção implementadas |
+| Persistência dos dados | Banco de dados e backend preparados para armazenar os novos registros |
+| Integração com DeepDDA | IA considerando SpO₂ e biossinais no ajuste da sessão |
+| Dashboard clínico | Dados de oxigenação e eventos de segurança visíveis ao terapeuta |
+| MVP funcional | Fluxo completo da melhoria operando de forma integrada |
+| Testes e ajustes | Requisitos verificados e falhas corrigidas |
+| Entrega final | Documentação, apresentação e versão final da proposta concluídas |
 
 ---
 
