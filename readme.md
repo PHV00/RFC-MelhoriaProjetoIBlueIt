@@ -1421,7 +1421,7 @@ MongoDB
 
 A melhoria proposta para o I Blue It mantém a estrutura principal do sistema biomédico atual, mas adiciona componentes voltados ao Flow Psicofisiológico com DeepDDA, permitindo que o sistema utilize dados do jogo, dados respiratórios, biossinais e percepção de esforço para apoiar o ajuste dinâmico de dificuldade durante a sessão terapêutica.
 
-Como demonstrado por Dias Claudiney(2024) 
+Nesse sentido este trabalho dá continuidade à tese de Dias (2024), implementando no sistema I Blue It a integração prática do Flow Psicofisiológico com DeepDDA, substituindo dados emulados por dados coletados durante a sessão e ajustando o modelo de dados, o fluxo da sessão, o registro de decisões da IA e a visualização dos resultados.[2]
 
 Nesse escopo, o sistema atual já possui componentes como cadastro de jogador, calibração respiratória, histórico de uso, registros de dados da plataforma e dos minigames, além de dashboards para acompanhamento do quadro por parte dos profissionais da saúde. A melhoria amplia esse sistema ao incorporar o monitoramento fisiológico, o registro das decisões da IA, o controle de segurança e os ajustes dinâmicos de dificuldade realizados pelo DeepDDA.
 
