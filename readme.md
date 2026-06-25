@@ -46,7 +46,7 @@ O sistema biomédico atual possui uma série de jogos e exercícios terapêutico
 
 [Figura 2. jogo I Blue It.][2]
 
-O sistema também possui um módulo de análise de dados, ao qual permite médico responsável analisar os dados de calibração e desempenho de seus pacientes,em todos os jogos aplicados, além de possibilitar a exportação dos mesmos em formato CSV. 
+O sistema também possui um módulo de análise de dados, que permite o médico responsável analisar os dados de calibração e desempenho de seus pacientes,em todos os jogos aplicados, além de possibilitar a exportação dos mesmos em formato CSV. 
 
 <img width="5464" height="2544" alt="image" src="https://github.com/user-attachments/assets/b5e8b6ac-99cc-453b-9763-f462f7fa86c4" />
 
