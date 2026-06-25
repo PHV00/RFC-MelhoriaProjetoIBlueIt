@@ -128,21 +128,22 @@ público-alvo : pessoas com problemas respiratórios de modo amplo
 
 ### Comparação
 
-| Solução | Pontos Fortes | Limitações |
-|---|---|---|
-| BubbleBreather |Permite a utilização do sistema em diversos ambientes (por ser em browser)|Não possui módulo clínico especializado|
-| PlayPhysio |Permite tratamento gamificado, com especialização em exercícios lúdicos com foco infantojuvenil| Ecossistema clínico mais simplificado|
-| OmniFlow |Permite o tratamento gamificado, e dados clínicos detalhados|Especificidade do sistema ao ambiente estadunidense|
+| Solução | Escopo terapêutico | Dispositivo ou entrada de dados | Multimodalidade | IA / Ajuste Dinâmico | Monitoramento fisiológico | Dashboard / camada clínica | Principais limitações |
+|---|---|---|---|---|---|---|---|
+| BubbleBreather | Exercícios respiratórios com foco em recuperação de pneumonia | Microfone / navegador | Não identificado | Não identificado | Não identificado | Não possui módulo clínico especializado | Escopo restrito, dependência de microfone e ausência de integração com sensores terapêuticos dedicados |
+| PlayPhysio | Exercícios respiratórios com foco em adesão ao tratamento, principalmente em crianças | Dispositivo IoT PhysioPal conectado via Bluetooth | Parcial | Não identificado | Dados vinculados ao uso do equipamento terapêutico | Camada clínica mais simplificada | Menor robustez clínica quando comparado a uma plataforma multimodal com dashboard terapêutico |
+| ACPlus Respiratory Assessment + OmniFlow | Diagnóstico, documentação clínica e terapia respiratória interativa | Espirômetro Bluetooth e iPad | Parcial | Não identificado | Dados respiratórios capturados por dispositivo dedicado | Possui documentação clínica e análise profissional | Solução comercial voltada ao contexto regulatório estadunidense |
+| I Blue It 5.2 | Reabilitação respiratória mediada por jogo sério ativo, com monitoramento fisiológico complementar | PITACO ampliado com sensor de SpO2 | Sim | Sim, com possibilidade de integração ao DeepDDA / Flow Psicofisiológico | SpO2 e, se validado tecnicamente, frequência cardíaca | Dashboard clínico com dados respiratórios, desempenho e saturação sanguínea | Solução em desenvolvimento, dependente de validação técnica da integração do oxímetro ao PITACO |
 
 ---
 
 ### Diferencial do Projeto
 
-Analisando os projetos elencados, podemos concluir que no campo das soluções respiratórias gamificadas elencadas se distribuem em três grandes grupos. O primeiro é o de soluções leves e acessíveis, como o BubbleBreather, que prioriza a simplicidade tecnológica e acesso rápido. O segundo é o das soluções orientadas ao engajamento familiar e à adesão de maneira lúdica, como o PlayPhysio. O terceiro é o das soluções com maior maturidade clínica e comercial, como o ACPlus Respiratory Assessment e o OmniFlow, fortemente ligado à atuação completa desde análise de desempenho do paciente em resposta ao tratamento, até ao tratamento gamificado e lúdico.
+Analisando as soluções elencadas, percebe-se que o campo de soluções digitais voltadas à reabilitação respiratória pode ser organizado em três grupos principais. O primeiro grupo é composto por soluções leves e acessíveis, como o BubbleBreather, que priorizam simplicidade tecnológica, acesso rápido e execução em navegador. O segundo grupo é formado por soluções voltadas ao engajamento e à adesão ao tratamento, como o PlayPhysio, que utiliza um dispositivo IoT para tornar os exercícios respiratórios mais atrativos, especialmente para o público infantil. O terceiro grupo envolve soluções com maior maturidade clínica e comercial, como o ACPlus Respiratory Assessment e o OmniFlow, que integram dispositivos respiratórios e recursos de análise profissional, porém com forte dependência do contexto regulatório e de implantação estadunidense.
 
-Porém podemos perceber que enquanto os dois primeiros concorrentes apresentem pontos fortes específicos e distintos, e que não cobrem todo o escopo já tratado pelo software I Blue It, o terceiro apresenta uma solução completa e semelhante ao software I Blue It, porém trazendo consigo uma diferença crucial, a especificidade ao ambiente estadunidense, o que impossibilita sua implementação de maneira simplificada em outros ambientes e sistemas.
+Apesar das contribuições dessas soluções, observa-se que nenhuma delas contempla, de forma integrada, todos os elementos que caracterizam a proposta do I Blue It 5.2: uso de jogo sério ativo voltado à reabilitação respiratória, arquitetura multimodal, integração com dispositivo IoT próprio, monitoramento fisiológico por SpO2, possibilidade de uso de inteligência artificial para ajuste dinâmico e dashboard clínico voltado ao acompanhamento profissional.
 
-Dado isto percebemos a lacuna nítida de uma ferramenta completa ao ambiente fisioterápico brasileiro, que abranja de maneira relevante tanto a exergames de exercícios fisioterápicos voltados à reabilitação respiratória, como a análise dos dados de desempenho do paciente, que é justamente a lacuna técnica que o I Blue It cobre.  
+Nesse contexto, o I Blue It 5.2 busca preencher uma lacuna técnica no ambiente fisioterapêutico brasileiro, ao propor uma solução que integra exergame respiratório, dispositivo terapêutico dedicado, monitoramento de saturação sanguínea e análise clínica dos dados do paciente. Dessa forma, o diferencial do projeto está na ampliação do ecossistema I Blue It para oferecer não apenas suporte lúdico aos exercícios respiratórios, mas também maior segurança fisiológica, rastreabilidade dos dados e apoio à tomada de decisão por parte do profissional da saúde.
 
 ---
 
