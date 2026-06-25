@@ -31,11 +31,11 @@ Este projeto tem como finalidade aprimorar o jogo sério I Blue It, um sistema b
 
 A reabilitação respiratória(RR) é um processo fisioterapêutico voltado a pacientes com doenças ou disfunções respiratórias,tendo como finalidade minimizar sintomas, melhorar a capacidade funcional e auxiliar na qualidade de vida dos pacientes.Entretanto frequentemente este processo envolve exercício sistemático, repetitivo e de longo prazo, o que pode torná-los monótono e exaustivo, assim reduzindo a adesão do paciente ao tratamento. Nesse contexto os jogos sérios surgem como uma forma de tornar a reabilitação mais atrativa, utilizando elementos lúdicos, feedback e desafios progressivos para aumentar o engajamento do paciente durante as sessões terapêuticas.[1]
 
-Nesse âmbito o sistema biomédico desenvolvido pela iniciativa de pesquisa do Laboratory for Research on Visual Applications (LARVA) da Universidade do Estado de Santa Catarina(Udesc), chamado I Blue It, foi desenvolvido como um jogo sério ativo voltado à reabilitação respiratória, com o objetivo de auxiliar pacientes durante exercícios respiratórios por meio da gamificação do tratamento.[1]
+Nesse âmbito o sistema biomédico desenvolvido pela iniciativa de pesquisa do Laboratory for Research on Visual Applications (LARVA) da Universidade do Estado de Santa Catarina(Udesc), chamado I Blue It, foi desenvolvido como um jogo sério (Exergame) ativo voltado à reabilitação respiratória, com o objetivo de auxiliar pacientes durante exercícios respiratórios .[1]
 
 O jogo utiliza a respiração do paciente como forma de controle, por meio de um do dispositivo de hardware chamado PITACO, um hardware criado baseado no funcionamento de um pneumotacógrafo, que permite capturar sinais relacionados ao fluxo de ar do paciente e disponibilizá-los ao jogo em tempo real.[1]
 
-Abaixo consta um dispositivo PITACO em sua versão mais recente:
+Abaixo consta um dispositivo PITACO em sua versão 1.0:
 <img width="755" height="366" alt="Captura de tela de 2026-06-01 14-12-55" src="https://github.com/user-attachments/assets/824ec7cd-f083-4813-8073-c3a78c45b97e" />
 
 [FonteArtigoLeonardoAindaNãoPublicado]
