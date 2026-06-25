@@ -156,7 +156,7 @@ Profissional de saúde: fisioterapeutas respiratórios, fisioterapeutas clínico
 
 ### Objetivo Geral
 
-O projeto se propõe a adicionar funções e módulos, tanto ao hardware como ao software, de modo a cobrir primariamente a segurança e monitoramento da saturação sanguínea do paciente em tempo de execução das sessões, e sua coleta e processamento dos dados oriundos da oximetria, para auxiliar os profissionais responsáveis na tomada de decisões .
+O projeto se propõe a adicionar funções e módulos, tanto ao hardware como ao software, de modo a cobrir primariamente a segurança e monitoramento da saturação sanguínea do paciente em tempo de execução das sessões, e sua coleta e processamento dos dados oriundos da oximetria, para auxiliar os profissionais responsáveis na tomada de decisões.
 
 Pretende-se assim adicionar um novo sensor de oximetria(SpO2) ao aparelho de captação de dados existente PITACO, ao qual serão utilizados tais dados de saturação sanguínea para a criação de um módulo, responsável pelo monitoramento e segurança do paciente durante a sessão.
 
