@@ -142,7 +142,7 @@ Analisando os projetos elencados, podemos concluir que no campo das soluções r
 
 Porém podemos perceber que enquanto os dois primeiros concorrentes apresentem pontos fortes específicos e distintos, e que não cobrem todo o escopo já tratado pelo software I Blue It, o terceiro apresenta uma solução completa e semelhante ao software I Blue It, porém trazendo consigo uma diferença crucial, a especificidade ao ambiente estadunidense, o que impossibilita sua implementação de maneira simplificada em outros ambientes e sistemas.
 
-Dado isto percebemos a lacuna nítida de uma ferramenta completa ao ambiente fisioterápico brasileiro, que abranja de maneira relevante tanto a gamificação dos exercícios fisioterápicos voltados à reabilitação respiratória, como a análise dos dados de desempenho do paciente, que é justamente a lacuna técnica que o I Blue It cobre.  
+Dado isto percebemos a lacuna nítida de uma ferramenta completa ao ambiente fisioterápico brasileiro, que abranja de maneira relevante tanto a exergames de exercícios fisioterápicos voltados à reabilitação respiratória, como a análise dos dados de desempenho do paciente, que é justamente a lacuna técnica que o I Blue It cobre.  
 
 ---
 
