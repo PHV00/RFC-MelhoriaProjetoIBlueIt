@@ -257,7 +257,7 @@ O sistema permite que o profissional de saúde cadastre o paciente caso seja nov
 **Objetivo:** Receber os dados fisiológicos necessários para a realização do jogo.
 
 **Descrição:**
-O sistema permite que o paciente por meio do dispositivo PITACO tenha seus dados fisiológicos estipulados e monitorados.Essa funcionalidade tem como fim capturar os dados necessários para a realização de todas as operações do sistema.
+O sistema permite que o paciente por meio do dispositivo PITACO tenha seus dados fisiológicos sensoriados e monitorados.Essa funcionalidade tem como fim capturar os dados necessários para a realização de todas as operações do sistema.
 
 ---
 
