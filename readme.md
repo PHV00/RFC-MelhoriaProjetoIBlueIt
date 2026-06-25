@@ -38,7 +38,7 @@ O jogo utiliza a respiração do paciente como forma de controle, por meio de um
 Abaixo consta um dispositivo PITACO em sua versão 1.0:
 <img width="755" height="366" alt="Captura de tela de 2026-06-01 14-12-55" src="https://github.com/user-attachments/assets/824ec7cd-f083-4813-8073-c3a78c45b97e" />
 
-[Figura 1. PITACO versão 0.1]
+[Figura 1. PITACO versão 1.0]
 
 O sistema biomédico atual possui uma série de jogos e exercícios terapêuticos, dentre eles o que leva o próprio nome do sistema, o I Blue It, no qual o paciente interage com o personagem principal, o golfinho Blue, realizando ações respiratórias de inspirar e expirar, que por sua vez movimentam o personagem no ambiente do jogo.[2]
 
