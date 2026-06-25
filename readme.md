@@ -90,38 +90,33 @@ Assim, o projeto de melhoria parte da continuidade de um trabalho técnico-acad�
 ## 1.3 Análise de Soluções Existentes (Benchmark)
 
 **BubbleBreather**  
-Uma pequena coleção de jogos/atividades para exercícios respiratórios focados apenas na recuperação de pneumonia. Pode ser acessado pelo GitHub público e possui uma demo web ativa, por mais que não haja updates desde 2020. Possui um escopo mais estreito sendo jogos feitos no próprio browser, depende de microfone, com foco em exercícios específicos e não apresenta uma camada clínica robusta, comparável a dashboard terapêutico ou equipamentos IoT terapêuticos multimodalidade com sensores dedicados.
+Uma pequena coleção de jogos/atividades para exercícios respiratórios focados apenas na recuperação de pneumonia. Pode ser acessado pelo GitHub público e possui uma demo web ativa, por mais que não haja updates desde 2020. Possui um escopo mais estreito sendo jogos feitos no próprio browser, depende de microfone, com foco em exercícios específicos e não apresenta uma camada clínica robusta, comparável a dashboard terapêutico ou equipamentos IoT terapêuticos multimodalidade com sensores dedicados. [11]
 
 <img width="1915" height="947" alt="image" src="https://github.com/user-attachments/assets/45f80ec5-01ce-4d98-9ae2-b7e611d33471" />
 
-link do repositório : https://github.com/hcilab/BubbleBreather?tab=readme-ov-file
+[Figura 3. Dashboard principal BubbleBreather.][11]
 
 público-alvo : pessoas em recuperação de pneumonia
 
 **PlayPhysio**
 
-Uma iniciativa originada pela demanda de um pai cuja filha possui fibrose cística e necessitava realizar fisioterapia, porém o tratamento não era engajador o que dificultava a participação e o interesse da criança. Com isso em mente, decidiu-se criar uma plataforma gamificada para que sua filha pudesse realizar seus exercícios de maneira mais lúdica. Para fazer isso a plataforma acopla um equipamento IoT chamado PhysioPal ao equipamento terapêutico que ao se conectar via Bluetooth no aparelho celular, registrará a pontuação no app. Não parece apresentar publicamente um ecossistema clínico tão robusto quanto o I Blue It, contendo dashboard terapêutico ou equipamentos IoT com sensores dedicados acoplados diretamente ao sistema, porém contém feedback em tempo real, e fornecimento detalhado de dados.
+Uma iniciativa originada pela demanda de um pai cuja filha possui fibrose cística e necessitava realizar fisioterapia, porém o tratamento não era engajador o que dificultava a participação e o interesse da criança. Com isso em mente, decidiu-se criar uma plataforma gamificada para que sua filha pudesse realizar seus exercícios de maneira mais lúdica. Para fazer isso a plataforma acopla um equipamento IoT chamado PhysioPal ao equipamento terapêutico que ao se conectar via Bluetooth no aparelho celular, registrará a pontuação no app. Não parece apresentar publicamente um ecossistema clínico tão robusto quanto o I Blue It, contendo dashboard terapêutico ou equipamentos IoT com sensores dedicados acoplados diretamente ao sistema, porém contém feedback em tempo real, e fornecimento detalhado de dados.[12][13]
 
 <img width="1922" height="952" alt="image" src="https://github.com/user-attachments/assets/0c27559d-9700-4069-ac29-197f41ecb948" />
 
-links do projeto:
-- https://www.jbs.cam.ac.uk/ventures/playphysio/
-- https://play.physio/
+[Figura 3. Tela inicial principal PlayPhysio.][12][13]
 
 público-alvo : pessoas com problemas respiratórios (com foco em crianças)
 
 **ACPlus Respiratory Assessment + OmniFlow**
 
-A empresa Accelerated Care Plus produz duas soluções no ramo de terapia respiratória sendo eles o ACPlus Respiratory Assessment uma solução voltada a ajudar na etapa de diagnóstico e decisão clínica de disfunções pulmonares, onde por meio de um dispositivo que captura os dados da respiração do paciente e os transmite a um iPad por meio do Bluetooth, que por sua vez retorna em formato de prontuário com a documentação clínica necessária aos profissionais da saúde. A outra chamado OmniFlow, tem como foco o tratamento gamificado através de terapias pulmonares por meio de experiências interativas/gamificadas, onde o paciente realiza o tratamento através de um dispositivo espirômetro Bluetooth que capta seus dados, que são utilizados tanto nos exercícios, quanto posteriormente permite a análise por um profissional de saúde. Entre suas limitações podemos destacar a exclusividade de implantação, pois atualmente os sistemas são voltados às regulamentações e normativas do seu país de origem Estados Unidos, o que limita a sua atuação preferencialmente apenas ao mercado estadunidense.
+A empresa Accelerated Care Plus produz duas soluções no ramo de terapia respiratória sendo eles o ACPlus Respiratory Assessment uma solução voltada a ajudar na etapa de diagnóstico e decisão clínica de disfunções pulmonares, onde por meio de um dispositivo que captura os dados da respiração do paciente e os transmite a um iPad por meio do Bluetooth, que por sua vez retorna em formato de prontuário com a documentação clínica necessária aos profissionais da saúde. A outra chamado OmniFlow, tem como foco o tratamento gamificado através de terapias pulmonares por meio de experiências interativas/gamificadas, onde o paciente realiza o tratamento através de um dispositivo espirômetro Bluetooth que capta seus dados, que são utilizados tanto nos exercícios, quanto posteriormente permite a análise por um profissional de saúde. Entre suas limitações podemos destacar a exclusividade de implantação, pois atualmente os sistemas são voltados às regulamentações e normativas do seu país de origem Estados Unidos, o que limita a sua atuação preferencialmente apenas ao mercado estadunidense.[14][15][16]
 
 - OmniFlow
 - <img width="1187" height="768" alt="image" src="https://github.com/user-attachments/assets/eef6fc3f-ce31-4bc5-8d05-24394b690f87" />
 
-links dos produtos:
-- https://acplus.com/acplus-respiratory-assessment-lp/
-- https://acplus.com/technology/omniflow/
-- https://acplus.com/blog/success-stories/omniflow-in-action-restoring-speech-confidence-and-connection/
-  
+[Figura 3. Dashboard principal BubbleBreather.][15]
+
 público-alvo : pessoas com problemas respiratórios de modo amplo
 
 ---
@@ -1876,7 +1871,7 @@ O cronograma foi organizado em marcos de desenvolvimento, priorizando primeiro a
 - [13] PLAYPHYSIO. **PlayPhysio official website**.  
   Link: https://play.physio/
 
-- [13] ACCELERATED CARE PLUS. **ACPlus Respiratory Assessment**.  
+- [14] ACCELERATED CARE PLUS. **ACPlus Respiratory Assessment**.  
   Link: https://acplus.com/acplus-respiratory-assessment-lp/
 
 - [15] ACCELERATED CARE PLUS. **OmniFlow: respiratory therapy technology**.  
