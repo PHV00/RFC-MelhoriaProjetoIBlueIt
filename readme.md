@@ -164,7 +164,7 @@ O projeto se propõe a adicionar funções e módulos, tanto ao hardware como ao
 
 Tendo em vista a problemática apresentada, este projeto tem como fim sanar as lacunas identificadas com fim de entregar ao final, um sistema biomédico mais completo. Baseando-se nisso segue abaixo os objetivos a serem tratados:
 
-- Integrar o hardware existente do PITACO ao sensor de SpO2 para monitoramento fisiológico complementar, através da saturação sanguínea, e se possível o batimento cardíaco.
+- Integrar o hardware existente do PITACO ao sensor de SpO2 para monitoramento fisiológico complementar, através da saturação sanguínea.
 - Atualizar o módulo de ajuste dinâmico por inteligência artificial responsável pela dificuldade, para suportar o novo parâmetro de Saturação Sanguínea.
 - Atualizar o dashboard clínico para exibir e correlacionar dados respiratórios, da saturação sanguínea  e de desempenho nos jogos e sessões.
 
