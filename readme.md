@@ -138,7 +138,7 @@ Analisando as soluções elencadas, percebe-se que o campo de soluções digitai
 
 Apesar das contribuições dessas soluções, observa-se que nenhuma delas contempla, de forma integrada, todos os elementos que caracterizam a proposta do I Blue It 5.2: uso de jogo sério ativo voltado à reabilitação respiratória, arquitetura multimodal, integração com dispositivo IoT próprio, monitoramento fisiológico por SpO2, possibilidade de uso de inteligência artificial para ajuste dinâmico e dashboard clínico voltado ao acompanhamento profissional.
 
-Nesse contexto, o I Blue It 5.2 busca preencher uma lacuna técnica no ambiente fisioterapêutico brasileiro, ao propor uma solução que integra exergame respiratório, dispositivo terapêutico dedicado, monitoramento de saturação sanguínea e análise clínica dos dados do paciente. Dessa forma, o diferencial do projeto está na ampliação do ecossistema I Blue It para oferecer não apenas suporte lúdico aos exercícios respiratórios, mas também maior segurança fisiológica, rastreabilidade dos dados e apoio à tomada de decisão por parte do profissional da saúde.
+Nesse contexto, o I Blue It 5.2 (a versão da proposta de melhoria) busca preencher uma lacuna técnica no ambiente fisioterapêutico brasileiro, ao propor uma solução que integra exergame respiratório, dispositivo terapêutico dedicado, monitoramento de saturação sanguínea e análise clínica dos dados do paciente. Dessa forma, o diferencial do projeto está na ampliação do ecossistema I Blue It para oferecer não apenas suporte lúdico aos exercícios respiratórios, mas também maior segurança fisiológica, rastreabilidade dos dados e apoio à tomada de decisão por parte do profissional da saúde.
 
 ---
 
