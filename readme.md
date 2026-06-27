@@ -94,7 +94,7 @@ Uma pequena coleção de jogos/atividades para exercícios respiratórios focado
 
 <img width="1915" height="947" alt="image" src="https://github.com/user-attachments/assets/45f80ec5-01ce-4d98-9ae2-b7e611d33471" />
 
-[Figura 3. Dashboard principal BubbleBreather.][11]
+[Figura 4. Dashboard principal BubbleBreather.][11]
 
 público-alvo : pessoas em recuperação de pneumonia
 
@@ -104,7 +104,7 @@ Uma iniciativa originada pela demanda de um pai cuja filha possui fibrose císti
 
 <img width="1922" height="952" alt="image" src="https://github.com/user-attachments/assets/0c27559d-9700-4069-ac29-197f41ecb948" />
 
-[Figura 3. Tela inicial principal PlayPhysio.][12][13]
+[Figura 5. Tela inicial principal PlayPhysio.][12][13]
 
 público-alvo : pessoas com problemas respiratórios (com foco em crianças)
 
@@ -115,7 +115,7 @@ A empresa Accelerated Care Plus produz duas soluções no ramo de terapia respir
 - OmniFlow
 <img width="1187" height="768" alt="image" src="https://github.com/user-attachments/assets/eef6fc3f-ce31-4bc5-8d05-24394b690f87" />
 
-[Figura 3. Dashboard principal BubbleBreather.][15]
+[Figura 6. Dashboard principal BubbleBreather.][15]
 
 público-alvo : pessoas com problemas respiratórios de modo amplo
 
@@ -275,21 +275,21 @@ O sistema permite que o profissional de saúde configure a sessão terapêutica 
 
 ---
 
-### UC05 — Executar Game Plataforma
-
-**Objetivo:** Realizar o exercício terapêutico com o jogo de plataforma
-
-**Descrição:**
-O sistema permite que o paciente realize a sessão de exercício terapêutico do game de plataforma, no qual utiliza-se de sua respiração no instrumento PITACO para controlar um personagem verticalmente assim o fazendo desviar de obstáculos que aparecem para completar o nível.Deste modo buscando exercitar o paciente de maneira lúdica. 
-
----
-
-### UC06 — Executar Minigame
+### UC05 — Executar Minigame
 
 **Objetivo:** Realizar o exercício terapêutico com os minijogos existentes 
 
 **Descrição:**
 O sistema permite que o paciente realize a sessão de exercício terapêutico em um dos minigames existentes, no qual utiliza-se de sua respiração no instrumento PITACO para controlar as ações de cada nível.Deste modo buscando exercitar o paciente de maneira lúdica. 
+
+---
+
+### UC06 — Executar Game Plataforma
+
+**Objetivo:** Realizar o exercício terapêutico com o jogo de plataforma
+
+**Descrição:**
+O sistema permite que o paciente realize a sessão de exercício terapêutico do game de plataforma, no qual utiliza-se de sua respiração no instrumento PITACO para controlar um personagem verticalmente assim o fazendo desviar de obstáculos que aparecem para completar o nível.Deste modo buscando exercitar o paciente de maneira lúdica. 
 
 ---
 
@@ -367,7 +367,7 @@ O sistema permite capturar dados fisiológicos, por meio do PITACO ampliado, tan
 **Objetivo:** Garantir que os dados respiratórios capturados pelo SpO2 sejam consistentes, confiáveis e adequados para análise.
 
 **Descrição:**
-O sistema realiza a validação e transformação dos dados brutos obtidos pelo SpO2 para dados como saturação sanguínea, frequência cardíaca e posição adequada do dispositivo, com a finalidade de fornecer tais dados processados para as outra partes interconectadas do sistema.Essa etapa permite validar se os dado estão sendo capturados de maneira adequada e que estejam sendo retornados também de maneira adequada, para as demais partes.
+O sistema realiza a validação se os dados estão sendo capturados adequadamente e a transformação dos mesmos dados brutos obtidos pelo SpO2 para valores reais de saturação sanguínea, com a finalidade de fornecer tais dados processados para as outra partes interconectadas do sistema.Essa etapa permite validar se os dados estão sendo capturados de maneira adequada e que estejam sendo retornados também de maneira adequada para as demais partes.
 
 ---
 
@@ -413,29 +413,28 @@ Abaixo pode se ver o fluxo com a melhoria proposta:
 |----|---------------------|
 | RF01 | O sistema deve permitir que o sensor SpO2 seja conectado ao sistema, sem interromper ou comprometer funcionalidades existentes. |
 | RF02 | O sistema deve permitir que o sensor SpO2 envie dados durante a sessão a todos os módulos pertinentes do software I Blue It. |
-| RF03 | O sistema deve permitir que o sensor SpO2 envie dados de frequência cardíaca, quando disponíveis. |
-| RF04 | O sistema deve permitir que o software I Blue It receba dados do módulo SpO2 em tempo real. |
-| RF05 | O sistema deve permitir que o módulo SpO2 valide o contato do sensor ao paciente. |
-| RF06 | O sistema deve permitir que o módulo SpO2 valide a qualidade do sinal recebido. |
-| RF07 | O sistema deve permitir que o módulo SpO2 ignore leituras inválidas de saturação sanguínea. |
-| RF08 | O sistema deve permitir que o sistema monitore a saturação sanguínea do paciente durante a execução do jogo. |
-| RF09 | O sistema deve permitir que o terapeuta configure o limite mínimo de saturação sanguínea. |
-| RF10 | O sistema deve permitir que o módulo SpO2 compare a saturação sanguínea obtida, com o limite definido pelo terapeuta. |
-| RF11 | O sistema deve permitir que o módulo SpO2 alerte o software I Blue It quando a saturação sanguínea estiver abaixo do limite definido. |
-| RF12 | O sistema deve permitir que o módulo SpO2 emita alerta quando o sensor estiver desconectado. |
-| RF13 | O sistema deve permitir que o módulo SpO2 emita alerta quando o sensor estiver mal posicionado, pausando a sessão. |
-| RF14 | O sistema deve permitir que o módulo SpO2 registre a série temporal de saturação sanguínea da sessão no software I Blue It. |
-| RF15 | O sistema deve permitir que o módulo SpO2 registre o menor valor de saturação sanguínea da sessão. |
-| RF16 | O sistema deve permitir que o módulo SpO2 registre eventos de queda de SpO2. |
-| RF17 | O sistema deve permitir que o registre eventos de falha ou perda de sinal do módulo SpO2. |
-| RF18 | O sistema deve permitir que o módulo SpO2 recomende pausa ao terapeuta quando houver risco fisiológico ao paciente. |
-| RF19 | O sistema deve permitir que o módulo SpO2 pause automaticamente a sessão no software I Blue It caso a saturação sanguínea esteja em condição crítica. |
-| RF20 | O sistema deve permitir que o terapeuta autorize a retomada da sessão após normalização da SpO2. |
-| RF21 | O sistema deve permitir que o software I Blue It apresente o estado do monitoramento fisiológico na interface. |
-| RF22 | O sistema deve permitir que o terapeuta visualize os dados do módulo SpO2 durante e após a sessão. |
-| RF23 | O sistema deve permitir que o módulo SpO2 gere um resumo fisiológico da sessão para ser apresentado no software I Blue It. |
-| RF24 | O sistema deve permitir a associação dos dados obtidos pelo módulo SpO2 aos dados já obtidos pelo software I Blue It durante a sessão terapêutica . |
-| RF25 | O sistema deve permitir que o terapeuta consulte os registros fisiológicos de sessões anteriores. |
+| RF03 | O sistema deve permitir que o software I Blue It receba dados do módulo SpO2 em tempo real. |
+| RF04 | O sistema deve permitir que o módulo SpO2 valide o contato do sensor ao paciente. |
+| RF05 | O sistema deve permitir que o módulo SpO2 valide a qualidade do sinal recebido. |
+| RF06 | O sistema deve permitir que o módulo SpO2 ignore leituras inválidas de saturação sanguínea. |
+| RF07 | O sistema deve permitir que o sistema monitore a saturação sanguínea do paciente durante a execução do jogo. |
+| RF08 | O sistema deve permitir que o terapeuta configure o limite mínimo de saturação sanguínea. |
+| RF9 | O sistema deve permitir que o módulo SpO2 compare a saturação sanguínea obtida, com o limite definido pelo terapeuta. |
+| RF10 | O sistema deve permitir que o módulo SpO2 alerte o software I Blue It quando a saturação sanguínea estiver abaixo do limite definido. |
+| RF11 | O sistema deve permitir que o módulo SpO2 emita alerta quando o sensor estiver desconectado. |
+| RF12 | O sistema deve permitir que o módulo SpO2 emita alerta quando o sensor estiver mal posicionado, pausando a sessão. |
+| RF13 | O sistema deve permitir que o módulo SpO2 registre a série temporal de saturação sanguínea da sessão no software I Blue It. |
+| RF14 | O sistema deve permitir que o módulo SpO2 registre o menor valor de saturação sanguínea da sessão. |
+| RF15 | O sistema deve permitir que o módulo SpO2 registre eventos de queda de SpO2. |
+| RF16 | O sistema deve permitir que o registre eventos de falha ou perda de sinal do módulo SpO2. |
+| RF17 | O sistema deve permitir que o módulo SpO2 recomende pausa ao terapeuta quando houver risco fisiológico ao paciente. |
+| RF18 | O sistema deve permitir que o módulo SpO2 pause automaticamente a sessão no software I Blue It caso a saturação sanguínea esteja em condição crítica. |
+| RF19 | O sistema deve permitir que o terapeuta autorize a retomada da sessão após normalização da SpO2. |
+| RF20 | O sistema deve permitir que o software I Blue It apresente o estado do monitoramento fisiológico na interface. |
+| RF21 | O sistema deve permitir que o terapeuta visualize os dados do módulo SpO2 durante e após a sessão. |
+| RF22 | O sistema deve permitir que o módulo SpO2 gere um resumo fisiológico da sessão para ser apresentado no software I Blue It. |
+| RF23 | O sistema deve permitir a associação dos dados obtidos pelo módulo SpO2 aos dados já obtidos pelo software I Blue It durante a sessão terapêutica . |
+| RF24 | O sistema deve permitir que o terapeuta consulte os registros fisiológicos de sessões anteriores. |
 | RF26 | O sistema deve permitir que em caso de eventuais pausas os dados fisiológicos até então captados não sejam perdidos e possam ser recuperados . |
 
 ---
@@ -474,29 +473,31 @@ Os requisitos não funcionais descritos nesta seção seguem o mesmo princípio 
 
 As regras de negócios aqui presentes foram elencadas com mesmo intuito de mostrar apenas a melhoria, tratando tanto o módulo da melhoria(módulo SpO2), quanto o sistema I Blue It já existente, apenas como um único sistema unificado, porém abrangendo apenas os aspectos presentes no I Blue It que competem a ser tratados na melhoria.Assim não remodelamos as regras de negócios do sistema biomédico existente.
 
-- Apenas o terapeuta pode definir o limite mínimo de saturação sanguínea.
-- O terapeuta responsável pode pausar ou parar a sessão a qualquer momento.
-- O terapeuta responsável pode adaptar a sessão conforme sua análise clínica.
-- Em situações fisiológicas críticas, a segurança do paciente deve prevalecer em relação a continuidade da sessão em andamento.
-- Uma sessão fisioterápica apenas podem ocorrer se os equipamentos de medição estiverem aptos, posicionados e captando os sinais vitais do paciente corretamente.
-- Durante uma sessão caso ocorra problemas de medições devido a problemas no equipamento, mal posicionamento e ou no processamento dos dados o sistema deve pausar a sessão, e notificar o usuário (paciente e médico), 
-- Durante as sessões o sistema deve avisar o médico de anomalias nos biosinais.
-- Em casos de parada da sessão o sistema deve manter os dados já obtidos da sessão, e possibilitar tanto a retomada do exercício do estado atual do exercício, ou eventual encerramento da sessão.  
-- Apenas a equipe médica e o paciente, devem ter acesso aos dados fisiológicos do paciente.
-- O sistema deve disponibilizar os dados captadas do paciente há equipe médica.
-- A sessão pausada só pode ser retomada após autorização do terapeuta.
-- A sessão deve ser pausada caso o sistema identifique risco fisiológico ao paciente.
-- A leitura do módulo SpO2 só deve ser considerada válida se houver contato adequado do sensor com o paciente.
-- A saturação sanguínea deve ser calculada somente com dados válidos.
-- Em caso de leituras inválidas ou instáveis, não devem ser utilizadas tais medições para o cálculo da saturação sanguínea do paciente.
-- O limite mínimo de saturação sanguínea definido pelo terapeuta deve ser usado como referência para classificar a condição fisiológica do paciente durante a sessão.
-- O limite mínimo de saturação sanguínea estipulado pelo terapeuta deve ser usado como referência para analisar a condição fisiológica do paciente durante a sessão.
-- Os dados do novo módulo SpO2 não devem substituir os dados já presentes no ecossistema I Blue It.
-- Os dados do novo módulo SpO2 devem ser integrados aos dados já presentes no ecossistema I Blue It.
-- Eventos de alerta tais como queda de saturação sanguínea, perda de sinal e ou pausa da sessão devem ser registrados no histórico da sessão.
-- A frequência cardíaca deve ser registrada sempre que possível pelo módulo SpO2.
-- Em casos de muito breve ausência de sinal fisiológico não devem ser interpretadas automaticamente como condições crítica do paciente.
-- O terapeuta responsável deve ter acesso aos registros fisiológicos da sessão após seu encerramento.
+| Código | Regra de Negócio |
+|---|---|
+| RN01 | Apenas o terapeuta pode definir o limite mínimo de saturação sanguínea. |
+| RN02 | O terapeuta responsável pode pausar ou parar a sessão a qualquer momento. |
+| RN03 | O terapeuta responsável pode adaptar a sessão conforme sua análise clínica. |
+| RN04 | Em situações fisiológicas críticas, a segurança do paciente deve prevalecer em relação a continuidade da sessão em andamento. |
+| RN05 | Uma sessão fisioterápica apenas podem ocorrer se os equipamentos de medição estiverem aptos, posicionados e captando os sinais vitais do paciente corretamente. |
+| RN06 | Durante uma sessão caso ocorra problemas de medições devido a problemas no equipamento, mal posicionamento e ou no processamento dos dados o sistema deve pausar a sessão, e notificar o usuário (paciente e médico). |
+| RN07 | Durante as sessões o sistema deve avisar o médico de anomalias nos biosinais. |
+| RN08 | Em casos de parada da sessão o sistema deve manter os dados já obtidos da sessão, e possibilitar tanto a retomada do exercício do estado atual do exercício, ou eventual encerramento da sessão. |
+| RN09 | Apenas a equipe médica e o paciente, devem ter acesso aos dados fisiológicos do paciente. |
+| RN10 | O sistema deve disponibilizar os dados captadas do paciente há equipe médica. |
+| RN11 | A sessão pausada só pode ser retomada após autorização do terapeuta. |
+| RN12 | A sessão deve ser pausada caso o sistema identifique risco fisiológico ao paciente. |
+| RN13 | A leitura do módulo SpO2 só deve ser considerada válida se houver contato adequado do sensor com o paciente. |
+| RN14 | A saturação sanguínea deve ser calculada somente com dados válidos. |
+| RN15 | Em caso de leituras inválidas ou instáveis, não devem ser utilizadas tais medições para o cálculo da saturação sanguínea do paciente. |
+| RN16 | O limite mínimo de saturação sanguínea definido pelo terapeuta deve ser usado como referência para classificar a condição fisiológica do paciente durante a sessão. |
+| RN17 | O limite mínimo de saturação sanguínea estipulado pelo terapeuta deve ser usado como referência para analisar a condição fisiológica do paciente durante a sessão. |
+| RN18 | Os dados do novo módulo SpO2 não devem substituir os dados já presentes no ecossistema I Blue It. |
+| RN19 | Os dados do novo módulo SpO2 devem ser integrados aos dados já presentes no ecossistema I Blue It. |
+| RN20 | Eventos de alerta tais como queda de saturação sanguínea, perda de sinal e ou pausa da sessão devem ser registrados no histórico da sessão. |
+| RN21 | A frequência cardíaca deve ser registrada sempre que possível pelo módulo SpO2. |
+| RN22 | Em casos de muito breve ausência de sinal fisiológico não devem ser interpretadas automaticamente como condições crítica do paciente. |
+| RN23 | O terapeuta responsável deve ter acesso aos registros fisiológicos da sessão após seu encerramento. |
 
 ---
 
@@ -587,7 +588,7 @@ Os Mockups foram divididos em dois fluxos, o primeiro mostra as alterações fei
 ---
 #### Adição a tela inicial da taxa de saturação sanguínea média do paciente
 
-<img width="1356" height="673" alt="image" src="https://github.com/user-attachments/assets/d3f7a063-2d38-471c-bf78-dd747813198d" />
+<img width="2880" height="1344" alt="image" src="https://github.com/user-attachments/assets/f6d8b151-46bc-4662-9f2c-5b41177ab4eb" />
 
 Esta é a tela inicial do sistema, ao qual apresenta os dados resumidamente ao usuário, na qual foi adicionado um novo componente aos demais do dashboard padrão, sendo  este o dado de saturação sanguínea média do paciente.
 
@@ -616,11 +617,6 @@ Modal de alerta com parada da sessão, ao paciente e terapeuta, para o terapeuta
 
 ---
 <img width="743" height="480" alt="image" src="https://github.com/user-attachments/assets/db1a5e84-db50-45b8-9649-059310092135" />
-
-Modal de alerta para saturação sanguínea do paciente em estado crítico, com parada do sistema, ao qual permite o terapeuta analisar o paciente e decidir ou pelo encerramento da sessão ou pela continuidade.
-
----
-<img width="743" height="480" alt="image" src="https://github.com/user-attachments/assets/065ccba5-52df-484b-a2e5-f8f1d0ad710c" />
 
 Modal de alerta para saturação sanguínea do paciente em estado crítico, com parada do sistema, ao qual permite o terapeuta analisar o paciente e decidir ou pelo encerramento da sessão ou pela continuidade.
 
