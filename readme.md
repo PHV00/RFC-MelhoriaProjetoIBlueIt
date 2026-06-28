@@ -17,7 +17,7 @@
   1/06/2026
 
 - **Versão:**  
-  1.3
+  1.4
 
 ---
 
@@ -58,7 +58,7 @@ Nesse modelo, dispositivos como o PITACO continuam fornecendo dados respiratóri
 
 Entretanto, a tese de Dias (2024) apresenta o uso da SpO₂ no I Blue It 5.0 no contexto de uma prova de conceito do Flow Psicofisiológico e do módulo DeepDDA. Embora essa prova de conceito demonstre a viabilidade técnica do uso da oximetria para apoiar decisões de segurança e adaptação dinâmica, ela não caracteriza, por si só, uma integração operacional definitiva do oxímetro ao ecossistema. Assim, ainda permanecem pontos a serem especificados e consolidados, como hardware, firmware, comunicação, confiabilidade da leitura, tratamento de erros, persistência dos dados e segurança da transmissão.
 
-Com base nessa estrutura, a melhoria proposta neste RFC se divide em três partes sendo a primeira a integração do módulo de oximetria ao dispositivo PITACO, permitindo que dados de saturação de oxigênio sejam coletados, transmitidos, armazenados e disponibilizados ao sistema de forma segura, a segunda se tratando da adição de tais dados ao módulo de Flow Psicologico ,tendo isto já sido validado na prova de conceito descrito por Dias (2024), e agora sendo de fato sendo implantado no sistema, e por fim o ajuste dos dashboards clínicos para o novo parametro de saturação sanguínea.A proposta deste modo não busca alterar a mecânica principal do jogo, mas aprimorar a camada de monitoramento fisiológico, ampliando a capacidade do I Blue It de acompanhar sinais relevantes durante a execução dos exercícios respiratórios, trazendo mais segurança para os pacientes.[2]
+Com base nessa estrutura, a melhoria proposta neste RFC se divide em três partes sendo a primeira a integração do módulo de oximetria ao dispositivo PITACO, permitindo que dados de saturação de oxigênio sejam coletados, transmitidos, armazenados e disponibilizados ao sistema de forma segura, a segunda se tratando da adição de tais dados ao módulo de Flow Psicologico ,tendo isto já sido validado na prova de conceito descrito por Dias (2024), e agora sendo de fato sendo implantado no sistema, e por fim o ajuste dos dashboards clínicos para o novo parametro de saturação sanguínea.A proposta deste modo não busca alterar a mecânica principal do jogo e sua jogabilidade em si, mas aprimorar a camada de monitoramento fisiológico, ampliando a capacidade do I Blue It de acompanhar sinais relevantes durante a execução dos exercícios respiratórios, trazendo mais segurança para os pacientes.[2]
 
 ---
 
@@ -128,7 +128,7 @@ público-alvo : pessoas com problemas respiratórios de modo amplo
 | BubbleBreather | Exercícios respiratórios com foco em recuperação de pneumonia | Microfone / navegador | Não identificado | Não identificado | Não identificado | Não possui módulo clínico especializado | Escopo restrito, dependência de microfone e ausência de integração com sensores terapêuticos dedicados |
 | PlayPhysio | Exercícios respiratórios com foco em adesão ao tratamento, principalmente em crianças | Dispositivo IoT PhysioPal conectado via Bluetooth | Parcial | Não identificado | Dados vinculados ao uso do equipamento terapêutico | Camada clínica mais simplificada | Menor robustez clínica quando comparado a uma plataforma multimodal com dashboard terapêutico |
 | ACPlus Respiratory Assessment + OmniFlow | Diagnóstico, documentação clínica e terapia respiratória interativa | Espirômetro Bluetooth e iPad | Parcial | Não identificado | Dados respiratórios capturados por dispositivo dedicado | Possui documentação clínica e análise profissional | Solução comercial voltada ao contexto regulatório estadunidense |
-| I Blue It 5.2 | Reabilitação respiratória mediada por jogo sério ativo, com monitoramento fisiológico complementar | PITACO ampliado com sensor de SpO2 | Sim | Sim, com possibilidade de integração ao DeepDDA / Flow Psicofisiológico | SpO2 e, se validado tecnicamente, frequência cardíaca | Dashboard clínico com dados respiratórios, desempenho e saturação sanguínea | Solução em desenvolvimento, dependente de validação técnica da integração do oxímetro ao PITACO |
+| I Blue It 6.0 | Reabilitação respiratória mediada por jogo sério ativo, com monitoramento fisiológico complementar | PITACO ampliado com sensor de SpO2 | Sim | Sim, com integração operacional ao DeepDDA / Flow Psicofisiológico utilizando dados reais de SpO2. | SpO2 e, se validado tecnicamente, frequência cardíaca | Dashboard clínico com dados respiratórios, desempenho e saturação sanguínea | Solução em desenvolvimento, dependente de validação técnica da integração do oxímetro ao PITACO |
 
 ---
 
@@ -136,9 +136,9 @@ público-alvo : pessoas com problemas respiratórios de modo amplo
 
 Analisando as soluções elencadas, percebe-se que o campo de soluções digitais voltadas à reabilitação respiratória pode ser organizado em três grupos principais. O primeiro grupo é composto por soluções leves e acessíveis, como o BubbleBreather, que priorizam simplicidade tecnológica, acesso rápido e execução em navegador. O segundo grupo é formado por soluções voltadas ao engajamento e à adesão ao tratamento, como o PlayPhysio, que utiliza um dispositivo IoT para tornar os exercícios respiratórios mais atrativos, especialmente para o público infantil. O terceiro grupo envolve soluções com maior maturidade clínica e comercial, como o ACPlus Respiratory Assessment e o OmniFlow, que integram dispositivos respiratórios e recursos de análise profissional, porém com forte dependência do contexto regulatório e de implantação estadunidense.
 
-Apesar das contribuições dessas soluções, observa-se que nenhuma delas contempla, de forma integrada, todos os elementos que caracterizam a proposta do I Blue It 5.2: uso de jogo sério ativo voltado à reabilitação respiratória, arquitetura multimodal, integração com dispositivo IoT próprio, monitoramento fisiológico por SpO2, possibilidade de uso de inteligência artificial para ajuste dinâmico e dashboard clínico voltado ao acompanhamento profissional.
+Apesar das contribuições dessas soluções, observa-se que nenhuma delas contempla, de forma integrada, todos os elementos que caracterizam a proposta do I Blue It 6.0: uso de jogo sério ativo voltado à reabilitação respiratória, arquitetura multimodal, integração com dispositivo IoT próprio, monitoramento fisiológico por SpO2, possibilidade de uso de inteligência artificial para ajuste dinâmico e dashboard clínico voltado ao acompanhamento profissional.
 
-Nesse contexto, o I Blue It 5.2 (a versão da proposta de melhoria) busca preencher uma lacuna técnica no ambiente fisioterapêutico brasileiro, ao propor uma solução que integra exergame respiratório, dispositivo terapêutico dedicado, monitoramento de saturação sanguínea e análise clínica dos dados do paciente. Dessa forma, o diferencial do projeto está na ampliação do ecossistema I Blue It para oferecer não apenas suporte lúdico aos exercícios respiratórios, mas também maior segurança fisiológica, rastreabilidade dos dados e apoio à tomada de decisão por parte do profissional da saúde.
+Nesse contexto, o I Blue It 6.0 (a versão da proposta de melhoria) busca preencher uma lacuna técnica no ambiente fisioterapêutico brasileiro, ao propor uma solução que integra exergame respiratório, dispositivo terapêutico dedicado, monitoramento de saturação sanguínea e análise clínica dos dados do paciente. Dessa forma, o diferencial do projeto está na ampliação do ecossistema I Blue It para oferecer não apenas suporte lúdico aos exercícios respiratórios, mas também maior segurança fisiológica, rastreabilidade dos dados e apoio à tomada de decisão por parte do profissional da saúde.
 
 ---
 
@@ -156,7 +156,7 @@ Profissional de saúde: fisioterapeutas respiratórios, fisioterapeutas clínico
 
 ### Objetivo Geral
 
-O projeto se propõe a adicionar funções e módulos, tanto ao hardware como ao software, de modo a cobrir primariamente a segurança e monitoramento da saturação sanguínea do paciente em tempo de execução das sessões, sua coleta e processamento dos dados oriundos da oximetria, para aumentar a segurança fisiológica do sistema e auxiliar os profissionais responsáveis na tomada de decisões.Pretende-se assim adicionar um novo sensor de oximetria(SpO2) ao aparelho de captação de dados existente PITACO, ao qual serão utilizados estes novos dados de saturação sanguínea para a criação de um módulo, responsável pelo monitoramento e segurança do paciente durante a sessão, adjunto ao modulo de dificuldade dinâmica por Inteligẽncia Artificial(IA) existente.Tais mudanças acarretam em alterações imediatas no sistema biomédico atual, como a adição ao dashboard clínico do dado de saturação sanguínea do paciente, com a finalidade de fornecer ao profissional da saúde responsável mais um dado em sua tomada decisão.Também será necessário alterar a IA de monitoramento e detecção de anomalias, responsável pela avaliação do estado do paciente em tempo de execução, passando agora a se utilizar de um novo parâmetro o biosinal de saturação sanguínea em seu processo, e retornando, recomendações de pausa ou interrupção imediata.  
+O projeto se propõe a adicionar funções e módulos, tanto ao hardware como ao software, de modo a cobrir primariamente a segurança e monitoramento da saturação sanguínea do paciente em tempo de execução das sessões, sua coleta e processamento dos dados oriundos da oximetria, para aumentar a segurança fisiológica do sistema e auxiliar os profissionais responsáveis na tomada de decisões.Pretende-se assim adicionar um novo sensor de oximetria(SpO2) ao aparelho de captação de dados existente PITACO, ao qual serão utilizados estes novos dados de saturação sanguínea para a criação de um módulo, responsável pelo monitoramento e segurança do paciente durante a sessão, adjunto ao modulo de dificuldade dinâmica por Inteligẽncia Artificial(IA) existente, assim operacionalizando o DeepDDA com dados reais do SpO2.Tais mudanças acarretam em alterações imediatas no sistema biomédico atual, como a adição ao dashboard clínico do dado de saturação sanguínea do paciente, com a finalidade de fornecer ao profissional da saúde responsável mais um dado em sua tomada decisão.Também será necessário alterar a IA de monitoramento e detecção de anomalias, responsável pela avaliação do estado do paciente em tempo de execução, passando agora a se utilizar de um novo parâmetro o biosinal de saturação sanguínea em seu processo, e retornando, recomendações de pausa ou interrupção imediata.  
 
 ---
 
@@ -436,6 +436,13 @@ Abaixo pode se ver o fluxo com a melhoria proposta:
 | RF23 | O sistema deve permitir a associação dos dados obtidos pelo módulo SpO2 aos dados já obtidos pelo software I Blue It durante a sessão terapêutica . |
 | RF24 | O sistema deve permitir que o terapeuta consulte os registros fisiológicos de sessões anteriores. |
 | RF26 | O sistema deve permitir que em caso de eventuais pausas os dados fisiológicos até então captados não sejam perdidos e possam ser recuperados . |
+| RF25 | O sistema deve permitir que os dados de SpO2 válidos sejam enviados ao módulo DeepDDA durante a execução da sessão. |
+| RF26 | O módulo DeepDDA deve considerar dados de desempenho do jogo, dados respiratórios e dados de SpO2 para compor o estado observado do paciente. |
+| RF27 | O módulo DeepDDA deve decidir entre manter, aumentar ou reduzir a dificuldade do jogo com base no estado observado. |
+| RF28 | O módulo DeepDDA deve recomendar pausa ou interrupção quando os dados fisiológicos indicarem condição de risco. |
+| RF29 | O sistema deve registrar cada decisão tomada pelo DeepDDA, incluindo estado observado, ação escolhida, parâmetros alterados, recompensa calculada e horário da decisão. |
+| RF30 | O sistema deve aplicar no jogo as ações de ajuste de dificuldade decididas pelo DeepDDA. |
+| RF31 | O sistema deve permitir rastrear os parâmetros do jogo antes e depois de cada ajuste realizado pela IA. |
 
 ---
 
@@ -509,7 +516,7 @@ Aqui constam alguns pontos que esta proposta não realizará, apenas ilustrados 
 - O sistema não prescreverá sessões de exercícios respiratórios de forma autônoma.
 - O sistema não alterará a lógica principal de jogabilidade e utilização já presentes no I Blue It.
 - O sistema não realizará integração com eventuais prontuários eletrônicos externos.
-- O sistema não realizará tomada de decisão clínica autônoma via inteligência artificial .
+- O sistema não realizará diagnóstico médico, prescrição terapêutica autônoma ou decisão clínica final. A IA poderá realizar decisões operacionais de ajuste dinâmico de dificuldade, alerta, recomendação de pausa e interrupção de segurança, sempre dentro de regras previamente definidas e com supervisão do profissional responsável.
 - O sistema não adicionará sensores fisiológicos adicionais além do sensor de SpO2.
 
 ---
