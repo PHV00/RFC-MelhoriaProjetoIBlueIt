@@ -58,7 +58,7 @@ Nesse modelo, dispositivos como o PITACO continuam fornecendo dados respiratóri
 
 Entretanto, a tese de Dias (2024) apresenta o uso da SpO₂ no I Blue It 5.0 no contexto de uma prova de conceito do Flow Psicofisiológico e do módulo DeepDDA. Embora essa prova de conceito demonstre a viabilidade técnica do uso da oximetria para apoiar decisões de segurança e adaptação dinâmica, ela não caracteriza, por si só, uma integração operacional definitiva do oxímetro ao ecossistema. Assim, ainda permanecem pontos a serem especificados e consolidados, como hardware, firmware, comunicação, confiabilidade da leitura, tratamento de erros, persistência dos dados e segurança da transmissão.
 
-Com base nessa estrutura, a melhoria proposta neste RFC se divide em três partes sendo a primeira a integração do módulo de oximetria ao dispositivo PITACO, permitindo que dados de saturação de oxigênio sejam coletados, transmitidos, armazenados e disponibilizados ao sistema de forma segura, a segunda se tratando da adição de tais dados ao módulo de Flow Psicologico ,tendo isto já sido validado na prova de conceito descrito por Dias (2024), e agora sendo de fato sendo implantado no sistema, e por fim o ajuste dos dashboards clínicos para o novo parametro de saturação sanguínea.A proposta deste modo não busca alterar a mecânica principal do jogo e sua jogabilidade em si, mas aprimorar a camada de monitoramento fisiológico, ampliando a capacidade do I Blue It de acompanhar sinais relevantes durante a execução dos exercícios respiratórios, trazendo mais segurança para os pacientes.[2]
+Com base nessa estrutura, a melhoria proposta neste RFC se divide em três partes sendo a primeira a integração do módulo de oximetria ao dispositivo PITACO, permitindo que dados de saturação de oxigênio sejam coletados, transmitidos, armazenados e disponibilizados ao sistema de forma segura, a segunda se tratando da adição de tais dados ao módulo de Flow Psicofisiológico ,tendo isto já sido validado na prova de conceito descrito por Dias (2024), e agora sendo de fato sendo implantado no sistema, e por fim o ajuste dos dashboards clínicos para o novo parametro de saturação sanguínea.A proposta deste modo não busca alterar a mecânica principal do jogo e sua jogabilidade em si, mas aprimorar a camada de monitoramento fisiológico, ampliando a capacidade do I Blue It de acompanhar sinais relevantes durante a execução dos exercícios respiratórios, trazendo mais segurança para os pacientes.[2]
 
 ---
 
@@ -115,7 +115,7 @@ A empresa Accelerated Care Plus produz duas soluções no ramo de terapia respir
 - OmniFlow
 <img width="1187" height="768" alt="image" src="https://github.com/user-attachments/assets/eef6fc3f-ce31-4bc5-8d05-24394b690f87" />
 
-[Figura 6. Dashboard principal BubbleBreather.][15]
+[Figura 6. Tela Inicial sobre o OmniFlow.][15]
 
 público-alvo : pessoas com problemas respiratórios de modo amplo
 
@@ -162,11 +162,13 @@ O projeto se propõe a adicionar funções e módulos, tanto ao hardware como ao
 
 ### Objetivos Específicos
 
-Tendo em vista a problemática apresentada, este projeto tem como fim sanar as lacunas identificadas com fim de entregar ao final, um sistema biomédico mais completo. Baseando-se nisso segue abaixo os objetivos a serem tratados:
+Tendo em vista a problemática apresentada, este projeto tem como fim sanar as lacunas identificadas e ao final, entregar um sistema biomédico mais completo. Baseando-se nisso segue abaixo os objetivos a serem tratados:
 
 - Integrar o hardware existente do PITACO ao sensor de SpO2 para monitoramento fisiológico complementar, através da saturação sanguínea.
 - Atualizar o módulo de ajuste dinâmico por inteligência artificial responsável pela dificuldade, para suportar o novo parâmetro de saturação sanguínea.
 - Atualizar o dashboard clínico para exibir e correlacionar dados respiratórios, da saturação sanguínea  e de desempenho nos jogos e sessões.
+- Registrar as decisões tomadas pelo DeepDDA, incluindo estado observado, ação selecionada, recompensa, parâmetros alterados e estado resultante.
+- Validar o comportamento do DeepDDA com dados reais e simulados de SpO2, verificando cenários de manutenção, redução de dificuldade, pausa e interrupção da sessão.
 
 ---
 
@@ -174,8 +176,8 @@ Tendo em vista a problemática apresentada, este projeto tem como fim sanar as l
 
 As Métricas de sucesso estipuladas são:
 
-- Registro correto de sessões com dados respiratórios do novo componente SpO2 mantendo a velocidade e métricas do sistema atual.
-- Acurácia da IA de monitoramento fisiológico superior a 85%.
+- Registro correto de sessões com saturação sanguínea associada, advinda do novo componente SpO2 de modo a manter a velocidade e métricas do sistema atual.
+- Acurácia da IA de monitoramento fisiológico superior a 85%(para o acerto de decisões de interrupção e detecção de risco).
 - Ajuste dinâmico com delay de até 800ms na dificuldade durante a sessão, ao utilizar a IA de monitoramento fisiológico .
 - Tempo de resposta do sistema inferior a 800 ms para feedback em gameplay.
 - Adição dos dados obtidos pelo SpO2 ao dashboard apresentando todos os dados já existente e novos pertinentes, mantendo o tempo de resposta atual.
@@ -359,7 +361,7 @@ Logo abaixo consta o diagrama de tais casos de uso e suas respectivas correlaç�
 
 Já para a versão melhorada foram acrescentados alguns casos, referentes ao novo módulo contendo o SpO2, como pode-se ver abaixo:
 
-### UC14 — Capturar Dados Respiratórios e SpO2 via PITACO Ampliado
+### UC13— Capturar Dados Respiratórios e SpO2 via PITACO Ampliado
 
 **Objetivo:** Ampliar a coleta de dados fisiológicos do paciente, integrando no mesmo dispositivo PITACO captura de informações respiratórias e de  saturação sanguínea.
 
@@ -368,7 +370,7 @@ O sistema permite capturar dados fisiológicos, por meio do PITACO ampliado, tan
 
 ---
 
-### UC15 — Validar, Filtrar e Transformar Sinais Brutos
+### UC14 — Validar, Filtrar e Transformar Sinais Brutos
 
 **Objetivo:** Garantir que os dados de satuação sanguínea capturados pelo SpO2 sejam consistentes, confiáveis e adequados para análise.
 
@@ -377,7 +379,7 @@ O sistema realiza a validação se os dados estão sendo capturados adequadament
 
 ---
 
-### UC16 — Registrar Dados de saturação sanguínea 
+### UC15 — Registrar Dados de saturação sanguínea 
 
 **Objetivo:** Armazenar os dados do SpO2 obtidos durante a sessão para fornecê-los no acompanhamento clínico e análise posteriores.
 
@@ -386,16 +388,16 @@ O sistema registra os dados de  saturação sanguínea obtidos durante a sessão
 
 ---
 
-### UC17 — Emitir Alerta de Segurança
+### UC16 — Emitir Alerta de Segurança
 
 **Objetivo:** Alerta o profissional da saúde sobre possíveis riscos fisiológicos ocorridos em tempo de execução da sessão terapêutica.
 
 **Descrição:**
-O sistema emite um alerta de segurança ao profissional da saúde quando identifica que os sinais fisiológicos do paciente indicam condições de risco ao mesmo, isso em durante a sessão terapêutica. Esses alertas podem estar relacionados a sinais incompatíveis com a execução do exercício como a falta de saturação sanguínea, ou ainda a casos onde o dispositivo pode estar apresentando falhas na leitura.
+O sistema emite um alerta de segurança ao profissional da saúde quando identifica que os sinais fisiológicos do paciente indicam condições de risco ao mesmo, isso durante a sessão terapêutica. Esses alertas podem estar relacionados a sinais incompatíveis com a execução do exercício como a quedas inesperadas de saturação sanguínea, ou ainda a casos onde o dispositivo pode estar apresentando falhas na leitura.
 
 ---
 
-### UC18 — Pausar/Interromper Sessão por Risco Fisiológico
+### UC17 — Pausar/Interromper Sessão por Risco Fisiológico
 
 **Objetivo:** Proteger o paciente durante a sessão, interrompendo a atividade que demonstre situações de risco.
 
@@ -425,14 +427,14 @@ Abaixo pode se ver o fluxo com a melhoria proposta:
 | RF06 | O sistema deve permitir que o módulo SpO2 ignore leituras inválidas de saturação sanguínea. |
 | RF07 | O sistema deve permitir que o sistema monitore a saturação sanguínea do paciente durante a execução do jogo. |
 | RF08 | O sistema deve permitir que o terapeuta configure o limite mínimo de saturação sanguínea. |
-| RF9 | O sistema deve permitir que o módulo SpO2 compare a saturação sanguínea obtida, com o limite definido pelo terapeuta. |
+| RF09 | O sistema deve permitir que o módulo SpO2 compare a saturação sanguínea obtida, com o limite definido pelo terapeuta. |
 | RF10 | O sistema deve permitir que o módulo SpO2 alerte o software I Blue It quando a saturação sanguínea estiver abaixo do limite definido. |
 | RF11 | O sistema deve permitir que o módulo SpO2 emita alerta quando o sensor estiver desconectado. |
 | RF12 | O sistema deve permitir que o módulo SpO2 emita alerta quando o sensor estiver mal posicionado, pausando a sessão. |
 | RF13 | O sistema deve permitir que o módulo SpO2 registre a série temporal de saturação sanguínea da sessão no software I Blue It. |
 | RF14 | O sistema deve permitir que o módulo SpO2 registre o menor valor de saturação sanguínea da sessão. |
 | RF15 | O sistema deve permitir que o módulo SpO2 registre eventos de queda de SpO2. |
-| RF16 | O sistema deve permitir que o registre eventos de falha ou perda de sinal do módulo SpO2. |
+| RF16 | O sistema deve permitir que se registre eventos de falha ou perda de sinal do módulo SpO2. |
 | RF17 | O sistema deve permitir que o módulo SpO2 recomende pausa ao terapeuta quando houver risco fisiológico ao paciente. |
 | RF18 | O sistema deve permitir que o módulo SpO2 pause automaticamente a sessão no software I Blue It caso a saturação sanguínea esteja em condição crítica. |
 | RF19 | O sistema deve permitir que o terapeuta autorize a retomada da sessão após normalização da SpO2. |
@@ -441,15 +443,14 @@ Abaixo pode se ver o fluxo com a melhoria proposta:
 | RF22 | O sistema deve permitir que o módulo SpO2 gere um resumo fisiológico da sessão para ser apresentado no software I Blue It. |
 | RF23 | O sistema deve permitir a associação dos dados obtidos pelo módulo SpO2 aos dados já obtidos pelo software I Blue It durante a sessão terapêutica . |
 | RF24 | O sistema deve permitir que o terapeuta consulte os registros fisiológicos de sessões anteriores. |
-| RF26 | O sistema deve permitir que em caso de eventuais pausas os dados fisiológicos até então captados não sejam perdidos e possam ser recuperados . |
 | RF25 | O sistema deve permitir que os dados de SpO2 válidos sejam enviados ao módulo DeepDDA durante a execução da sessão. |
-| RF26 | O módulo DeepDDA deve considerar dados de desempenho do jogo, dados respiratórios e dados de SpO2 para compor o estado observado do paciente. |
-| RF27 | O módulo DeepDDA deve decidir entre manter, aumentar ou reduzir a dificuldade do jogo com base no estado observado. |
-| RF28 | O módulo DeepDDA deve recomendar pausa ou interrupção quando os dados fisiológicos indicarem condição de risco. |
-| RF29 | O sistema deve registrar cada decisão tomada pelo DeepDDA, incluindo estado observado, ação escolhida, parâmetros alterados, recompensa calculada e horário da decisão. |
-| RF30 | O sistema deve aplicar no jogo as ações de ajuste de dificuldade decididas pelo DeepDDA. |
-| RF31 | O sistema deve permitir rastrear os parâmetros do jogo antes e depois de cada ajuste realizado pela IA. |
-| RF32 | O sistema deve construir um estado observado contendo desempenho no jogo, dados respiratórios, SpO2 e demais biossinais validados. |
+| RF26 | O sistema deve permitir que em caso de eventuais pausas os dados fisiológicos até então captados não sejam perdidos e possam ser recuperados . |
+| RF27 | O módulo DeepDDA deve considerar dados de desempenho do jogo, dados respiratórios e dados de SpO2 para compor o estado observado do paciente. |
+| RF28 | O módulo DeepDDA deve decidir entre manter, aumentar ou reduzir a dificuldade do jogo com base no estado observado. |
+| RF29 | O módulo DeepDDA deve recomendar pausa ou interrupção quando os dados fisiológicos indicarem condição de risco. |
+| RF30 | O sistema deve registrar cada decisão tomada pelo DeepDDA, incluindo estado observado, ação escolhida, parâmetros alterados, recompensa calculada e horário da decisão. |
+| RF31 | O sistema deve aplicar no jogo as ações de ajuste de dificuldade decididas pelo DeepDDA. |
+| RF32 | O sistema deve permitir rastrear os parâmetros do jogo antes e depois de cada ajuste realizado pela IA. |
 | RF33 | O módulo DeepDDA deve selecionar uma ação dentro de um conjunto definido de ações possíveis, como manter, aumentar, reduzir, pausar ou interromper. |
 | RF34 | O sistema deve calcular ou registrar a recompensa associada à decisão tomada pela IA. |
 | RF35 | O sistema deve armazenar o estado resultante após a aplicação da ação da IA. |
@@ -479,7 +480,7 @@ Os requisitos não funcionais descritos nesta seção seguem o mesmo princípio 
 | RNF15 | Privacidade | Os dados fisiológicos do paciente devem ser tratados como informações sensíveis e não devem ser expostos indevidamente. |
 | RNF16 | Manutenibilidade | O código do módulo SpO2 deve ser organizado de forma a facilitar ajustes, correções e futuras expansões. |
 | RNF17 | Testabilidade | O módulo SpO2 deve permitir testes com dados simulados, possibilitando verificar conexão, validação de sinal, alertas e registro de dados sem depender exclusivamente do sensor físico. |
-| RNF18 | Extensibilidade | A estrutura do módulo SpO2 deve tem em mente a modularidade com o fim de permitir futura adaptação para outros sensores fisiológicos, caso necessário. |
+| RNF18 | Extensibilidade | A estrutura do módulo SpO2 deve ser desenvolvida com foco na modularidade com o fim de permitir futura adaptação para outros sensores fisiológicos, caso necessário. |
 | RNF19 | Consistência | As nomenclaturas, unidades e formas de apresentação dos dados fisiológicos devem ser consistentes em todo o sistema. |
 | RNF20 | Recuperação de falhas | O módulo SpO2 deve permitir a retomada do monitoramento após falha temporária de conexão ou reposicionamento do sensor. |
 | RNF21 | Compatibilidade | O módulo SpO2 deve ser codificado em linguagens e tecnologias já presentes no software |
@@ -498,7 +499,7 @@ As regras de negócios aqui presentes foram elencadas com mesmo intuito de mostr
 | RN04 | Em situações fisiológicas críticas, a segurança do paciente deve prevalecer em relação a continuidade da sessão em andamento. |
 | RN05 | Uma sessão fisioterápica apenas podem ocorrer se os equipamentos de medição estiverem aptos, posicionados e captando os sinais vitais do paciente corretamente. |
 | RN06 | Durante uma sessão caso ocorra problemas de medições devido a problemas no equipamento, mal posicionamento e ou no processamento dos dados o sistema deve pausar a sessão, e notificar o usuário (paciente e médico). |
-| RN07 | Durante as sessões o sistema deve avisar o médico de anomalias nos biosinais. |
+| RN07 | Durante as sessões o sistema deve avisar o terapeuta de anomalias nos biosinais. |
 | RN08 | Em casos de parada da sessão o sistema deve manter os dados já obtidos da sessão, e possibilitar tanto a retomada do exercício do estado atual do exercício, ou eventual encerramento da sessão. |
 | RN09 | Apenas a equipe médica e o paciente, devem ter acesso aos dados fisiológicos do paciente. |
 | RN10 | O sistema deve disponibilizar os dados captadas do paciente há equipe médica. |
@@ -508,12 +509,11 @@ As regras de negócios aqui presentes foram elencadas com mesmo intuito de mostr
 | RN14 | A saturação sanguínea deve ser calculada somente com dados válidos. |
 | RN15 | Em caso de leituras inválidas ou instáveis, não devem ser utilizadas tais medições para o cálculo da saturação sanguínea do paciente. |
 | RN16 | O limite mínimo de saturação sanguínea definido pelo terapeuta deve ser usado como referência para classificar a condição fisiológica do paciente durante a sessão. |
-| RN17 | O limite mínimo de saturação sanguínea estipulado pelo terapeuta deve ser usado como referência para analisar a condição fisiológica do paciente durante a sessão. |
-| RN18 | Os dados do novo módulo SpO2 não devem substituir os dados já presentes no ecossistema I Blue It. |
-| RN19 | Os dados do novo módulo SpO2 devem ser integrados aos dados já presentes no ecossistema I Blue It. |
-| RN20 | Eventos de alerta tais como queda de saturação sanguínea, perda de sinal e ou pausa da sessão devem ser registrados no histórico da sessão. |
-| RN21 | Em casos de muito breve ausência de sinal fisiológico não devem ser interpretadas automaticamente como condições crítica do paciente. |
-| RN22 | O terapeuta responsável deve ter acesso aos registros fisiológicos da sessão após seu encerramento. |
+| RN17 | Os dados do novo módulo SpO2 não devem substituir os dados já presentes no ecossistema I Blue It. |
+| RN18 | Os dados do novo módulo SpO2 devem ser integrados aos dados já presentes no ecossistema I Blue It. |
+| RN19 | Eventos de alerta tais como queda de saturação sanguínea, perda de sinal e ou pausa da sessão devem ser registrados no histórico da sessão. |
+| RN20 | Em casos de muito breve ausência de sinal fisiológico não devem ser interpretadas automaticamente como condições crítica do paciente. |
+| RN21 | O terapeuta responsável deve ter acesso aos registros fisiológicos da sessão após seu encerramento. |
 
 ---
 
@@ -612,18 +612,18 @@ Esta é a tela inicial do sistema, ao qual apresenta os dados resumidamente ao u
 #### Adição na tela de calibração o dado de saturação sanguínea do paciente
 <img width="1356" height="635" alt="image" src="https://github.com/user-attachments/assets/05ee743c-3213-4464-ab51-e49854f1cd41" />
 
-Esta tela mostra os dados de calibração dos sensores, ao qual foi adicionado um dado de calibração referente a saturação sanguínea do paciente.
+Esta tela mostra os dados da leitura basal dos sensores, ao qual foi adicionado um dado de calibração referente a saturação sanguínea do paciente.
 
 
 ---
 <img width="1365" height="634" alt="image" src="https://github.com/user-attachments/assets/6ef1f920-8fb8-44cd-8174-a38bd7388db6" />
 
-Esta tela adiciona um botão de acesso ao novo gráfico, que possui as estatísticas obtidas nos minijogos de saturação sanguínea do paciente ao longo das sessões.
+Esta tela adiciona um botão de acesso ao novo gráfico, que possui as estatísticas obtidas nos minijogos sobre a saturação sanguínea do paciente ao longo das sessões.
 
 ---
-<img width="1356" height="635" alt="image" src="https://github.com/user-attachments/assets/79b67b82-4cbe-46c7-aed6-88a09c204a00" />
+<img width="2880" height="1344" alt="image" src="https://github.com/user-attachments/assets/de172724-b3b9-4398-8b23-71e2841cc5ae" />
 
-Esta tela, mostra a configuração feita apenas pelo terapeuta, das sessões que ele aplicará ao paciente, no qual foi adicionado dois campos, para definirem a taxa mínima e máxima de saturação sanguínea do paciente, dado este utilizado pelo sistema para definir os parâmetros de avisos e parada de sessões. 
+Esta tela, mostra a configuração feita apenas pelo terapeuta, das sessões que ele aplicará ao paciente, no qual foi adicionado um campo, para definir a taxa mínima  de saturação sanguínea do paciente, dado este utilizado pelo sistema para definir os parâmetros de avisos e parada de sessões. 
 
 #### 4.2.2- Modals Jogo
 ---
@@ -777,9 +777,9 @@ Neste nível mostramos quais são os seus principais componentes, stacks e proto
 
 ---
 
-### 5.1.2 Nível 3 — Diagrama de Componentes
+### 5.1.3 Nível 3 — Diagrama de Componentes
 
-Neste nível selecionamos para o aprofundamento e detalhamento, a estrutura e organização do novo sensor ao PITACO, o SpO2(oxímetro), presente abaixo:
+Neste nível selecionamos para o aprofundamento e detalhamento sobre a estrutura e organização do software do novo sensor ao PITACO, o SpO2(oxímetro), presente abaixo:
 
 <img width="6448" height="3760" alt="image" src="https://github.com/user-attachments/assets/54b82195-488a-4a96-861f-ce4b1a23e57e" />
 
@@ -800,7 +800,7 @@ Segue abaixo uma lista das alterações que a melhoria realiza no banco de dados
 - A estrutura deixa de representar apenas dados de fluxo respiratório. Isso foi feito porque agora a sessão também pode receber dados de outros dispositivos, como o oxímetro, além dos dispositivos respiratórios já utilizados no sistema.
 
 #### Renomear DEVICE_FLOW para DEVICE_SIGNAL
-- O dispositivo passa a registrar diferentes tipos de sinais, não apenas fluxo. Isso foi feito para permitir sinais como flowValue, SpO2, heartRate e respiratoryRate.
+- O dispositivo passa a registrar diferentes tipos de sinais, não apenas fluxo. Isso foi feito para permitir sinais como flowValue, SpO2 e respiratoryRate.
 
 #### Renomear FLOW_SAMPLE para DEVICE_SAMPLE
 - Cada amostra passa a representar qualquer leitura de dispositivo. Isso foi feito porque uma amostra pode ser de fluxo respiratório, SpO2 ou outro sinal fisiológico usado no Flow Psicofisiológico.
@@ -1065,7 +1065,6 @@ Como o DeepDDA opera por ciclos de observação, decisão, ação e recompensa, 
     "avgPhysiologicalFlow": "number",
     "minSpo2": "number",
     "avgSpo2": "number",
-    "maxHeartRate": "number",
     "avgRespiratoryRate": "number",
     "totalDdaAdjustments": "number",
     "totalSafetyEvents": "number"
@@ -1158,7 +1157,6 @@ Como o DeepDDA opera por ciclos de observação, decisão, ação e recompensa, 
   "deviceDataSummary": {
     "minSpo2": "number",
     "avgSpo2": "number",
-    "maxHeartRate": "number",
     "respiratoryFlowPeak": "number"
   },
 
@@ -1242,7 +1240,6 @@ Como o DeepDDA opera por ciclos de observação, decisão, ação e recompensa, 
     "avgValue": "number",
     "minSpo2": "number",
     "avgSpo2": "number",
-    "maxHeartRate": "number",
     "signalQualityAvg": "number"
   },
 
@@ -1293,7 +1290,6 @@ Como o DeepDDA opera por ciclos de observação, decisão, ação e recompensa, 
     "targetsSuccessRate",
     "obstaclesFailRate",
     "spo2",
-    "heartRate",
     "respiratoryRate",
     "borgScale",
     "flowPsychic",
@@ -1340,7 +1336,6 @@ Como o DeepDDA opera por ciclos de observação, decisão, ação e recompensa, 
     "obstaclesFailRate": "number",
 
     "spo2": "number",
-    "heartRate": "number",
     "respiratoryRate": "number",
     "borgScale": "number",
 
@@ -1365,7 +1360,6 @@ Como o DeepDDA opera por ciclos de observação, decisão, ação e recompensa, 
     "phase": "number",
     "level": "number",
     "spo2": "number",
-    "heartRate": "number",
     "scoreRatio": "number"
   },
 
@@ -1727,7 +1721,7 @@ A melhoria por sua vez adiciona novo componente de hardware, novas funções e a
 | Componente adicionado | Stack / tecnologia utilizada | Justificativa |
 |---|---|---|
 | Oxímetro de pulso | Sensor biomédico / hardware de monitoramento | Adicionado para capturar dados fisiológicos do paciente durante a sessão, principalmente SpO2. |
-| Leitura do oxímetro | C com Idf.py | Utilizado para programar o microcontrolador responsável pela leitura dos dados do oxímetro. |
+| Leitura do oxímetro | Firmware em C/C++ com ESP-IDF | Utilizado para programar o microcontrolador responsável pela leitura dos dados do oxímetro. |
 | Integração com o jogo | Unity e C# | Utilizada para receber os dados do oxímetro dentro do jogo e acionar ações como pausa, retomada ou interrupção da sessão. |
 | Registro de eventos da sessão | Node.js e Azure Functions | Adicionado para permitir que a API registre eventos como pausa, retomada, interrupção, motivo da interrupção e horário da ocorrência. |
 | Módulo de monitoramento fisiológico | C# | Adicionado para interpretar os dados de SpO2, comparando-os com limites de segurança definidos para o paciente. |
@@ -1768,7 +1762,7 @@ O ecossistema I Blue It, em sua versão 5.0, manipula dados sensíveis relaciona
 | **Proteção contra injeção e dados inválidos**     | Como as requisições passam pelo backend antes de chegar ao banco, o sistema possui uma camada central para validação dos dados recebidos do jogo e da aplicação web.                                  |
 | **Proteção contra exposição direta do banco**     | O banco de dados não é acessado diretamente pela interface do usuário, mas por meio do backend, reduzindo riscos de exposição indevida.                                                               |
 
-O modelo atual contempla medidas associadas a autenticação, autorização, criptografia em trânsito, controle de acesso e separação de camadas, que se relacionam com riscos presentes na OWASP Top 10, assim já apresentando nativamente um sistema robusto e seguro.
+O modelo atual contempla medidas basicas associadas a autenticação, autorização, criptografia em trânsito, controle de acesso e separação de camadas, que se relacionam com riscos presentes na OWASP Top 10, assim já apresentando nativamente um foco em segurança.
 
 Ao se adicionar o novo módulo SpO2 ao PITACO, e todos os ajustes em cada módulo que isto necessite, esperamos manter o mesmo rigor no tratamento, coleta e armazenamento de dados existente.Nesse sentido vale ressaltar que o módulo IoT SpO2 será desenvolvido com o mesmo sistema de transmissão USB serial, que mitiga vazamentos de informações, além de após as  alterações pertinentes nos módulos subsequentes para comportar a melhoria(tais como o jogo, o InfoChart e o backend), esperamos manter o mesmo nível de segurança já presente no ecossistema I Blue It.
 
@@ -1823,7 +1817,7 @@ O cronograma foi organizado em marcos de desenvolvimento, priorizando primeiro a
 | M4 | Implementação da validação, filtragem e tratamento dos sinais fisiológicos, incluindo identificação de leituras inválidas, perda de sinal, mau posicionamento do sensor e inconsistências nos dados. | 07/09/2026 a 18/09/2026 |
 | M5 | Implementação das regras de monitoramento fisiológico, alertas de segurança, recomendação de pausa e interrupção automática da sessão em casos críticos de SpO2. | 21/09/2026 a 02/10/2026 |
 | M6 | Atualização do backend, API e modelo de dados para registrar SpO2, eventos de alerta, pausas, interrupções e associação desses dados à sessão terapêutica. | 05/10/2026 a 16/10/2026 |
-| M7 | Integração dos dados fisiológicos ao módulo DeepDDA, permitindo que a IA utilize SpO2 e demais biossinais como parâmetros adicionais no ajuste dinâmico de dificuldade e nas decisões de segurança. | 19/10/2026 a 30/10/2026 |
+| M7 | Integração dos dados fisiológicos ao módulo DeepDDA, permitindo que a IA utilize SpO2 como parâmetros adicionais no ajuste dinâmico de dificuldade e nas decisões de segurança. | 19/10/2026 a 30/10/2026 |
 | M8 | Atualização do dashboard clínico Health InfoCharts para exibir dados de saturação sanguínea, eventos de pausa/interrupção, resumo fisiológico da sessão e histórico dos novos registros. | 02/11/2026 a 13/11/2026 |
 | M9 | Consolidação do MVP funcional da melhoria, integrando PITACO ampliado, módulo SpO2, jogo, backend, banco de dados, dashboard e registros de eventos da sessão. | 16/11/2026 a 20/11/2026 |
 | M10 | Testes funcionais, testes de integração, testes com dados simulados, verificação dos requisitos funcionais e não funcionais, correções e ajustes finais. | 23/11/2026 a 04/12/2026 |
