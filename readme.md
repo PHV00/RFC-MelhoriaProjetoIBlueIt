@@ -385,7 +385,7 @@ O sistema registra os dados de  saturação sanguínea obtidos durante a sessão
 **Objetivo:** Alerta o profissional da saúde sobre possíveis riscos fisiológicos ocorridos em tempo de execução da sessão terapêutica.
 
 **Descrição:**
-O sistema emite um alerta de segurança ao profissional da saúde quando identifica que os sinais fisiológicos do paciente indicam condições de risco ao mesmo, isso em durante a sessão terapêutica. Esses alertas podem estar relacionados a sinais incompatíveis com a execução do exercício como excesso ou falta de saturação sanguínea, ou ainda a casos onde o dispositivo pode estar apresentando falhas na leitura.
+O sistema emite um alerta de segurança ao profissional da saúde quando identifica que os sinais fisiológicos do paciente indicam condições de risco ao mesmo, isso em durante a sessão terapêutica. Esses alertas podem estar relacionados a sinais incompatíveis com a execução do exercício como a falta de saturação sanguínea, ou ainda a casos onde o dispositivo pode estar apresentando falhas na leitura.
 
 ---
 
@@ -556,7 +556,7 @@ O primeiro trata-se de uma validação que ocorre no elemento número 9 do fluxo
 
 <img width="5828" height="1836" alt="image" src="https://github.com/user-attachments/assets/90bb9540-ffbb-45bc-95c6-2fa733884e85" />
 
-O segundo e mais problemático, trata-se da validação do estado de saturação sanguínea do paciente no qual a cada instante após a sessão se iniciar, os dados coletados pelo módulo SpO2 são analisados em busca de padrões que indiquem se o paciente irá sofrer ou está sofrendo com a dificuldade do exercício, tanto em falta quanto em excesso de saturação sanguínea, tendo como objetivo evitar casos de fadiga extrema e possíveis desmaios ocasionados pelo exercício. 
+O segundo e mais problemático, trata-se da validação do estado de saturação sanguínea do paciente no qual a cada instante após a sessão se iniciar, os dados coletados pelo módulo SpO2 são analisados em busca de padrões que indiquem se o paciente irá sofrer ou está sofrendo com a dificuldade do exercício, em falta de saturação sanguínea, tendo como objetivo evitar casos de fadiga extrema e possíveis desmaios ocasionados pelo exercício. 
 
 <img width="6044" height="3188" alt="image" src="https://github.com/user-attachments/assets/c511ad33-d3d0-4505-9abb-8355578113b4" />
 
@@ -850,6 +850,8 @@ MongoDB
 ### Suas conexões:
 
 <img width="4976" height="1972" alt="image" src="https://github.com/user-attachments/assets/2d7cde95-61d9-42c8-a823-301e7e90630c" />
+
+Como o DeepDDA opera por ciclos de observação, decisão, ação e recompensa, o modelo de dados precisa registrar não apenas os dados fisiológicos e de desempenho, mas também o estado observado pela IA, a ação escolhida, os parâmetros alterados, a recompensa atribuída e o resultado da decisão. Essa rastreabilidade é necessária para analisar se a integração com dados reais está reproduzindo corretamente o comportamento previsto na prova de conceito de Dias (2024).
 
 ## Estrutura dos dados em JSON:
 
