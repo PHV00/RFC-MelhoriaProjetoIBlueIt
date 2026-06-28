@@ -180,7 +180,13 @@ As Métricas de sucesso estipuladas são:
 - Tempo de resposta do sistema inferior a 800 ms para feedback em gameplay.
 - Adição dos dados obtidos pelo SpO2 ao dashboard apresentando todos os dados já existente e novos pertinentes, mantendo o tempo de resposta atual.
 - Acurácia dos cálculos do sensor SpO2 sobre saturação sanguínea igualada a equipamentos homologados.
-
+- Percentual de decisões do DeepDDA registradas corretamente com estado observado, ação, recompensa e parâmetros alterados.
+- Tempo entre captura da SpO2 válida e disponibilização do dado ao DeepDDA inferior a 800ms.
+- Tempo entre decisão do DeepDDA e aplicação da ação no jogo inferior a 800ms.
+- Percentual de cenários simulados em que o sistema reduz dificuldade quando SpO2 < 95%.
+- Percentual de cenários simulados em que o sistema pausa/interrompe quando SpO2 < 89%.
+- Percentual de sessões em que os dados reais do PITACO ampliado são associados corretamente ao paciente, sessão e decisão da IA igualado a 100%.
+  
 ---
 
 # 2. Engenharia de Requisitos
@@ -364,7 +370,7 @@ O sistema permite capturar dados fisiológicos, por meio do PITACO ampliado, tan
 
 ### UC15 — Validar, Filtrar e Transformar Sinais Brutos
 
-**Objetivo:** Garantir que os dados respiratórios capturados pelo SpO2 sejam consistentes, confiáveis e adequados para análise.
+**Objetivo:** Garantir que os dados de satuação sanguínea capturados pelo SpO2 sejam consistentes, confiáveis e adequados para análise.
 
 **Descrição:**
 O sistema realiza a validação se os dados estão sendo capturados adequadamente e a transformação dos mesmos dados brutos obtidos pelo SpO2 para valores reais de saturação sanguínea, com a finalidade de fornecer tais dados processados para as outra partes interconectadas do sistema.Essa etapa permite validar se os dados estão sendo capturados de maneira adequada e que estejam sendo retornados também de maneira adequada para as demais partes.
@@ -443,6 +449,10 @@ Abaixo pode se ver o fluxo com a melhoria proposta:
 | RF29 | O sistema deve registrar cada decisão tomada pelo DeepDDA, incluindo estado observado, ação escolhida, parâmetros alterados, recompensa calculada e horário da decisão. |
 | RF30 | O sistema deve aplicar no jogo as ações de ajuste de dificuldade decididas pelo DeepDDA. |
 | RF31 | O sistema deve permitir rastrear os parâmetros do jogo antes e depois de cada ajuste realizado pela IA. |
+| RF32 | O sistema deve construir um estado observado contendo desempenho no jogo, dados respiratórios, SpO2 e demais biossinais validados. |
+| RF33 | O módulo DeepDDA deve selecionar uma ação dentro de um conjunto definido de ações possíveis, como manter, aumentar, reduzir, pausar ou interromper. |
+| RF34 | O sistema deve calcular ou registrar a recompensa associada à decisão tomada pela IA. |
+| RF35 | O sistema deve armazenar o estado resultante após a aplicação da ação da IA. |
 
 ---
 
