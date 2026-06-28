@@ -58,7 +58,7 @@ Nesse modelo, dispositivos como o PITACO continuam fornecendo dados respiratóri
 
 Entretanto, a tese de Dias (2024) apresenta o uso da SpO₂ no I Blue It 5.0 no contexto de uma prova de conceito do Flow Psicofisiológico e do módulo DeepDDA. Embora essa prova de conceito demonstre a viabilidade técnica do uso da oximetria para apoiar decisões de segurança e adaptação dinâmica, ela não caracteriza, por si só, uma integração operacional definitiva do oxímetro ao ecossistema. Assim, ainda permanecem pontos a serem especificados e consolidados, como hardware, firmware, comunicação, confiabilidade da leitura, tratamento de erros, persistência dos dados e segurança da transmissão.
 
-Com base nessa estrutura, a melhoria proposta neste RFC concentra-se na integração do módulo de oximetria ao dispositivo PITACO, permitindo que dados de saturação de oxigênio sejam coletados, transmitidos, armazenados e disponibilizados ao sistema de forma segura. A proposta não busca alterar a mecânica principal do jogo, mas aprimorar a camada de monitoramento fisiológico, ampliando a capacidade do I Blue It de acompanhar sinais relevantes durante a execução dos exercícios respiratórios, trazendo mais segurança para os pacientes.
+Com base nessa estrutura, a melhoria proposta neste RFC se divide em três partes sendo a primeira a integração do módulo de oximetria ao dispositivo PITACO, permitindo que dados de saturação de oxigênio sejam coletados, transmitidos, armazenados e disponibilizados ao sistema de forma segura, a segunda se tratando da adição de tais dados ao módulo de Flow Psicologico ,tendo isto já sido validado na prova de conceito descrito por Dias (2024), e agora sendo de fato sendo implantado no sistema, e por fim o ajuste dos dashboards clínicos para o novo parametro de saturação sanguínea.A proposta deste modo não busca alterar a mecânica principal do jogo, mas aprimorar a camada de monitoramento fisiológico, ampliando a capacidade do I Blue It de acompanhar sinais relevantes durante a execução dos exercícios respiratórios, trazendo mais segurança para os pacientes.[2]
 
 ---
 
@@ -83,7 +83,7 @@ Desde sua fase inicial até agora houve diversas melhorias em cada uma das vers�
 - versão 05 - I Blue It / Flow Psicofisiológico (2024):
   - Incorporação de Flow Psicofisiológico (busca equilibrar a parte motivadora psíquica, com a parte fisiológica do paciente) e IA ao projeto com o fim de controlar o Flow Psicofisiológico
 
-Apesar dos avanços já alcançados no ecossistema I Blue It, ainda existem melhorias a serem desenvolvidas no sistema biomédico, especialmente quanto à integração de novos recursos de monitoramento fisiológico e ao aprimoramento de seus componentes de hardware e software. Nesse contexto, por meio de uma bolsa de Iniciação Científica vinculada à UDESC, este projeto tem como proposta dar continuidade ao desenvolvimento da ferramenta, realizando a integração de um oxímetro ao dispositivo PITACO e promovendo ajustes complementares no sistema.
+Apesar dos avanços já alcançados no ecossistema I Blue It, ainda existem melhorias a serem desenvolvidas no sistema biomédico, especialmente quanto à integração de novos recursos de monitoramento fisiológico e ao aprimoramento de seus componentes de hardware e software. Nesse contexto, por meio de uma bolsa de Iniciação Científica vinculada à UDESC, este projeto tem como proposta dar continuidade ao desenvolvimento da ferramenta, realizando a integração de um oxímetro ao dispositivo PITACO e promovendo ajustes complementares no sistema, tais como o ajuste no módulo de ajuste dinâmico da dificuldade por Inteligência Artificial(DeepDDa), ajuste nos dashboards clínicos ,em conta da adição do nomo parâmetro a oximetria.
 
 Assim, o projeto de melhoria parte da continuidade de um trabalho técnico-acadêmico já consolidado, buscando tratar lacunas identificadas e contribuir para o aprimoramento de uma solução voltada ao apoio da comunidade fisioterapêutica na reabilitação de pacientes com problemas respiratórios.
 
@@ -165,7 +165,7 @@ O projeto se propõe a adicionar funções e módulos, tanto ao hardware como ao
 Tendo em vista a problemática apresentada, este projeto tem como fim sanar as lacunas identificadas com fim de entregar ao final, um sistema biomédico mais completo. Baseando-se nisso segue abaixo os objetivos a serem tratados:
 
 - Integrar o hardware existente do PITACO ao sensor de SpO2 para monitoramento fisiológico complementar, através da saturação sanguínea.
-- Atualizar o módulo de ajuste dinâmico por inteligência artificial responsável pela dificuldade, para suportar o novo parâmetro de Saturação Sanguínea.
+- Atualizar o módulo de ajuste dinâmico por inteligência artificial responsável pela dificuldade, para suportar o novo parâmetro de saturação sanguínea.
 - Atualizar o dashboard clínico para exibir e correlacionar dados respiratórios, da saturação sanguínea  e de desempenho nos jogos e sessões.
 
 ---
