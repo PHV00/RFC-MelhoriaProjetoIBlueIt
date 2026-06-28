@@ -14,7 +14,7 @@
   Pedro Henrique Vitoreti
 
 - **Data da Proposta:**  
-  1/06/2026
+  28/06/2026
 
 - **Versão:**  
   1.4
@@ -128,7 +128,7 @@ público-alvo : pessoas com problemas respiratórios de modo amplo
 | BubbleBreather | Exercícios respiratórios com foco em recuperação de pneumonia | Microfone / navegador | Não identificado | Não identificado | Não identificado | Não possui módulo clínico especializado | Escopo restrito, dependência de microfone e ausência de integração com sensores terapêuticos dedicados |
 | PlayPhysio | Exercícios respiratórios com foco em adesão ao tratamento, principalmente em crianças | Dispositivo IoT PhysioPal conectado via Bluetooth | Parcial | Não identificado | Dados vinculados ao uso do equipamento terapêutico | Camada clínica mais simplificada | Menor robustez clínica quando comparado a uma plataforma multimodal com dashboard terapêutico |
 | ACPlus Respiratory Assessment + OmniFlow | Diagnóstico, documentação clínica e terapia respiratória interativa | Espirômetro Bluetooth e iPad | Parcial | Não identificado | Dados respiratórios capturados por dispositivo dedicado | Possui documentação clínica e análise profissional | Solução comercial voltada ao contexto regulatório estadunidense |
-| I Blue It 6.0 | Reabilitação respiratória mediada por jogo sério ativo, com monitoramento fisiológico complementar | PITACO ampliado com sensor de SpO2 | Sim | Sim, com integração operacional ao DeepDDA / Flow Psicofisiológico utilizando dados reais de SpO2. | SpO2 e, se validado tecnicamente, frequência cardíaca | Dashboard clínico com dados respiratórios, desempenho e saturação sanguínea | Solução em desenvolvimento, dependente de validação técnica da integração do oxímetro ao PITACO |
+| I Blue It 6.0 | Reabilitação respiratória mediada por jogo sério ativo, com monitoramento fisiológico complementar | PITACO ampliado com sensor de SpO2 | Sim | Sim, com integração operacional ao DeepDDA / Flow Psicofisiológico utilizando dados reais de SpO2. | sensor SpO2(saturação sanguínea) | Dashboard clínico com dados respiratórios, desempenho e saturação sanguínea | Solução em desenvolvimento, dependente de validação técnica da integração do oxímetro ao PITACO |
 
 ---
 
@@ -407,7 +407,7 @@ Abaixo pode se ver o fluxo com a melhoria proposta:
 ## 2.3 Requisitos Funcionais (RF)
 
   Em vista dos trabalhos já realizados e documentados das versões passadas do software I Blue It, esta proposta de melhoria não se atém aos requisitos funcionais da versão atual do software, e sim, apenas aos pertinentes a sua melhoria, nisto consistindo na integração do módulo de monitoramento de SpO2 para apoiar a segurança fisiológica durante as sessões de reabilitação respiratória, os quais estão presentes logo abaixo.
-  Outro adendo necessário, para diferenciar o local onde a melhoria será aplicada, do software já existente, foi nomeado a melhoria como módulo SpO2 sendo este o módulo responsável pela captação, validação, correção e cálculo de saturação sanguínea e estipulação do pulso cardíaco do paciente, e o sistema já existente sendo referido como sistema I Blue It, assim mostrando quais partes terão de fazer quais tarefas, e suas respectivas interações e responsabilidades.  
+  Outro adendo necessário, para diferenciar o local onde a melhoria será aplicada, do software já existente, foi nomeado a melhoria como módulo SpO2 sendo este o módulo responsável pela captação, validação, correção e cálculo de saturação sanguínea do paciente, já o sistema existente sendo referido como sistema I Blue It, assim mostrando quais partes terão de fazer quais tarefas, e suas respectivas interações e responsabilidades.  
 
 | ID | Requisito Funcional |
 |----|---------------------|
@@ -455,7 +455,7 @@ Os requisitos não funcionais descritos nesta seção seguem o mesmo princípio 
 | RNF01 | Compatibilidade | O módulo SpO2 deve ser integrado ao software I Blue It sem comprometer as funcionalidades já existentes no software ou hardware. |
 | RNF02 | Modularidade | O módulo SpO2 deve ser desenvolvido de forma independente, permitindo sua manutenção sem necessidade de alterar partes centrais do software I Blue It. |
 | RNF03 | Interoperabilidade | O módulo SpO2 deve se comunicar com o software I Blue It por meio de um formato de dados definido e compreensível pelos dois componentes. |
-| RNF04 | Desempenho | O módulo SpO2 deve atualizar os dados de saturação sanguínea e frequência cardíaca em tempo compatível com o acompanhamento da sessão terapêutica. |
+| RNF04 | Desempenho | O módulo SpO2 deve atualizar os dados de saturação sanguínea em tempo compatível com o acompanhamento da sessão terapêutica. |
 | RNF05 | Tempo de resposta | O módulo SpO2 deve emitir alertas de risco fisiológico em tempo suficiente para que o terapeuta possa intervir durante a sessão. |
 | RNF06 | Confiabilidade | O módulo SpO2 deve evitar o uso de leituras inválidas, instáveis ou incompatíveis com um sinal fisiológico confiável. |
 | RNF07 | Robustez | A perda de conexão com o sensor SpO2 não deve causar travamento ou encerramento inesperado do software I Blue It, mas deve gerar alertas e avisos. |
@@ -464,7 +464,7 @@ Os requisitos não funcionais descritos nesta seção seguem o mesmo princípio 
 | RNF10 | Usabilidade | O estado do módulo SpO2 deve ser apresentado de forma clara ao terapeuta, indicando se o sensor está conectado, desconectado, válido, inválido ou em alerta. |
 | RNF11 | Clareza de interface | Os alertas relacionados à saturação sanguínea, perda de sinal ou mau posicionamento do sensor devem ser compreensíveis para o terapeuta durante a sessão. |
 | RNF12 | Rastreabilidade | Os dados fisiológicos registrados pelo módulo SpO2 devem estar associados à sessão, ao paciente e ao momento em que foram coletados. |
-| RNF13 | Integridade dos dados | Os dados de saturação sanguínea, frequência cardíaca e eventos de alerta devem ser armazenados sem sobrescrever ou corromper os dados já registrados pelo software I Blue It. |
+| RNF13 | Integridade dos dados | Os dados de saturação sanguínea e eventos de alerta devem ser armazenados sem sobrescrever ou corromper os dados já registrados pelo software I Blue It. |
 | RNF14 | Persistência | Os registros fisiológicos da sessão devem permanecer disponíveis para consulta após o encerramento do jogo. |
 | RNF15 | Privacidade | Os dados fisiológicos do paciente devem ser tratados como informações sensíveis e não devem ser expostos indevidamente. |
 | RNF16 | Manutenibilidade | O código do módulo SpO2 deve ser organizado de forma a facilitar ajustes, correções e futuras expansões. |
@@ -502,9 +502,8 @@ As regras de negócios aqui presentes foram elencadas com mesmo intuito de mostr
 | RN18 | Os dados do novo módulo SpO2 não devem substituir os dados já presentes no ecossistema I Blue It. |
 | RN19 | Os dados do novo módulo SpO2 devem ser integrados aos dados já presentes no ecossistema I Blue It. |
 | RN20 | Eventos de alerta tais como queda de saturação sanguínea, perda de sinal e ou pausa da sessão devem ser registrados no histórico da sessão. |
-| RN21 | A frequência cardíaca deve ser registrada sempre que possível pelo módulo SpO2. |
-| RN22 | Em casos de muito breve ausência de sinal fisiológico não devem ser interpretadas automaticamente como condições crítica do paciente. |
-| RN23 | O terapeuta responsável deve ter acesso aos registros fisiológicos da sessão após seu encerramento. |
+| RN21 | Em casos de muito breve ausência de sinal fisiológico não devem ser interpretadas automaticamente como condições crítica do paciente. |
+| RN22 | O terapeuta responsável deve ter acesso aos registros fisiológicos da sessão após seu encerramento. |
 
 ---
 
@@ -757,7 +756,7 @@ Neste nível mostramos quais são os seus principais componentes, stacks e proto
 | Container | Função no sistema |
 |---|---|
 | **Jogo I Blue It** | Executa a sessão de reabilitação, controla o personagem, ajusta dinamicamente a dificuldade, interpreta os sinais respiratórios e aplica as regras de pausa ou interrupção da sessão.|
-| **Dispositivos biomédicos** | Capturam sinais respiratórios e fisiológicos do paciente, como fluxo respiratório, pressão, expansão torácica , saturação sanguínea e frequência cardíaca. |
+| **Dispositivos biomédicos** | Capturam sinais respiratórios e fisiológicos do paciente, como fluxo respiratório, pressão, expansão torácica e saturação sanguínea. |
 | **Back-end / API** | Recebe os dados gerados pelo jogo, processa requisições do dashboard e centraliza a comunicação com o banco de dados. |
 | **Banco de Dados** | Armazena pacientes, sessões, medições, histórico de uso, eventos de pausa, eventos de interrupção e dados de segurança. |
 | **Health InfoCharts** | Interface web utilizada pelo profissional da saúde para visualizar gráficos, histórico, estatísticas e eventos relevantes da sessão. |
@@ -794,7 +793,7 @@ Segue abaixo uma lista das alterações que a melhoria realiza no banco de dados
 - O dispositivo passa a registrar diferentes tipos de sinais, não apenas fluxo. Isso foi feito para permitir sinais como flowValue, SpO2, heartRate e respiratoryRate.
 
 #### Renomear FLOW_SAMPLE para DEVICE_SAMPLE
-- Cada amostra passa a representar qualquer leitura de dispositivo. Isso foi feito porque uma amostra pode ser de fluxo respiratório, SpO2, frequência cardíaca ou outro sinal fisiológico usado no Flow Psicofisiológico.
+- Cada amostra passa a representar qualquer leitura de dispositivo. Isso foi feito porque uma amostra pode ser de fluxo respiratório, SpO2 ou outro sinal fisiológico usado no Flow Psicofisiológico.
 
 #### Adicionar oxímetro como dispositivo da sessão
 - O oxímetro passa a ser tratado junto aos demais dispositivos usados durante o jogo. Isso foi feito para incluir o monitoramento fisiológico sem criar uma estrutura paralela ao modelo atual.
@@ -1450,7 +1449,7 @@ O I Blue It já possui calibração respiratória antes da execução da platafo
 
 Na melhoria, a calibração respiratória não é substituída. Ela passa a compor o conjunto de dados iniciais utilizados pelo Flow Psicofisiológico, servindo como base para o setup inicial do exergame e para a avaliação do desempenho fisiológico durante a sessão.
 
-Além dos dados respiratórios já existentes, a sessão passa a considerar também biossinais, como SpO2 e frequência cardíaca, quando disponíveis, para que o DeepDDA tenha uma visão mais completa do estado do paciente.
+Além dos dados respiratórios já existentes, a sessão passa a considerar também biossinais, como SpO2 , quando disponíveis, para que o DeepDDA tenha uma visão mais completa do estado do paciente.
 
 ---
 
@@ -1463,7 +1462,7 @@ A melhoria se apoia nesse componente, mas amplia o tipo de informação registra
 | Novo dado registrado | Finalidade |
 |---|---|
 | Status da sessão | Identificar se a sessão foi concluída, pausada ou interrompida |
-| Dados de biossinais | Registrar SpO₂, frequência cardíaca e outros sinais fisiológicos |
+| Dados de biossinais | Registrar SpO2 e outros sinais fisiológicos |
 | Observações do DeepDDA | Armazenar o estado analisado pela IA |
 | Ação escolhida pela IA | Registrar se a dificuldade foi mantida, aumentada, reduzida, pausada ou interrompida |
 | Recompensa calculada | Registrar a avaliação usada no aprendizado por reforço |
@@ -1495,7 +1494,7 @@ Esse componente tem como objetivo manter o equilíbrio entre desafio, segurança
 
 #### Módulo de Monitoramento Psicofisiológico
 
-Este é um dos principais componentes da melhoria. Ele recebe os dados fisiológicos e respiratórios do paciente durante a sessão, principalmente fluxo respiratório, SpO2, frequência cardíaca, frequência respiratória.
+Este é um dos principais componentes da melhoria. Ele recebe os dados fisiológicos e respiratórios do paciente durante a sessão, principalmente fluxo respiratório, a saturação sanguínea e a frequência respiratória.
 
 Sua função é fornecer ao DeepDDA uma visão do estado atual do paciente. Esses dados são utilizados para avaliar se o desafio do jogo está adequado à condição fisiológica e psíquica do paciente durante a sessão.
 
@@ -1505,7 +1504,7 @@ Sua função é fornecer ao DeepDDA uma visão do estado atual do paciente. Esse
 
 O módulo DeepDDA é o agente de Inteligência Artificial responsável por realizar o ajuste dinâmico de dificuldade no I Blue It. Ele observa o estado atual da sessão, interpreta os dados do paciente e decide qual ação deve ser tomada no jogo.
 
-Esse módulo utiliza dados como desempenho no jogo, fase, nível, pontuação, acertos, erros, SpO2, frequência cardíaca, frequência respiratória, escala de Borg e demais informações psicofisiológicas disponíveis.
+Esse módulo utiliza dados como desempenho no jogo, fase, nível, pontuação, acertos, erros, saturação sanguínea e frequência respiratória, escala de Borg e demais informações psicofisiológicas disponíveis.
 
 | Entrada analisada | Finalidade |
 |---|---|
@@ -1514,7 +1513,6 @@ Esse módulo utiliza dados como desempenho no jogo, fase, nível, pontuação, a
 | Fase e nível | Identificar o desafio atual |
 | Dados respiratórios | Avaliar execução do exercício terapêutico |
 | SpO2 | Verificar segurança fisiológica |
-| Frequência cardíaca | Apoiar análise de esforço |
 | Escala de Borg | Considerar percepção subjetiva de esforço |
 | Histórico do paciente | Apoiar decisões mais personalizadas |
 
@@ -1534,7 +1532,6 @@ Exemplo de estado observado:
 | Nível atual | Nível 3 |
 | Desempenho | 78% |
 | SpO2 | 93% |
-| Frequência cardíaca | 110 bpm |
 | Escala de Borg | 4 |
 | Erros em obstáculos | 3 |
 | Acertos em alvos | 12 |
@@ -1682,7 +1679,7 @@ Esse módulo organiza os dados da sessão em uma visualização útil para o pro
 | Histórico e Persistência | Já existente | É ampliado para registrar biossinais, decisões, recompensas e parâmetros |
 | Dashboards / Relatórios | Já existente no ecossistema | Passa a exibir dados psicofisiológicos, ajustes e decisões da IA |
 | IA / Ajuste Dinâmico de Dificuldade | Aprofundado pela melhoria | Torna-se o núcleo do Flow Psicofisiológico com DeepDDA |
-| Monitoramento Psicofisiológico | Adicionado/aprofundado | Captura SpO2, frequência cardíaca, frequência respiratória e percepção de esforço |
+| Monitoramento Psicofisiológico | Adicionado/aprofundado | Captura SpO2, frequência respiratória e percepção de esforço |
 | Módulo DeepDDA | Novo/aprofundado | Observa o estado da sessão e decide ações de dificuldade ou segurança |
 | Observação do Estado | Novo | Organiza os dados que serão analisados pela IA |
 | Decisão do DeepDDA | Novo | Define manter, aumentar, reduzir, pausar ou interromper |
@@ -1719,11 +1716,11 @@ A melhoria por sua vez adiciona novo componente de hardware, novas funções e a
 
 | Componente adicionado | Stack / tecnologia utilizada | Justificativa |
 |---|---|---|
-| Oxímetro de pulso | Sensor biomédico / hardware de monitoramento | Adicionado para capturar dados fisiológicos do paciente durante a sessão, principalmente SpO2 e frequência cardíaca. |
+| Oxímetro de pulso | Sensor biomédico / hardware de monitoramento | Adicionado para capturar dados fisiológicos do paciente durante a sessão, principalmente SpO2. |
 | Leitura do oxímetro | C com Idf.py | Utilizado para programar o microcontrolador responsável pela leitura dos dados do oxímetro. |
 | Integração com o jogo | Unity e C# | Utilizada para receber os dados do oxímetro dentro do jogo e acionar ações como pausa, retomada ou interrupção da sessão. |
 | Registro de eventos da sessão | Node.js e Azure Functions | Adicionado para permitir que a API registre eventos como pausa, retomada, interrupção, motivo da interrupção e horário da ocorrência. |
-| Módulo de monitoramento fisiológico | C# | Adicionado para interpretar os dados de SpO2 e frequência cardíaca, comparando-os com limites de segurança definidos para o paciente. |
+| Módulo de monitoramento fisiológico | C# | Adicionado para interpretar os dados de SpO2, comparando-os com limites de segurança definidos para o paciente. |
 | Controle de estado da sessão | C# | Adicionado para registrar e controlar os estados da sessão, como em andamento, pausada, retomada, interrompida ou finalizada. |
 | Regras de pausa e interrupção | C# | Utilizadas para pausar ou interromper a sessão quando os sinais fisiológicos indicarem risco, sem alterar diretamente a mecânica principal do jogo. |
 | Persistência dos novos dados | MongoDB Atlas e Mongoose | Utilizada para armazenar os novos dados da melhoria, como valores fisiológicos, estado da sessão e eventos de segurança. |
@@ -1782,7 +1779,7 @@ Abaixo consta uma lista de todos os dados coletados (já imaginando um cenário 
 | **Dados brutos dos dispositivos**         | Nome do dispositivo, valor medido e timestamp. Exemplo: `deviceName`, `flowValue`, `timestamp`                                                                                                 | Coleção `FlowDataDevice`, separada dos resumos da sessão. A plataforma salva uma referência `flowDataDevicesId` para esses dados brutos.                                                                                                                  | **Ponto crítico:** a função `DeletePacient` atual não remove explicitamente `FlowDataDevice`. Assim, dados brutos podem ficar órfãos no banco se não forem apagados por referência antes da exclusão dos resumos. |
 | **Minigames**                             | Nome do minigame, exercício respiratório, rodada, pontuação da rodada, pontuação do fluxo e referência aos dados dos dispositivos                                                              | Coleção `MinigameOverview`, com referências para `FlowDataDevice`.                                                                                                                                                                                        | A exclusão completa remove `MinigameOverview`, mas deve também remover os `FlowDataDevice` referenciados.                                                                                                         |
 | **Sessão clínica/dia de uso**             | Identificador do paciente e número da sessão                                                                                                                                                   | Coleção `PlaySession`, com `pacientId` e `sessionNumber`.                                                                                                                                                                                                 | A função `DeletePacient` remove `PlaySession` do paciente.                                                                                                                                                        |
-| **SpO2 / biossinais da melhoria**         | Saturação de oxigênio, Frequência cardíaca ,e, possivelmente, eventos de alerta, pausa ou interrupção por queda de SpO2                                                                                              | Na tese, o oxímetro entra como dispositivo de monitoramento fisiológico para segurança do paciente; porém, no backend público consultado, os validadores aceitam PITACO, Manovacuômetro e Cinta, mas ainda não listam “Oxímetro” como dispositivo válido. | Para a melhoria, a remoção deve seguir o mesmo vínculo por `pacientId`, mas o schema/validador precisa ser atualizado para garantir que os dados de SpO2 também sejam apagados.                                   |
+| **SpO2 / biossinais da melhoria**         | Saturação de oxigênio,e, possivelmente, eventos de alerta, pausa ou interrupção por queda de SpO2                                                                                              | Na tese, o oxímetro entra como dispositivo de monitoramento fisiológico para segurança do paciente; porém, no backend público consultado, os validadores aceitam PITACO, Manovacuômetro e Cinta, mas ainda não listam “Oxímetro” como dispositivo válido. | Para a melhoria, a remoção deve seguir o mesmo vínculo por `pacientId`, mas o schema/validador precisa ser atualizado para garantir que os dados de SpO2 também sejam apagados.                                   |
 
 Tais dados têm como finalidade serem captados, processados e utilizados pelo software durante a gameplay da sessão de terapia, para análise posterior do terapeuta, ou garantia da segurança do paciente durante a execução, não sendo vendidos,transferidos ou compartilhados com terceiros que não o médico e seu paciente.
 
@@ -1811,11 +1808,11 @@ O cronograma foi organizado em marcos de desenvolvimento, priorizando primeiro a
 | Marco | Descrição | Prazo |
 |---|---|---|
 | M1 | Setup do ambiente de desenvolvimento, análise do código existente do I Blue It, definição dos pontos de integração com o PITACO, Unity, backend, banco de dados e dashboard. | 27/07/2026 a 07/08/2026 |
-| M2 | Prova de conceito da leitura do sensor SpO2 integrado ao PITACO ampliado, incluindo captura inicial de saturação, frequência cardíaca, validação de contato e testes com dados simulados. | 10/08/2026 a 21/08/2026 |
+| M2 | Prova de conceito da leitura do sensor SpO2 integrado ao PITACO ampliado, incluindo captura inicial de saturação sanguínea, validação de contato e testes com dados simulados. | 10/08/2026 a 21/08/2026 |
 | M3 | Integração inicial entre o módulo SpO2 e o jogo I Blue It, permitindo que o Unity receba dados fisiológicos em tempo de execução sem comprometer a captura respiratória já existente. | 24/08/2026 a 04/09/2026 |
 | M4 | Implementação da validação, filtragem e tratamento dos sinais fisiológicos, incluindo identificação de leituras inválidas, perda de sinal, mau posicionamento do sensor e inconsistências nos dados. | 07/09/2026 a 18/09/2026 |
 | M5 | Implementação das regras de monitoramento fisiológico, alertas de segurança, recomendação de pausa e interrupção automática da sessão em casos críticos de SpO2. | 21/09/2026 a 02/10/2026 |
-| M6 | Atualização do backend, API e modelo de dados para registrar SpO2, frequência cardíaca, eventos de alerta, pausas, interrupções e associação desses dados à sessão terapêutica. | 05/10/2026 a 16/10/2026 |
+| M6 | Atualização do backend, API e modelo de dados para registrar SpO2, eventos de alerta, pausas, interrupções e associação desses dados à sessão terapêutica. | 05/10/2026 a 16/10/2026 |
 | M7 | Integração dos dados fisiológicos ao módulo DeepDDA, permitindo que a IA utilize SpO2 e demais biossinais como parâmetros adicionais no ajuste dinâmico de dificuldade e nas decisões de segurança. | 19/10/2026 a 30/10/2026 |
 | M8 | Atualização do dashboard clínico Health InfoCharts para exibir dados de saturação sanguínea, eventos de pausa/interrupção, resumo fisiológico da sessão e histórico dos novos registros. | 02/11/2026 a 13/11/2026 |
 | M9 | Consolidação do MVP funcional da melhoria, integrando PITACO ampliado, módulo SpO2, jogo, backend, banco de dados, dashboard e registros de eventos da sessão. | 16/11/2026 a 20/11/2026 |
