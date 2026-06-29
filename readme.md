@@ -642,7 +642,7 @@ Modal de aviso de iminente saturação sanguínea do paciente em estado anormal,
 
 ---
 
-<img width="743" height="480" alt="image" src="https://github.com/user-attachments/assets/6cf9aa99-399b-a6d2-c643bf9f618d" />
+<img width="1472" height="952" alt="image" src="https://github.com/user-attachments/assets/d33e9db5-aa88-463c-87b0-954ab8200727" />
 
 Modal de informativo de parada, ao qual o terapeuta preenche o motivo pelo qual ele pausou ou encerrou prematuramente a sessão.
 
