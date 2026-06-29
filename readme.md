@@ -791,6 +791,9 @@ O modelo abaixo contempla uma abstração DER (diagrama entidade-relacionamento)
 
 A melhoria utiliza-se de todo o escopo demonstrado no DER, porém estende os atributos das entidades e suas conexões para suportar o Flow Psicofisiológico com DeepDDA. Dessa forma, o modelo passa a registrar não apenas os dados da sessão, dos dispositivos e dos resultados do jogo, mas também os dados psicofisiológicos observados pela IA, as decisões tomadas pelo agente, as ações aplicadas no jogo, as recompensas calculadas e os parâmetros antes e depois dos ajustes dinâmicos. Tais mudanças podem ser vistas abaixo, junto às suas explicações.
 
+Como o DeepDDA opera por ciclos de observação, decisão, ação e recompensa, o modelo de dados precisa registrar não apenas os dados fisiológicos e de desempenho, mas também o estado observado pela IA, a ação escolhida, os parâmetros alterados, a recompensa atribuída e o resultado da decisão. Essa rastreabilidade é necessária para analisar se a integração com dados reais está reproduzindo corretamente o comportamento previsto na prova de conceito de Dias (2024).[2]
+
+
 <img width="11472" height="13528" alt="image" src="https://github.com/user-attachments/assets/00151e1e-1dde-4abc-9d5b-adb594d2bb4b" />
 
 Segue abaixo uma lista das alterações que a melhoria realiza no banco de dados atual:
@@ -858,8 +861,6 @@ MongoDB
 ### Suas conexões:
 
 <img width="4976" height="1972" alt="image" src="https://github.com/user-attachments/assets/2d7cde95-61d9-42c8-a823-301e7e90630c" />
-
-Como o DeepDDA opera por ciclos de observação, decisão, ação e recompensa, o modelo de dados precisa registrar não apenas os dados fisiológicos e de desempenho, mas também o estado observado pela IA, a ação escolhida, os parâmetros alterados, a recompensa atribuída e o resultado da decisão. Essa rastreabilidade é necessária para analisar se a integração com dados reais está reproduzindo corretamente o comportamento previsto na prova de conceito de Dias (2024).
 
 ## Estrutura dos dados em JSON:
 
