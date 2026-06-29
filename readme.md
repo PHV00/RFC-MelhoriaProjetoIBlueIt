@@ -451,13 +451,12 @@ Abaixo pode se ver o fluxo com a melhoria proposta:
 | RF30 | O sistema deve registrar cada decisão tomada pelo DeepDDA, incluindo estado observado, ação escolhida, parâmetros alterados, recompensa calculada e horário da decisão. |
 | RF31 | O sistema deve aplicar no jogo as ações de ajuste de dificuldade decididas pelo DeepDDA. |
 | RF32 | O sistema deve permitir rastrear os parâmetros do jogo antes e depois de cada ajuste realizado pela IA. |
-| RF33 | O módulo DeepDDA deve selecionar uma ação dentro de um conjunto definido de ações possíveis, como manter, aumentar, reduzir, pausar ou interromper. |
-| RF34 | O sistema deve calcular ou registrar a recompensa associada à decisão tomada pela IA. |
-| RF35 | O sistema deve armazenar o estado resultante após a aplicação da ação da IA. |
+| RF33 | O sistema deve calcular ou registrar a recompensa associada à decisão tomada pela IA. |
+| RF34 | O sistema deve armazenar o estado resultante após a aplicação da ação da IA. |
 
 ---
 
-## 2.4 Requisitos Não Funcionais (RNF)]
+## 2.4 Requisitos Não Funcionais (RNF)
 
 Os requisitos não funcionais descritos nesta seção seguem o mesmo princípio descrito nos Funcionais onde o foco para elencá-los foi ter em mente a solução e o que ela alterará no modelo atual, porém agora estipulando métricas qualitativas de desempenho, segurança, confiabilidade, usabilidade, compatibilidade e manutenção que devem ser atendidas pela melhoria proposta.
 
