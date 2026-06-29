@@ -615,7 +615,7 @@ Esta tela mostra os dados da leitura basal dos sensores, ao qual foi adicionado 
 
 
 ---
-<img width="1365" height="634" alt="image" src="https://github.com/user-attachments/assets/6ef1f920-8fb8-44cd-8174-a38bd7388db6" />
+<img width="2880" height="1344" alt="image" src="https://github.com/user-attachments/assets/45281218-707a-4d38-a404-7acbb33d99d4" />
 
 Esta tela adiciona um botão de acesso ao novo gráfico, que possui as estatísticas obtidas nos minijogos sobre a saturação sanguínea do paciente ao longo das sessões.
 
