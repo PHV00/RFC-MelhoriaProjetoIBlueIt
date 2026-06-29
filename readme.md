@@ -650,7 +650,7 @@ Modal de informativo de parada, ao qual o terapeuta preenche o motivo pelo qual 
 
 ## 4.3 Fluxo de Interação do Usuário
 
-O fluxo abaixo, demonstra o fluxo que o terapeuta realiza para analisar os dados obtidos, em forma de dashboards e posteriormente, exportar tais dados dos pacientes em uma planilha CSV.
+O fluxo abaixo demonstra o fluxo que o terapeuta realiza para analisar os dados obtidos, em forma de dashboards e posteriormente, exportar tais dados dos pacientes em uma planilha CSV.
 
 ### Fluxo de acesso e análise no sistema
 
@@ -760,7 +760,7 @@ Os principais atores são:
 ---
 ### 5.1.2 Nível 2 — Diagrama de Containers
 
-Neste nível mostramos quais são os seus principais componentes, stacks e protocolos de comunicação, tendo um resumo em forma de tabela logo abaixo e abaixo deste o diagrama referente: 
+Neste nível, mostramos quais são os seus principais componentes, stacks e protocolos de comunicação, tendo um resumo em forma de tabela logo abaixo e abaixo deste o diagrama referente: 
 
 | Container | Função no sistema |
 |---|---|
@@ -1453,7 +1453,7 @@ O I Blue It já possui calibração respiratória antes da execução da platafo
 
 Na melhoria, a calibração respiratória não é substituída. Ela passa a compor o conjunto de dados iniciais utilizados pelo Flow Psicofisiológico, servindo como base para o setup inicial do exergame e para a avaliação do desempenho fisiológico durante a sessão.
 
-Além dos dados respiratórios já existentes, a sessão passa a considerar também biossinais, como SpO2 , quando disponíveis, para que o DeepDDA tenha uma visão mais completa do estado do paciente.
+Além dos dados respiratórios já existentes, a sessão passa a considerar também biossinais, como SpO2, quando disponíveis, para que o DeepDDA tenha uma visão mais completa do estado do paciente.
 
 ---
 
@@ -1698,7 +1698,7 @@ Esse módulo organiza os dados da sessão em uma visualização útil para o pro
 ---
 ## 5.4 Stack Tecnológica
 
-O sistema I Blue It é composto por diferentes camadas tecnológicas: o jogo sério, os dispositivos biomédicos, a comunicação entre hardware e software, o back-end, o banco de dados, o painel web e os módulos de inteligência artificial.Abaixo consta uma lista simplificada das stacks no sistema atual sem a melhoria.
+O sistema I Blue It é composto por diferentes camadas tecnológicas: o jogo sério, os dispositivos biomédicos, a comunicação entre hardware e software, o back-end, o banco de dados, o painel web e os módulos de inteligência artificial. Abaixo consta uma lista simplificada das stacks no sistema atual sem a melhoria.
 
 #### Stack atual do sistema
 
@@ -1714,7 +1714,7 @@ O sistema I Blue It é composto por diferentes camadas tecnológicas: o jogo sé
 | Dashboard web | React, Material UI, Recharts, Axios |
 | Infraestrutura | Docker, Nginx |
 
-A melhoria por sua vez adiciona novo componente de hardware, novas funções e ajustes, porém tendo sempre em mente o ecossistema em que está inserida, sendo assim priorizamos e não alteramos as stacks já presentes no sistema.Tendo isso em mente abaixo está a lista de componentes adicionados, suas stacks e justificativas.
+A melhoria, por sua vez, adiciona novo componente de hardware, novas funções e ajustes, porém tendo sempre em mente o ecossistema em que está inserida, sendo assim priorizamos e não alteramos as stacks já presentes no sistema. Tendo isso em mente, abaixo está a lista de componentes adicionados, suas stacks e justificativas.
 
 #### Stack adicionada pela melhoria proposta
 
@@ -1735,7 +1735,7 @@ A melhoria por sua vez adiciona novo componente de hardware, novas funções e a
 
 # 6. Segurança e Privacidade
 
-O ecossistema I Blue It, em sua versão 5.0, manipula dados sensíveis relacionados ao acompanhamento terapêutico de pacientes em sessões de reabilitação respiratória. Esses dados incluem informações de cadastro, calibração respiratória, histórico de sessões, desempenho no jogo, parâmetros definidos pelo fisioterapeuta e sinais fisiológicos utilizados pelo sistema para adaptação da dificuldade.Tais dados são utilizados em diversas camadas de tecnologias e protocolos, aos quais já foram citados ao longo deste documento, abaixo podemos ver uma abstração das  principais preocupação de segurança e como são sanadas já pelo modelo atual: 
+O ecossistema I Blue It, em sua versão 5.0, manipula dados sensíveis relacionados ao acompanhamento terapêutico de pacientes em sessões de reabilitação respiratória. Esses dados incluem informações de cadastro, calibração respiratória, histórico de sessões, desempenho no jogo, parâmetros definidos pelo fisioterapeuta e sinais fisiológicos utilizados pelo sistema para adaptação da dificuldade. Tais dados são utilizados em diversas camadas de tecnologias e protocolos, os quais já foram citados ao longo deste documento, abaixo, podemos ver uma abstração das principais preocupações de segurança e como são sanadas já pelo modelo atual: 
 
 | Preocupação de segurança                          | Aplicação no I Blue It 5.0                                                                                                                                                                            |
 | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1762,9 +1762,9 @@ O ecossistema I Blue It, em sua versão 5.0, manipula dados sensíveis relaciona
 | **Proteção contra injeção e dados inválidos**     | Como as requisições passam pelo backend antes de chegar ao banco, o sistema possui uma camada central para validação dos dados recebidos do jogo e da aplicação web.                                  |
 | **Proteção contra exposição direta do banco**     | O banco de dados não é acessado diretamente pela interface do usuário, mas por meio do backend, reduzindo riscos de exposição indevida.                                                               |
 
-O modelo atual contempla medidas basicas associadas a autenticação, autorização, criptografia em trânsito, controle de acesso e separação de camadas, que se relacionam com riscos presentes na OWASP Top 10, assim já apresentando nativamente um foco em segurança.
+O modelo atual contempla medidas básicas associadas à autenticação, autorização, criptografia em trânsito, controle de acesso e separação de camadas, que se relacionam com riscos presentes na OWASP Top 10, assim já apresentando nativamente um foco em segurança.
 
-Ao se adicionar o novo módulo SpO2 ao PITACO, e todos os ajustes em cada módulo que isto necessite, esperamos manter o mesmo rigor no tratamento, coleta e armazenamento de dados existente.Nesse sentido vale ressaltar que o módulo IoT SpO2 será desenvolvido com o mesmo sistema de transmissão USB serial, que mitiga vazamentos de informações, além de após as  alterações pertinentes nos módulos subsequentes para comportar a melhoria(tais como o jogo, o InfoChart e o backend), esperamos manter o mesmo nível de segurança já presente no ecossistema I Blue It.
+Ao se adicionar o novo módulo SpO2 ao PITACO, e todos os ajustes em cada módulo que isto necessite, esperamos manter o mesmo rigor no tratamento, coleta e armazenamento de dados existente. Nesse sentido vale ressaltar que o módulo IoT SpO2 será desenvolvido com o mesmo sistema de transmissão USB serial, que mitiga vazamentos de informações, além de após as alterações pertinentes nos módulos subsequentes para comportar a melhoria (tais como o jogo, o InfoChart e o backend), esperamos manter o mesmo nível de segurança já presente no ecossistema I Blue It.
 
 ---
 
@@ -1783,14 +1783,14 @@ Abaixo consta uma lista de todos os dados coletados (já imaginando um cenário 
 | **Dados brutos dos dispositivos**         | Nome do dispositivo, valor medido e timestamp. Exemplo: `deviceName`, `flowValue`, `timestamp`                                                                                                 | Coleção `FlowDataDevice`, separada dos resumos da sessão. A plataforma salva uma referência `flowDataDevicesId` para esses dados brutos.                                                                                                                  | **Ponto crítico:** a função `DeletePacient` atual não remove explicitamente `FlowDataDevice`. Assim, dados brutos podem ficar órfãos no banco se não forem apagados por referência antes da exclusão dos resumos. |
 | **Minigames**                             | Nome do minigame, exercício respiratório, rodada, pontuação da rodada, pontuação do fluxo e referência aos dados dos dispositivos                                                              | Coleção `MinigameOverview`, com referências para `FlowDataDevice`.                                                                                                                                                                                        | A exclusão completa remove `MinigameOverview`, mas deve também remover os `FlowDataDevice` referenciados.                                                                                                         |
 | **Sessão clínica/dia de uso**             | Identificador do paciente e número da sessão                                                                                                                                                   | Coleção `PlaySession`, com `pacientId` e `sessionNumber`.                                                                                                                                                                                                 | A função `DeletePacient` remove `PlaySession` do paciente.                                                                                                                                                        |
-| **SpO2 / biossinais da melhoria**         | Saturação de oxigênio,e, possivelmente, eventos de alerta, pausa ou interrupção por queda de SpO2                                                                                              | Na tese, o oxímetro entra como dispositivo de monitoramento fisiológico para segurança do paciente; porém, no backend público consultado, os validadores aceitam PITACO, Manovacuômetro e Cinta, mas ainda não listam “Oxímetro” como dispositivo válido. | Para a melhoria, a remoção deve seguir o mesmo vínculo por `pacientId`, mas o schema/validador precisa ser atualizado para garantir que os dados de SpO2 também sejam apagados.                                   |
+| **SpO2 / biossinais da melhoria**         | Saturação de oxigênio e, possivelmente, eventos de alerta, pausa ou interrupção por queda de SpO2                                                                                              | Na tese, o oxímetro entra como dispositivo de monitoramento fisiológico para segurança do paciente; porém, no backend público consultado, os validadores aceitam PITACO, Manovacuômetro e Cinta, mas ainda não listam “Oxímetro” como dispositivo válido. | Para a melhoria, a remoção deve seguir o mesmo vínculo por `pacientId`, mas o schema/validador precisa ser atualizado para garantir que os dados de SpO2 também sejam apagados.                                   |
 
-Tais dados têm como finalidade serem captados, processados e utilizados pelo software durante a gameplay da sessão de terapia, para análise posterior do terapeuta, ou garantia da segurança do paciente durante a execução, não sendo vendidos,transferidos ou compartilhados com terceiros que não o médico e seu paciente.
+Tais dados têm como finalidade serem captados, processados e utilizados pelo software durante a gameplay da sessão de terapia, para análise posterior do terapeuta, ou garantia da segurança do paciente durante a execução, não sendo vendidos, transferidos ou compartilhados com terceiros que não o médico e seu paciente.
 
-Abaixo podemos ver uma abstração do fluxo de captura e processamento dos dados pelo software:
+Abaixo, podemos ver uma abstração do fluxo de captura e processamento dos dados pelo software:
 
 ```code
-Pitaco/Oximetro
+Pitaco/Oxímetro
    ↓ capta os dados
 Unity / I Blue It
    ↓ envia JSON com GameToken
@@ -1801,7 +1801,7 @@ MongoDB Atlas
 Health InfoCharts
    ↓ consulta e exibe ao terapeuta/paciente
 ```
-Assim todos os dados são centralizados no banco de dados MongoDB, o que permitem sua criação, visualização, manipulação e exclusão caso requerido tanto pelo sistema como pelos usuários.Para tais finalidade de exclusão de dados o paciente, ou seu responsável legal, pode solicitar a remoção de seus dados ao responsável pelo sistema, clínica, pesquisador ou administrador do I Blue It. Após a solicitação, o operador autorizado deverá localizar o pacientId correspondente e executar a rotina de exclusão no backend, removendo o cadastro do paciente, conta vinculada, calibrações, sessões, resultados da plataforma, minigames e dados brutos dos dispositivos.
+Assim todos os dados são centralizados no banco de dados MongoDB, o que permite sua criação, visualização, manipulação e exclusão caso requerido tanto pelo sistema como pelos usuários. Para tal finalidade de exclusão de dados o paciente, ou seu responsável legal, pode solicitar a remoção de seus dados ao responsável pelo sistema, clínica, pesquisador ou administrador do I Blue It. Após a solicitação, o operador autorizado deverá localizar o pacientId correspondente e executar a rotina de exclusão no backend, removendo o cadastro do paciente, conta vinculada, calibrações, sessões, resultados da plataforma, minigames e dados brutos dos dispositivos.
 
 ---
 
@@ -1817,7 +1817,7 @@ O cronograma foi organizado em marcos de desenvolvimento, priorizando primeiro a
 | M4 | Implementação da validação, filtragem e tratamento dos sinais fisiológicos, incluindo identificação de leituras inválidas, perda de sinal, mau posicionamento do sensor e inconsistências nos dados. | 07/09/2026 a 18/09/2026 |
 | M5 | Implementação das regras de monitoramento fisiológico, alertas de segurança, recomendação de pausa e interrupção automática da sessão em casos críticos de SpO2. | 21/09/2026 a 02/10/2026 |
 | M6 | Atualização do backend, API e modelo de dados para registrar SpO2, eventos de alerta, pausas, interrupções e associação desses dados à sessão terapêutica. | 05/10/2026 a 16/10/2026 |
-| M7 | Integração dos dados fisiológicos ao módulo DeepDDA, permitindo que a IA utilize SpO2 como parâmetros adicionais no ajuste dinâmico de dificuldade e nas decisões de segurança. | 19/10/2026 a 30/10/2026 |
+| M7 | Integração dos dados fisiológicos ao módulo DeepDDA, permitindo que a IA utilize SpO2 como parâmetro adicional no ajuste dinâmico de dificuldade e nas decisões de segurança. | 19/10/2026 a 30/10/2026 |
 | M8 | Atualização do dashboard clínico Health InfoCharts para exibir dados de saturação sanguínea, eventos de pausa/interrupção, resumo fisiológico da sessão e histórico dos novos registros. | 02/11/2026 a 13/11/2026 |
 | M9 | Consolidação do MVP funcional da melhoria, integrando PITACO ampliado, módulo SpO2, jogo, backend, banco de dados, dashboard e registros de eventos da sessão. | 16/11/2026 a 20/11/2026 |
 | M10 | Testes funcionais, testes de integração, testes com dados simulados, verificação dos requisitos funcionais e não funcionais, correções e ajustes finais. | 23/11/2026 a 04/12/2026 |
