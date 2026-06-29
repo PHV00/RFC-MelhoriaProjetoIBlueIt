@@ -1904,8 +1904,3 @@ Observações:
 Observações:
 
 ---
-
-**Avaliador 3:** __________________________  
-**Status:** [ ] Aprovado  [ ] Ajustar
-
-Observações:
