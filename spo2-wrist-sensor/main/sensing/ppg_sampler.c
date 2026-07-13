@@ -1,3 +1,13 @@
+//O sampler é uma estrutura que reúne os elementos necessários para a coleta.
+/*
+O sampler é uma estrutura que reúne os elementos necessários para a coleta.
+
+ppg_sampler_t
+├── sensor → de onde ler
+├── buffer → onde guardar
+└── seq    → número da próxima amostra
+*/
+
 #include "sensing/ppg_sampler.h"
 
 #include "esp_timer.h"
@@ -23,7 +33,7 @@ bool ppg_sampler_step(ppg_sampler_t *sampler) {
         return false;
     }
 
-    sample.timestamp_ms = (uint32_t)(esp_timer_get_time() / 1000ULL);
+    sample.timestamp_ms = (uint32_t)(   esp_timer_get_time() / 1000ULL);
     sample.seq = ++sampler->seq;
 
     return sample_buffer_push(sampler->buffer, &sample);

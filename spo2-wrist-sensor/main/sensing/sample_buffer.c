@@ -1,3 +1,29 @@
+/*
+É uma estrutura de buffer circular com tamanho de 128 definida pelo SAMPLE_BUFFER_SIZE definido na interface .h
+Estrutura: 
+    sample_buffer_t
+    ├── data  → vetor onde ficam as amostras
+    ├── head  → posição onde será escrita a próxima amostra
+    └── count → quantas amostras válidas existem
+
+Funções:
+    sample_buffer_init()
+        esvazia logicamente o buffer
+
+    sample_buffer_push()
+        insere uma nova amostra
+        substitui a mais antiga se estiver cheio
+
+    sample_buffer_count()
+        informa quantas amostras válidas existem
+
+    sample_buffer_latest()
+        retorna a amostra mais recente
+
+    sample_buffer_get_oldest_first()
+        acessa as amostras em ordem cronológica
+*/
+
 #include "sensing/sample_buffer.h"
 
 void sample_buffer_init(sample_buffer_t *buffer) {

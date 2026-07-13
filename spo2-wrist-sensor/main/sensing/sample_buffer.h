@@ -5,6 +5,7 @@
 
 #include "app/app_types.h"
 
+// define o tamanho do buffer circular de amostras
 #define SAMPLE_BUFFER_SIZE 128
 
 typedef struct {

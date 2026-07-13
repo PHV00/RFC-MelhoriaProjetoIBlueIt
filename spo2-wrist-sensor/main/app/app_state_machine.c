@@ -1,3 +1,20 @@
+//código responsavel por guardar qual dos estados da maquina está e garantir uma troca de estados de maneira coerente(implementar) 
+
+/*
+Funções:
+    armazenar o estado atual;
+    decidir se uma transição é permitida;
+    executar a troca de estado somente quando as condições forem válidas.
+Estados:
+    BOOT
+    SELF_TEST
+    IDLE
+    SAMPLING
+    TRACKING
+    LOW_CONFIDENCE
+    ERROR
+*/  
+
 #include "app/app_state_machine.h"
 
 static app_state_t g_state = APP_STATE_BOOT;

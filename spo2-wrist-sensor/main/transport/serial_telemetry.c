@@ -1,3 +1,4 @@
+// função enviar os dados obtidos pelo canal usb/serial para o jogo  
 #include "transport/serial_telemetry.h"
 
 #include <stdio.h>

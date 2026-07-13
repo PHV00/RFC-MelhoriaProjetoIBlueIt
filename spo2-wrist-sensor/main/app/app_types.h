@@ -1,9 +1,34 @@
+
+/*
+    arquivo responsavel por criar um dicionário de tipos de dados compartilhados pelo projeto
+
+    responsavel por fornecer os tipos de dados que o sistema usa para representar:
+    -estado, 
+    -amostra PPG,
+    -qualidade,
+    -frequência cardíaca,
+    -SpO₂, 
+    -resultado completo.
+
+    padronizando os dados transmitidos pelos modulos do software, que se comunicam pela mesma estruturas aqui setadas
+
+*/
+
 #pragma once
+/*
+#pragma once
+
+Inclua este arquivo apenas uma vez durante a compilação de cada arquivo .c.
+
+"cria singleton"
+
+*/
 
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef enum {
+// Um enum = um tipo que representa um conjunto fechado de opções possíveis(lista de opções)
+.typedef enum {
     APP_STATE_BOOT = 0,
     APP_STATE_SELF_TEST,
     APP_STATE_IDLE,

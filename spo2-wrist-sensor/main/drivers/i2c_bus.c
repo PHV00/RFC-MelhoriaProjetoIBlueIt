@@ -1,10 +1,28 @@
+// I²C significa Inter-Integrated Circuit. É um protocolo de comunicação usado para fazer componentes eletrônicos conversarem entre si.
+// Esse protocolo permite que mais sensores sejem conectados ao esp e utilizem as entradas SCL e SDA mas com o SPo2 utilizando a 0x57 e os outros subsequente as outras "portas"
+
+// esse codigo deve : 
+/*
+1. Inicializar o barramento I²C
+2. Escrever dados no sensor
+3. Ler dados do sensor
+*/
+/*
+driver do MAX30105
+        ↓
+i2c_bus.c
+        ↓
+driver I²C do ESP-IDF
+        ↓
+hardware do ESP32
+*/
+
 #include "drivers/i2c_bus.h"
-#include "driver/i2c.h"
 
 #define SPO2_I2C_PORT I2C_NUM_0
 #define SPO2_I2C_TIMEOUT_MS 1000
 
-static bool g_i2c_initialized = false;
+static bool g_i2c_initialized = false;//variavel g_ = global = todo o software tem acesso  , mas n podem alterar seu valor
 
 esp_err_t i2c_bus_init(int sda_gpio, int scl_gpio, uint32_t freq_hz) {
     if (g_i2c_initialized) {
