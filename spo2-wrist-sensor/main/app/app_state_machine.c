@@ -1,26 +1,43 @@
-//código responsavel por guardar qual dos estados da maquina está e garantir uma troca de estados de maneira coerente(implementar) 
-
-/*
-Funções:
-    armazenar o estado atual;
-    decidir se uma transição é permitida;
-    executar a troca de estado somente quando as condições forem válidas.
-Estados:
-    BOOT
-    SELF_TEST
-    IDLE
-    SAMPLING
-    TRACKING
-    LOW_CONFIDENCE
-    ERROR
-*/  
-
 #include "app/app_state_machine.h"
 
 static app_state_t g_state = APP_STATE_BOOT;
 
+static bool transition_allowed(app_state_t from, app_state_t to) {
+    if (from == to) return true;
+    if (to == APP_STATE_ERROR) return true;
+
+    switch (from) {
+        case APP_STATE_BOOT:
+            return to == APP_STATE_SELF_TEST;
+        case APP_STATE_SELF_TEST:
+            return to == APP_STATE_IDLE;
+        case APP_STATE_IDLE:
+            return to == APP_STATE_SAMPLING || to == APP_STATE_SELF_TEST;
+        case APP_STATE_SAMPLING:
+            return to == APP_STATE_TRACKING || to == APP_STATE_LOW_CONFIDENCE || to == APP_STATE_IDLE;
+        case APP_STATE_TRACKING:
+            return to == APP_STATE_LOW_CONFIDENCE || to == APP_STATE_SAMPLING || to == APP_STATE_IDLE;
+        case APP_STATE_LOW_CONFIDENCE:
+            return to == APP_STATE_TRACKING || to == APP_STATE_SAMPLING || to == APP_STATE_IDLE;
+        case APP_STATE_ERROR:
+            return to == APP_STATE_BOOT || to == APP_STATE_SELF_TEST;
+        default:
+            return false;
+    }
+}
+
+void app_state_machine_reset(void) {
+    g_state = APP_STATE_BOOT;
+}
+
+bool app_state_machine_transition(app_state_t next_state) {
+    if (!transition_allowed(g_state, next_state)) return false;
+    g_state = next_state;
+    return true;
+}
+
 void app_state_machine_set(app_state_t state) {
-    g_state = state;
+    (void)app_state_machine_transition(state);
 }
 
 app_state_t app_state_machine_get(void) {

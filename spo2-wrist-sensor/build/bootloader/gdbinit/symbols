@@ -27,4 +27,4 @@ set confirm off
 set confirm on
 
 # Load application symbols
-file /home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader/bootloader.elf
+file /home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader/bootloader.elf

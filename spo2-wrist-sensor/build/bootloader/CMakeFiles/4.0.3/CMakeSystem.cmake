@@ -1,9 +1,9 @@
-set(CMAKE_HOST_SYSTEM "Linux-6.17.0-22-generic")
+set(CMAKE_HOST_SYSTEM "Linux-6.17.0-35-generic")
 set(CMAKE_HOST_SYSTEM_NAME "Linux")
-set(CMAKE_HOST_SYSTEM_VERSION "6.17.0-22-generic")
+set(CMAKE_HOST_SYSTEM_VERSION "6.17.0-35-generic")
 set(CMAKE_HOST_SYSTEM_PROCESSOR "x86_64")
 
-include("/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader/toolchain/toolchain-esp32c3.cmake")
+include("/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader/toolchain/toolchain-esp32c3.cmake")
 
 set(CMAKE_SYSTEM "Generic")
 set(CMAKE_SYSTEM_NAME "Generic")

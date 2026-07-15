@@ -10,18 +10,18 @@ if(NOT EXISTS "/home/pedro/esp/esp-idf/components/bootloader/subproject")
   file(MAKE_DIRECTORY "/home/pedro/esp/esp-idf/components/bootloader/subproject")
 endif()
 file(MAKE_DIRECTORY
-  "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader"
-  "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader-prefix"
-  "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader-prefix/tmp"
-  "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp"
-  "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader-prefix/src"
-  "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp"
+  "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader"
+  "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader-prefix"
+  "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader-prefix/tmp"
+  "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp"
+  "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader-prefix/src"
+  "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
 endif()

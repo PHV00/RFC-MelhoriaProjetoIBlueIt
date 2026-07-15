@@ -1,76 +1,57 @@
-/*
-É uma estrutura de buffer circular com tamanho de 128 definida pelo SAMPLE_BUFFER_SIZE definido na interface .h
-Estrutura: 
-    sample_buffer_t
-    ├── data  → vetor onde ficam as amostras
-    ├── head  → posição onde será escrita a próxima amostra
-    └── count → quantas amostras válidas existem
-
-Funções:
-    sample_buffer_init()
-        esvazia logicamente o buffer
-
-    sample_buffer_push()
-        insere uma nova amostra
-        substitui a mais antiga se estiver cheio
-
-    sample_buffer_count()
-        informa quantas amostras válidas existem
-
-    sample_buffer_latest()
-        retorna a amostra mais recente
-
-    sample_buffer_get_oldest_first()
-        acessa as amostras em ordem cronológica
-*/
-
 #include "sensing/sample_buffer.h"
 
-void sample_buffer_init(sample_buffer_t *buffer) {
-    if (buffer == NULL) {
-        return;
-    }
+#include <string.h>
 
-    buffer->head = 0;
-    buffer->count = 0;
+void sample_buffer_init(sample_buffer_t *buffer) {
+    if (buffer == NULL) return;
+    memset(buffer, 0, sizeof(*buffer));
 }
 
 bool sample_buffer_push(sample_buffer_t *buffer, const ppg_sample_t *sample) {
-    if (buffer == NULL || sample == NULL) {
-        return false;
+    if (buffer == NULL || sample == NULL) return false;
+
+    if (buffer->count == SAMPLE_BUFFER_SIZE) {
+        buffer->overwritten_samples++;
     }
 
     buffer->data[buffer->head] = *sample;
-    buffer->head = (buffer->head + 1) % SAMPLE_BUFFER_SIZE;
-
-    if (buffer->count < SAMPLE_BUFFER_SIZE) {
-        buffer->count++;
-    }
-
+    buffer->head = (buffer->head + 1u) % SAMPLE_BUFFER_SIZE;
+    if (buffer->count < SAMPLE_BUFFER_SIZE) buffer->count++;
     return true;
 }
 
 size_t sample_buffer_count(const sample_buffer_t *buffer) {
-    return buffer ? buffer->count : 0;
+    return buffer != NULL ? buffer->count : 0u;
 }
 
 bool sample_buffer_latest(const sample_buffer_t *buffer, ppg_sample_t *sample) {
-    if (buffer == NULL || sample == NULL || buffer->count == 0) {
-        return false;
-    }
-
-    size_t last = (buffer->head + SAMPLE_BUFFER_SIZE - 1) % SAMPLE_BUFFER_SIZE;
+    if (buffer == NULL || sample == NULL || buffer->count == 0u) return false;
+    size_t last = (buffer->head + SAMPLE_BUFFER_SIZE - 1u) % SAMPLE_BUFFER_SIZE;
     *sample = buffer->data[last];
     return true;
 }
 
 bool sample_buffer_get_oldest_first(const sample_buffer_t *buffer, size_t index, ppg_sample_t *sample) {
-    if (buffer == NULL || sample == NULL || index >= buffer->count) {
-        return false;
-    }
-
+    if (buffer == NULL || sample == NULL || index >= buffer->count) return false;
     size_t oldest = (buffer->head + SAMPLE_BUFFER_SIZE - buffer->count) % SAMPLE_BUFFER_SIZE;
     size_t pos = (oldest + index) % SAMPLE_BUFFER_SIZE;
     *sample = buffer->data[pos];
     return true;
+}
+
+bool sample_buffer_copy_latest(const sample_buffer_t *buffer, ppg_sample_t *out, size_t requested, size_t *out_count) {
+    if (out_count != NULL) *out_count = 0u;
+    if (buffer == NULL || out == NULL || requested == 0u || buffer->count == 0u) return false;
+
+    size_t n = requested < buffer->count ? requested : buffer->count;
+    size_t first_index = buffer->count - n;
+    for (size_t i = 0; i < n; ++i) {
+        if (!sample_buffer_get_oldest_first(buffer, first_index + i, &out[i])) return false;
+    }
+    if (out_count != NULL) *out_count = n;
+    return true;
+}
+
+uint32_t sample_buffer_overwritten(const sample_buffer_t *buffer) {
+    return buffer != NULL ? buffer->overwritten_samples : 0u;
 }

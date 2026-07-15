@@ -23,8 +23,8 @@ end
 
 # Load bootloader symbols
 set confirm off
-    add-symbol-file /home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader/bootloader.elf
+    add-symbol-file /home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader/bootloader.elf
 set confirm on
 
 # Load application symbols
-file /home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/sp02_ble.elf
+file /home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/sp02_ble.elf

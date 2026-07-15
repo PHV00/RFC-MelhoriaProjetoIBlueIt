@@ -2,34 +2,34 @@
 	"sources" : 
 	[
 		{
-			"file" : "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/CMakeFiles/bootloader"
+			"file" : "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/CMakeFiles/bootloader"
 		},
 		{
-			"file" : "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/CMakeFiles/bootloader.rule"
+			"file" : "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/CMakeFiles/bootloader.rule"
 		},
 		{
-			"file" : "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/CMakeFiles/bootloader-complete.rule"
+			"file" : "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/CMakeFiles/bootloader-complete.rule"
 		},
 		{
-			"file" : "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
+			"file" : "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
 		},
 		{
-			"file" : "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
+			"file" : "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
 		},
 		{
-			"file" : "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
+			"file" : "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
 		},
 		{
-			"file" : "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
+			"file" : "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
 		},
 		{
-			"file" : "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
+			"file" : "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
 		},
 		{
-			"file" : "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
+			"file" : "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
 		},
 		{
-			"file" : "/home/pedro/Documentos/git/portifolio/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
+			"file" : "/home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
 		}
 	],
 	"target" : 

@@ -1,0 +1,98 @@
+Command: /home/pedro/.espressif/python_env/idf6.0_py3.12_env/bin/python /home/pedro/esp/esp-idf/tools/idf_monitor.py -p /dev/ttyACM0 -b 115200 --toolchain-prefix riscv32-esp-elf- --target esp32c3 --revision 3 --decode-panic backtrace /home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/sp02_ble.elf /home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader/bootloader.elf -m '/home/pedro/.espressif/python_env/idf6.0_py3.12_env/bin/python' '/home/pedro/esp/esp-idf/tools/idf.py' '-p' '/dev/ttyACM0'
+[0;32mI (102) esp_image: segment 3: paddr=00020020 vaddr=42000020 sizeESP-ROM:esp32c3-api1-20210207[0m
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xd (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40383748
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5830,len:0x155c
+load:0x403cbf10,len:0xce0
+load:0x403ce710,len:0x2fbc
+entry 0x403cbf1a
+[0;32mI (24) boot: ESP-IDF v6.0 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time Jul 13 2026 11:43:10[0m
+[0;32mI (25) boot: chip revision: v0.4[0m
+[0;32mI (25) boot: efuse block revision: v1.3[0m
+[0;32mI (28) boot.esp32c3: SPI Speed      : 80MHz[0m
+[0;32mI (32) boot.esp32c3: SPI Mode       : DIO[0m
+[0;32mI (35) boot.esp32c3: SPI Flash Size : 2MB[0m
+[0;32mI (39) boot: Enabling RNG early entropy source...[0m
+[0;32mI (44) boot: Partition Table:[0m
+[0;32mI (46) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (53) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (59) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (66) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (72) boot: End of partition table[0m
+[0;32mI (75) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=08f44h ( 36676) map[0m
+[0;32mI (89) esp_image: segment 1: paddr=00018f6c vaddr=3fc8ae00 size=018e8h (  6376) load[0m
+[0;32mI (91) esp_image: segment 2: paddr=0001a85c vaddr=40380000 size=057bch ( 22460) load[0m
+[0;32mI (102) esp_image: segment 3: paddr=00020020 vaddr=42000020 size=1565ch ( 87644) map[0m
+[0;32mI (119) esp_image: segment 4: paddr=00035684 vaddr=403857bc size=055dch ( 21980) load[0m
+[0;32mI (123) esp_image: segment 5: paddr=0003ac68 vaddr=50000000 size=00024h (    36) load[0m
+[0;32mI (127) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (128) boot: Disabling RNG early entropy source...[0m
+[0;32mI (144) cpu_start: Unicore app[0m
+[0;32mI (152) cpu_start: GPIO 20 and 21 are used as console UART I/O pins[0m
+[0;32mI (153) cpu_start: Pro cpu start user code[0m
+[0;32mI (153) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (155) app_init: Application information:[0m
+[0;32mI (158) app_init: Project name:     sp02_ble[0m
+[0;32mI (162) app_init: App version:      5aca752-dirty[0m
+[0;32mI (167) app_init: Compile time:     Jul 13 2026 11:42:47[0m
+[0;32mI (172) app_init: ELF file SHA256:  0bd961324...[0m
+[0;32mI (176) app_init: ESP-IDF:          v6.0[0m
+[0;32mI (180) efuse_init: Min chip rev:     v0.3[0m
+[0;32mI (184) efuse_init: Max chip rev:     v1.99 [0m
+[0;32mI (188) efuse_init: Chip rev:         v0.4[0m
+[0;32mI (191) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (198) heap_init: At 3FC95FE0 len 0002A020 (168 KiB): RAM[0m
+[0;32mI (203) heap_init: At 3FCC0000 len 0001C710 (113 KiB): Retention RAM[0m
+[0;32mI (209) heap_init: At 3FCDC710 len 00002950 (10 KiB): Retention RAM[0m
+[0;32mI (215) heap_init: At 50000024 len 00001FC4 (7 KiB): RTCRAM[0m
+[0;32mI (221) spi_flash: detected chip: generic[0m
+[0;32mI (224) spi_flash: flash io: dio[0m
+[0;33mW (227) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;33mW (239) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`[0m
+[0;32mI (249) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (255) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (262) main_task: Started on CPU0[0m
+[0;32mI (262) main_task: Calling app_main()[0m
+[0;32mI (262) APP: Inicializando prova de conceito de HR/SpO2[0m
+{"v":1,"type":"sensor_info","part_id":21,"revision_id":6,"sample_rate_hz":100}
+{"type":"oximetry","ts_ms":4102,"valid":false,"finger":true,"hr":0.0,"spo2":94.8,"confidence":0.63}
+{"type":"oximetry","ts_ms":4622,"valid":true,"finger":true,"hr":121.2,"spo2":90.8,"confidence":0.53}
+{"type":"oximetry","ts_ms":5142,"valid":true,"finger":true,"hr":67.4,"spo2":92.4,"confidence":0.56}
+{"type":"oximetry","ts_ms":5672,"valid":true,"finger":true,"hr":74.5,"spo2":95.9,"confidence":0.52}
+{"type":"oximetry","ts_ms":6192,"valid":true,"finger":true,"hr":74.5,"spo2":96.1,"confidence":0.48}
+{"type":"oximetry","ts_ms":6722,"valid":true,"finger":true,"hr":72.3,"spo2":98.8,"confidence":0.37}
+{"type":"oximetry","ts_ms":7242,"valid":true,"finger":true,"hr":111.0,"spo2":100.0,"confidence":0.45}
+{"type":"oximetry","ts_ms":7772,"valid":true,"finger":true,"hr":122.4,"spo2":100.0,"confidence":0.45}
+{"type":"oximetry","ts_ms":8292,"valid":true,"finger":true,"hr":93.8,"spo2":100.0,"confidence":0.46}
+{"type":"oximetry","ts_ms":8822,"valid":true,"finger":true,"hr":92.3,"spo2":99.3,"confidence":0.44}
+{"type":"oximetry","ts_ms":9342,"valid":true,"finger":true,"hr":76.9,"spo2":99.3,"confidence":0.42}
+{"type":"oximetry","ts_ms":9872,"valid":true,"finger":true,"hr":76.9,"spo2":100.0,"confidence":0.42}
+{"type":"oximetry","ts_ms":10392,"valid":false,"finger":true,"hr":75.9,"spo2":0.0,"confidence":0.36}
+{"type":"oximetry","ts_ms":10912,"valid":true,"finger":true,"hr":84.5,"spo2":100.0,"confidence":0.46}
+{"type":"oximetry","ts_ms":11432,"valid":true,"finger":true,"hr":98.4,"spo2":100.0,"confidence":0.46}
+{"type":"oximetry","ts_ms":11962,"valid":true,"finger":true,"hr":90.2,"spo2":99.9,"confidence":0.46}
+{"type":"oximetry","ts_ms":12482,"valid":true,"finger":true,"hr":98.4,"spo2":100.0,"confidence":0.45}
+{"type":"oximetry","ts_ms":13012,"valid":false,"finger":true,"hr":76.9,"spo2":0.0,"confidence":0.37}
+{"type":"oximetry","ts_ms":13532,"valid":false,"finger":true,"hr":68.2,"spo2":0.0,"confidence":0.37}
+{"type":"oximetry","ts_ms":14052,"valid":false,"finger":true,"hr":76.9,"spo2":0.0,"confidence":0.38}
+{"type":"oximetry","ts_ms":14572,"valid":true,"finger":true,"hr":76.9,"spo2":99.6,"confidence":0.45}
+{"type":"oximetry","ts_ms":15102,"valid":true,"finger":true,"hr":75.0,"spo2":100.0,"confidence":0.45}
+{"type":"oximetry","ts_ms":15622,"valid":true,"finger":true,"hr":75.1,"spo2":100.0,"confidence":0.44}
+{"type":"oximetry","ts_ms":16152,"valid":false,"finger":true,"hr":85.6,"spo2":0.0,"confidence":0.32}
+{"type":"oximetry","ts_ms":16672,"valid":true,"finger":true,"hr":95.2,"spo2":99.8,"confidence":0.37}
+{"type":"oximetry","ts_ms":17202,"valid":true,"finger":true,"hr":85.6,"spo2":98.5,"confidence":0.38}
+{"type":"oximetry","ts_ms":17722,"valid":false,"finger":true,"hr":70.6,"spo2":0.0,"confidence":0.32}
+{"type":"oximetry","ts_ms":18242,"valid":false,"finger":true,"hr":95.2,"spo2":0.0,"confidence":0.35}
+{"type":"oximetry","ts_ms":18762,"valid":true,"finger":true,"hr":97.6,"spo2":100.0,"confidence":0.43}
+{"type":"oximetry","ts_ms":19292,"valid":true,"finger":true,"hr":98.4,"spo2":99.2,"confidence":0.43}
+{"type":"oximetry","ts_ms":19812,"valid":true,"finger":true,"hr":81.1,"spo2":99.9,"confidence":0.44}
+{"type":"oximetry","ts_ms":20342,"valid":true,"finger":true,"hr":80.0,"spo2":100.0,"confidence":0.45}
+{"type":"oximetry","ts_ms":20862,"valid":true,"finger":true,"hr":80.0,"spo2":100.0,"confidence":0.42}
+{"type":"oximetry","ts_ms":21392,"valid":true,"finger":true,"hr":101.7,"spo2":100.0,"confidence":0.43}
+{"type":"oximetry","ts_ms":21922,"valid":true,"finger":true,"hr":73.2,"spo2":100.0,"confidence":0.41}
+{"type":"oximetry","ts_ms":22452,"valid":false,"finger":true,"hr":100.0,"spo2":0.0,"confidence":0.34}
+{"type":"oximetry","ts_ms":22972,"valid":true,"finger":true,"hr":69.

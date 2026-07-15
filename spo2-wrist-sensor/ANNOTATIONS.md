@@ -9,6 +9,7 @@ codigo em si
 rodar modo de desenvolvedor para passar o esp32-c3
 
 . $HOME/esp/esp-idf/export.sh
+idf.py -p /dev/ttyACM0 flash monitor
 
 fluxo dos dados:
 
@@ -25,4 +26,8 @@ fluxo dos dados:
 11. Calcular confiança final
 12. Publicar health_frame_t
 
- 
+
+. $HOME/esp/esp-idf/export.sh
+idf.py fullclean
+idf.py build
+idf.py -p /dev/ttyACM0 flash monitor
