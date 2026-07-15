@@ -1,0 +1,1906 @@
+**Engenharia de Software – Católica SC**
+
+---
+
+# Identificação
+
+- **Título do Projeto:**  
+  Sistema de Monitoramento e Detecção de Anomalias da Oximetria durante a Fisioterapia Respiratória usando o Jogo Sério Ativo I Blue It.
+
+- **Linha de Projeto (Direction):**  
+  IA / IoT / Dados e Jogos Sérios.
+
+- **Autor:**  
+  Pedro Henrique Vitoreti
+
+- **Data da Proposta:**  
+  28/06/2026
+
+- **Versão:**  
+  1.5
+
+---
+
+# 1. Visão do Produto e Impacto (O Problema)
+  
+Este projeto tem como finalidade aprimorar o jogo sério I Blue It, um sistema biomédico composto por dispositivos, jogos sérios e telemetria, desenvolvido pelo Laboratory for Research on Visual Applications (LARVA) da Universidade do Estado de Santa Catarina (UDESC), com o objetivo de auxiliar na fisioterapia de pacientes com problemas respiratórios. Esse auxílio ocorre por meio de exercícios respiratórios e da análise dos resultados obtidos durante sua execução. Assim, o projeto propõe a aplicação de melhorias tanto no hardware quanto no software do sistema biomédico.
+
+---
+
+## 1.1 Contexto e Problema
+
+A reabilitação respiratória (RR) é um processo fisioterapêutico voltado a pacientes com doenças ou disfunções respiratórias, tendo como finalidade minimizar sintomas, melhorar a capacidade funcional e auxiliar na qualidade de vida dos pacientes. Entretanto, frequentemente, este processo envolve exercício sistemático, repetitivo e de longo prazo, o que pode torná-lo monótono e exaustivo, assim reduzindo a adesão do paciente ao tratamento. Nesse contexto, os jogos sérios surgem como uma forma de tornar a reabilitação mais atrativa, utilizando elementos lúdicos, feedback e desafios progressivos para aumentar o engajamento do paciente durante as sessões terapêuticas.[1]
+
+Nesse âmbito, o sistema biomédico desenvolvido pela iniciativa de pesquisa do Laboratory for Research on Visual Applications (LARVA) da Universidade do Estado de Santa Catarina (UDESC), chamado I Blue It, foi desenvolvido como um jogo sério (Exergame) ativo voltado à reabilitação respiratória, com o objetivo de auxiliar pacientes durante exercícios respiratórios.[1]
+
+O jogo utiliza a respiração do paciente como forma de controle, por meio de um dispositivo de hardware chamado PITACO, um hardware criado baseado no funcionamento de um pneumotacógrafo, que permite capturar sinais relacionados ao fluxo de ar do paciente e disponibilizá-los ao jogo em tempo real.[1]
+
+Abaixo consta um dispositivo PITACO em sua versão 1.0:
+<img width="755" height="366" alt="Captura de tela de 2026-06-01 14-12-55" src="https://github.com/user-attachments/assets/824ec7cd-f083-4813-8073-c3a78c45b97e" />
+
+[Figura 1. PITACO versão 1.0]
+
+O sistema biomédico atual possui uma série de jogos e exercícios terapêuticos, dentre eles o que leva o próprio nome do sistema, o I Blue It, no qual o paciente interage com o personagem principal, o golfinho Blue, realizando ações respiratórias de inspirar e expirar, que, por sua vez, movimentam o personagem no ambiente do jogo.[2]
+
+<img width="603" height="338" alt="Captura de tela de 2026-06-01 14-03-33" src="https://github.com/user-attachments/assets/8503ea1c-c196-44d7-8324-19510f13c5cf" />
+
+[Figura 2. jogo I Blue It.][2]
+
+O sistema também possui um módulo de análise de dados, que permite ao médico responsável analisar os dados de calibração e desempenho de seus pacientes, em todos os jogos aplicados, além de possibilitar a exportação dos mesmos em formato CSV. 
+
+<img width="5464" height="2544" alt="image" src="https://github.com/user-attachments/assets/b5e8b6ac-99cc-453b-9763-f462f7fa86c4" />
+
+
+[Figura 3. iblueit health InfoCharts, página para processo de envio dos dados sobre os pacientes.][Fonte própria autoria]
+
+Na versão 5.0 descrita por Dias (2024), o I Blue It passa a ser tratado como uma plataforma multimodal voltada ao Flow Psicofisiológico, conceito que busca ajustar a dificuldade dos exercícios considerando tanto o desempenho do paciente no jogo quanto sinais associados ao seu estado físico e psíquico. Para isso, o sistema utiliza o módulo DeepDDA, um agente de inteligência artificial baseado em aprendizado por reforço profundo, capaz de adaptar dinamicamente os desafios do exergame a partir dos dados coletados durante a sessão.
+Nesse modelo, dispositivos como o PITACO continuam fornecendo dados respiratórios relacionados à execução dos exercícios, enquanto sensores fisiológicos, como o oxímetro, podem fornecer informações complementares sobre a condição do paciente, especialmente para fins de monitoramento e segurança do paciente, tendo como fim para tais dados o ajuste da sessão à situação fisiológica do paciente, podendo levar à diminuição da dificuldade ou, em casos de saturação sanguínea baixíssima, pausa ou encerramento da sessão. [2]
+
+Entretanto, a tese de Dias (2024) apresenta o uso da SpO₂ no I Blue It 5.0 no contexto de uma prova de conceito do Flow Psicofisiológico e do módulo DeepDDA. Embora essa prova de conceito demonstre a viabilidade técnica do uso da oximetria para apoiar decisões de segurança e adaptação dinâmica, ela não caracteriza, por si só, uma integração operacional definitiva do oxímetro ao ecossistema. Assim, ainda permanecem pontos a serem especificados e consolidados, como hardware, firmware, comunicação, confiabilidade da leitura, tratamento de erros, persistência dos dados e segurança da transmissão.
+
+Com base nessa estrutura, a melhoria proposta neste RFC se divide em três partes, sendo a primeira a integração do módulo de oximetria ao dispositivo PITACO, permitindo que dados de saturação de oxigênio sejam coletados, transmitidos, armazenados e disponibilizados ao sistema de forma segura, a segunda tratando da adição de tais dados ao módulo de Flow Psicofisiológico, tendo isso já sido validado na prova de conceito descrita por Dias (2024), e agora sendo de fato implantado no sistema, e, por fim, o ajuste dos dashboards clínicos para o novo parâmetro de saturação sanguínea. A proposta, deste modo, não busca alterar a mecânica principal do jogo e sua jogabilidade em si, mas aprimorar a camada de monitoramento fisiológico, ampliando a capacidade do I Blue It de acompanhar sinais relevantes durante a execução dos exercícios respiratórios, trazendo mais segurança para os pacientes.[2]
+
+---
+
+## 1.2 Origem da Demanda e Evidências
+
+A concepção do tema desta pesquisa surge no Laboratory for Research on Visual Applications (LARVA) da UDESC, em colaboração com profissionais da área de fisioterapia respiratória e áreas correlatas, com o objetivo de atender a problemáticas reais do domínio clínico. Sendo assim, desde o princípio, o sistema tem como foco atender às necessidades de ferramentas que auxiliem no processo de atendimento médico e tratamento de pacientes com problemas respiratórios.[1]
+
+Os primeiros resultados surgiram em 2018, com a pesquisa sendo feita com a participação de 80 profissionais da saúde (fisioterapeutas, médicos pneumologistas, fisioterapeutas respiratórios, neurologistas), os quais atuavam com a finalidade de garantir a efetividade da ferramenta ao longo do próprio desenvolvimento, e que, ao final, a avaliaram, obtendo um resultado muito satisfatório, uma nota 4.1 de 5, demonstrando grande satisfação por parte dos envolvidos. [1]
+
+Desde sua fase inicial até agora, houve diversas melhorias em cada uma das versões. Segue um histórico de versões de maneira resumida:
+
+- versão 01 - I Blue It / PITACO (2018):
+  - Criação do dispositivo PITACO (responsável por medir fluxo de ar) e do jogo "Blue"
+- versão 02 - I Blue It / ManoBD (2019):
+  - Adição de minijogos do Copo d’água e Bolo de Aniversário e concepção do dispositivo ManoBD (responsável por medir a pressão do ar)
+- versão 03 - I Blue It / Health InfoCharts (2020):
+  - Adição de módulo de análise clínica do paciente (Histórico e resultados dos jogos mostrados e armazenados)
+- versão 04 - I Blue It / Multimodal (2020):
+  - Incorporação de arquitetura Multimodal 123-SGR, o que permitiu a incorporação de dispositivos distintos como PITACO e ManoBD
+- versão 04.5 - I Blue It / Multimodal redesign (2023):
+  - Redesign para a incorporação de IA ao projeto
+- versão 05 - I Blue It / Flow Psicofisiológico (2024):
+  - Incorporação de Flow Psicofisiológico (busca equilibrar a parte motivadora psíquica com a parte fisiológica do paciente) e IA ao projeto com o fim de controlar o Flow Psicofisiológico
+
+Apesar dos avanços já alcançados no ecossistema I Blue It, ainda existem melhorias a serem desenvolvidas no sistema biomédico, especialmente quanto à integração de novos recursos de monitoramento fisiológico e ao aprimoramento de seus componentes de hardware e software. Nesse contexto, por meio de uma bolsa de Iniciação Científica vinculada à UDESC, este projeto tem como proposta dar continuidade ao desenvolvimento da ferramenta, realizando a integração de um oxímetro ao dispositivo PITACO e promovendo ajustes complementares no sistema, tais como o ajuste no módulo de ajuste dinâmico da dificuldade por Inteligência Artificial (DeepDDA), ajuste nos dashboards clínicos, em conta da adição do novo parâmetro à oximetria.
+
+Assim, o projeto de melhoria parte da continuidade de um trabalho técnico-acadêmico já consolidado, buscando tratar lacunas identificadas e contribuir para o aprimoramento de uma solução voltada ao apoio da comunidade fisioterapêutica na reabilitação de pacientes com problemas respiratórios.
+
+## 1.3 Análise de Soluções Existentes (Benchmark)
+
+**BubbleBreather**  
+Uma pequena coleção de jogos/atividades para exercícios respiratórios focados apenas na recuperação de pneumonia. Pode ser acessado pelo GitHub público e possui uma demo web ativa, por mais que não haja updates desde 2020. Possui um escopo mais estreito, sendo jogos feitos no próprio browser, depende de microfone, com foco em exercícios específicos e não apresenta uma camada clínica robusta, comparável a dashboard terapêutico ou equipamentos IoT terapêuticos multimodalidade com sensores dedicados. [11]
+
+<img width="1915" height="947" alt="image" src="https://github.com/user-attachments/assets/45f80ec5-01ce-4d98-9ae2-b7e611d33471" />
+
+[Figura 4. Dashboard principal BubbleBreather.][11]
+
+público-alvo: pessoas em recuperação de pneumonia
+
+**PlayPhysio**
+
+Uma iniciativa originada pela demanda de um pai cuja filha possui fibrose cística e necessitava realizar fisioterapia, porém o tratamento não era engajador, o que dificultava a participação e o interesse da criança. Com isso em mente, decidiu-se criar uma plataforma gamificada para que sua filha pudesse realizar seus exercícios de maneira mais lúdica. Para fazer isso, a plataforma acopla um equipamento IoT chamado PhysioPal ao equipamento terapêutico, que, ao se conectar via Bluetooth no aparelho celular, registrará a pontuação no app. Não parece apresentar publicamente um ecossistema clínico tão robusto quanto o I Blue It, contendo dashboard terapêutico ou equipamentos IoT com sensores dedicados acoplados diretamente ao sistema, porém contém feedback em tempo real e fornecimento detalhado de dados.[12][13]
+
+<img width="1922" height="952" alt="image" src="https://github.com/user-attachments/assets/0c27559d-9700-4069-ac29-197f41ecb948" />
+
+[Figura 5. Tela inicial principal PlayPhysio.][12][13]
+
+público-alvo: pessoas com problemas respiratórios (com foco em crianças)
+
+**ACPlus Respiratory Assessment + OmniFlow**
+
+A empresa Accelerated Care Plus produz duas soluções no ramo de terapia respiratória, sendo elas o ACPlus Respiratory Assessment, uma solução voltada a ajudar na etapa de diagnóstico e decisão clínica de disfunções pulmonares, onde, por meio de um dispositivo que captura os dados da respiração do paciente e os transmite a um iPad por meio do Bluetooth, que, por sua vez, retorna em formato de prontuário com a documentação clínica necessária aos profissionais da saúde. A outra, chamada OmniFlow, tem como foco o tratamento gamificado através de terapias pulmonares por meio de experiências interativas/gamificadas, onde o paciente realiza o tratamento através de um dispositivo espirômetro Bluetooth que capta seus dados, que são utilizados tanto nos exercícios quanto posteriormente permitem a análise por um profissional de saúde. Entre suas limitações, podemos destacar a exclusividade de implantação, pois atualmente os sistemas são voltados às regulamentações e normativas do seu país de origem, Estados Unidos, o que limita a sua atuação preferencialmente apenas ao mercado estadunidense.[14][15][16]
+
+- OmniFlow
+<img width="1187" height="768" alt="image" src="https://github.com/user-attachments/assets/eef6fc3f-ce31-4bc5-8d05-24394b690f87" />
+
+[Figura 6. Tela Inicial sobre o OmniFlow.][15]
+
+público-alvo: pessoas com problemas respiratórios de modo amplo
+
+---
+
+### Comparação
+
+| Solução | Escopo terapêutico | Dispositivo ou entrada de dados | Multimodalidade | IA / Ajuste Dinâmico | Monitoramento fisiológico | Dashboard / camada clínica | Principais limitações |
+|---|---|---|---|---|---|---|---|
+| BubbleBreather | Exercícios respiratórios com foco em recuperação de pneumonia | Microfone / navegador | Não identificado | Não identificado | Não identificado | Não possui módulo clínico especializado | Escopo restrito, dependência de microfone e ausência de integração com sensores terapêuticos dedicados |
+| PlayPhysio | Exercícios respiratórios com foco em adesão ao tratamento, principalmente em crianças | Dispositivo IoT PhysioPal conectado via Bluetooth | Parcial | Não identificado | Dados vinculados ao uso do equipamento terapêutico | Camada clínica mais simplificada | Menor robustez clínica quando comparado a uma plataforma multimodal com dashboard terapêutico |
+| ACPlus Respiratory Assessment + OmniFlow | Diagnóstico, documentação clínica e terapia respiratória interativa | Espirômetro Bluetooth e iPad | Parcial | Não identificado | Dados respiratórios capturados por dispositivo dedicado | Possui documentação clínica e análise profissional | Solução comercial voltada ao contexto regulatório estadunidense |
+| I Blue It 6.0 | Reabilitação respiratória mediada por jogo sério ativo, com monitoramento fisiológico complementar | PITACO ampliado com sensor de SpO2 | Sim | Sim, com integração operacional ao DeepDDA / Flow Psicofisiológico utilizando dados reais de SpO2. | sensor SpO2 (saturação sanguínea) | Dashboard clínico com dados respiratórios, desempenho e saturação sanguínea | Solução em desenvolvimento, dependente de validação técnica da integração do oxímetro ao PITACO |
+
+---
+
+### Diferencial do Projeto
+
+Analisando as soluções elencadas, percebe-se que o campo de soluções digitais voltadas à reabilitação respiratória pode ser organizado em três grupos principais. O primeiro grupo é composto por soluções leves e acessíveis, como o BubbleBreather, que priorizam simplicidade tecnológica, acesso rápido e execução em navegador. O segundo grupo é formado por soluções voltadas ao engajamento e à adesão ao tratamento, como o PlayPhysio, que utiliza um dispositivo IoT para tornar os exercícios respiratórios mais atrativos, especialmente para o público infantil. O terceiro grupo envolve soluções com maior maturidade clínica e comercial, como o ACPlus Respiratory Assessment e o OmniFlow, que integram dispositivos respiratórios e recursos de análise profissional, porém com forte dependência do contexto regulatório e de implantação estadunidense.
+
+Apesar das contribuições dessas soluções, observa-se que nenhuma delas contempla, de forma integrada, todos os elementos que caracterizam a proposta do I Blue It 6.0: uso de jogo sério ativo voltado à reabilitação respiratória, arquitetura multimodal, integração com dispositivo IoT próprio, monitoramento fisiológico por SpO2, possibilidade de uso de inteligência artificial para ajuste dinâmico e dashboard clínico voltado ao acompanhamento profissional.
+
+Nesse contexto, o I Blue It 6.0 (a versão da proposta de melhoria) busca preencher uma lacuna técnica no ambiente fisioterapêutico brasileiro, ao propor uma solução que integra exergame respiratório, dispositivo terapêutico dedicado, monitoramento de saturação sanguínea e análise clínica dos dados do paciente. Dessa forma, o diferencial do projeto está na ampliação do ecossistema I Blue It para oferecer não apenas suporte lúdico aos exercícios respiratórios, mas também maior segurança fisiológica, rastreabilidade dos dados e apoio à tomada de decisão por parte do profissional da saúde.
+
+---
+
+## 1.4 Público-Alvo
+
+O sistema terá dois públicos principais:
+
+Paciente em reabilitação respiratória: crianças e adultos que realizam exercícios terapêuticos respiratórios com acompanhamento profissional.
+
+Profissional de saúde: fisioterapeutas respiratórios, fisioterapeutas clínicos, pneumologistas e demais especialistas que acompanham a sessão dos pacientes, definem parâmetros terapêuticos e analisam os resultados.
+
+---
+
+## 1.5 Objetivos do Projeto
+
+### Objetivo Geral
+
+O projeto se propõe a adicionar funções e módulos, tanto ao hardware como ao software, de modo a cobrir primariamente a segurança e monitoramento da saturação sanguínea do paciente em tempo de execução das sessões, sua coleta e processamento dos dados oriundos da oximetria, para aumentar a segurança fisiológica do sistema e auxiliar os profissionais responsáveis na tomada de decisões. Pretende-se assim adicionar um novo sensor de oximetria (SpO2) ao aparelho de captação de dados existente PITACO, ao qual serão utilizados estes novos dados de saturação sanguínea para a criação de um módulo, responsável pelo monitoramento e segurança do paciente durante a sessão, adjunto ao módulo de dificuldade dinâmica por Inteligência Artificial (IA) existente, assim operacionalizando o DeepDDA com dados reais do SpO2. Tais mudanças acarretam em alterações imediatas no sistema biomédico atual, como a adição ao dashboard clínico do dado de saturação sanguínea do paciente, com a finalidade de fornecer ao profissional da saúde responsável mais um dado em sua tomada de decisão. Também será necessário alterar a IA de monitoramento e detecção de anomalias, responsável pela avaliação do estado do paciente em tempo de execução, passando agora a se utilizar de um novo parâmetro, o biossinal de saturação sanguínea, em seu processo, e retornando recomendações de pausa ou interrupção imediata.  
+
+---
+
+### Objetivos Específicos
+
+Tendo em vista a problemática apresentada, este projeto tem como fim sanar as lacunas identificadas e, ao final, entregar um sistema biomédico mais completo. Baseando-se nisso, segue abaixo os objetivos a serem tratados:
+
+- Integrar o hardware existente do PITACO ao sensor de SpO2 para monitoramento fisiológico complementar, através da saturação sanguínea.
+- Atualizar o módulo de ajuste dinâmico por inteligência artificial responsável pela dificuldade, para suportar o novo parâmetro de saturação sanguínea.
+- Atualizar o dashboard clínico para exibir e correlacionar dados respiratórios, da saturação sanguínea e de desempenho nos jogos e sessões.
+- Registrar as decisões tomadas pelo DeepDDA, incluindo estado observado, ação selecionada, recompensa, parâmetros alterados e estado resultante.
+- Validar o comportamento do DeepDDA com dados reais e simulados de SpO2, verificando cenários de manutenção, redução de dificuldade, pausa e interrupção da sessão.
+
+---
+
+## 1.6 Métricas de Sucesso (KPIs)
+
+As métricas de sucesso estipuladas são:
+
+- Registro correto de sessões com saturação sanguínea associada, advinda do novo componente SpO2, de modo a manter a velocidade e métricas do sistema atual.
+- Acurácia da IA de monitoramento fisiológico superior a 85% (para o acerto de decisões de interrupção e detecção de risco).
+- Ajuste dinâmico com delay de até 800 ms na dificuldade durante a sessão, ao utilizar a IA de monitoramento fisiológico.
+- Tempo de resposta do sistema inferior a 800 ms para feedback em gameplay.
+- Adição dos dados obtidos pelo SpO2 ao dashboard apresentando todos os dados já existentes e novos pertinentes, mantendo o tempo de resposta atual.
+- Acurácia dos cálculos do sensor SpO2 sobre saturação sanguínea igualada a equipamentos homologados.
+- Percentual de decisões do DeepDDA registradas corretamente com estado observado, ação, recompensa e parâmetros alterados.
+- Tempo entre captura da SpO2 válida e disponibilização do dado ao DeepDDA inferior a 800 ms.
+- Tempo entre decisão do DeepDDA e aplicação da ação no jogo inferior a 800 ms.
+- Percentual de cenários simulados em que o sistema reduz dificuldade quando SpO2 < 95%.
+- Percentual de cenários simulados em que o sistema pausa/interrompe quando SpO2 < 89%.
+- Percentual de sessões em que os dados reais do PITACO ampliado são associados corretamente ao paciente, sessão e decisão da IA igualado a 100%.
+  
+---
+
+# 2. Engenharia de Requisitos
+
+Este segmento define o que a melhoria realizará para atender às novas necessidades de monitoramento e segurança do paciente, sobre o sistema biomédico I Blue It. Nesse sentido, os dados atualmente fornecidos são insuficientes para a utilização do módulo de IA (inteligência artificial), de modo a monitorar a segurança biofisiológica do paciente e garanti-la durante as sessões.
+
+Sendo assim, a melhoria abrange duas frentes, a primeira, adicionar a coleta de tais dados, sendo feita por meio de um incremento do sensor SpO2 (sensor de oximetria) ao dispositivo PITACO, e a segunda sendo os ajustes necessários no sistema biomédico atual para suportar tais mudanças, ajustes estes como adicionar parâmetros de oximetria à IA de Flow Psicofisiológico, assim ajustando ou interrompendo as sessões em casos identificados como anômalos ou de iminente risco fisiológico ao paciente, e aprimoração com a adição dos novos dados aos dashboards clínicos, utilizados pela equipe médica na tomada de decisão. Assim buscamos, em última instância, garantir que as sessões sejam realizadas na dificuldade adequada ao paciente, por meio do monitoramento contínuo e, em casos anômalos, parando a mesma.
+
+O projeto tem como premissa que o software I Blue It já possui uma base funcional composta por jogo sério, dispositivos IoT para captura respiratória, armazenamento de dados, calibração por inteligência artificial e acompanhamento por profissional. Sendo assim, os requisitos estipulados abaixo descrevem as funcionalidades necessárias para a integração do novo módulo proposto, saturação sanguínea, ao sistema existente. 
+
+---
+
+## 2.1 Personas
+### Persona 1 — Ana Clara, paciente em reabilitação respiratória
+
+**Contexto:**  
+Ana Clara, uma criança de 12 anos, realiza sessões de fisioterapia respiratória por possuir problemas respiratórios. Ela apresentava dificuldade em manter a constância dos exercícios, considerando o tratamento repetitivo e cansativo. Durante as sessões, passou a utilizar o jogo I Blue It com acompanhamento de um fisioterapeuta, o que apresentou respectiva melhora ao quadro.
+
+**Objetivos:**  
+- Proporcionar os exercícios respiratórios de uma forma mais lúdica e motivadora.
+- Receber feedback visual durante a sessão de tratamento.
+- Conseguir completar os níveis e desafios do jogo sem sentir-se excessivamente desconfortável.
+- Evoluir gradualmente a dificuldade, conforme sua melhora na capacidade respiratória.
+
+**Principais dificuldades:**  
+- Perde a motivação quando os exercícios são repetitivos.
+- Em exercícios longos pode apresentar fadiga ou desconforto.
+- Não possui sensibilidade necessária para perceber quando está realizando esforço excessivo.
+- Dependente da orientação de um profissional para realizar adequadamente os exercícios propostos.
+
+---
+
+### Persona 2 — Dr. Marcos, fisioterapeuta respiratório
+
+**Contexto:**  
+Dr. Marcos atua em uma clínica voltada ao tratamento fisioterápico, na área respiratória, onde acompanha pacientes com diferentes quadros clínicos. Ele faz uso de ferramentas de apoio em vista de tornar os seus tratamentos mais motivadores e lúdicos, assim o auxiliando na aplicação do tratamento, acompanhamento e evolução dos pacientes ao longo das sessões.
+
+**Objetivos:**  
+- Configurar parâmetros para exercício seguindo o perfil clínico do paciente.
+- Acompanhar os dados respiratórios e fisiológicos em tempo de execução da sessão.
+- Visualizar histórico do paciente analisando seu desempenho e evolução.
+- Identificar sinais de alerta, tais como queda de saturação, fadiga ou baixo resultado ao exercício.
+- Utilizar os dados obtidos e processados pelo sistema como apoio na tomada de decisão.
+
+**Principais dificuldades:**  
+- Necessita acompanhar simultaneamente a execução respiratória do paciente, suas condições fisiológicas e seu desempenho no jogo.
+- Necessita de dados objetivamente organizados e claros para sua avaliação de evolução e tomada de decisão.
+- Precisa evitar que o paciente seja submetido a esforços inadequados.
+- Precisa ajustar a dificuldade do exercício de maneira a não interromper a sessão.
+
+---
+
+## 2.2 Casos de Uso Principais
+
+Considerando o estado atual em que o software se encontra, com suas inúmeras funcionalidades e aprimoramentos de cada versão, foram abstraídas as suas principais funções e características para a criação de dois fluxos, consistindo, em primazia, uma abstração geral sobre o modelo atual do sistema I Blue It, e posteriormente uma derivação para fins comparativos, contendo este as principais mudanças e impactos no fluxo que a melhoria se propõe a realizar.
+
+Para o atual estado do software, foram elencadas as seguintes funcionalidades:
+
+### UC01 — Cadastrar/Selecionar Paciente
+
+**Objetivo:** Identificar paciente que realizará a sessão terapêutica.
+
+**Descrição:**
+O sistema permite que o profissional de saúde cadastre o paciente caso seja novo, ou permite a seleção de um paciente previamente cadastrado. Essa funcionalidade tem como fim associar os pacientes às sessões do jogo e seus dados, tais como calibrações, dados respiratórios, histórico e resultados.
+
+---
+
+### UC02 — Capturar dados respiratórios (via PITACO)
+
+**Objetivo:** Receber os dados fisiológicos necessários para a realização do jogo.
+
+**Descrição:**
+O sistema permite que o paciente, por meio do dispositivo PITACO, tenha seus dados fisiológicos sensoriados e monitorados. Essa funcionalidade tem como fim capturar os dados necessários para a realização de todas as operações do sistema.
+
+---
+
+### UC03 — Calibrar Respiração
+
+**Objetivo:** Calibrar o sistema baseando-se na fisiologia do paciente.
+
+**Descrição:**
+O sistema permite que o paciente, adjunto ao profissional de saúde, calibrem e preparem o ambiente para a realização dos exercícios. Essa funcionalidade tem como objetivo adequar e preparar o software para realizar o exercício ao paciente.
+
+---
+
+### UC04 — Configurar Sessão Terapêutica
+
+**Objetivo:** Preparar a sessão com o exercício terapêutico adequado ao paciente.
+
+**Descrição:**
+O sistema permite que o profissional de saúde configure a sessão terapêutica a ser executada. Essa configuração se caracteriza por poder envolver desde a preparação do paciente, escolha do modo de jogo até a definição de parâmetros para a realização da atividade.
+
+---
+
+### UC05 — Executar Minigame
+
+**Objetivo:** Realizar o exercício terapêutico com os minijogos existentes 
+
+**Descrição:**
+O sistema permite que o paciente realize a sessão de exercício terapêutico em um dos minigames existentes, no qual utiliza-se de sua respiração no instrumento PITACO para controlar as ações de cada nível. Desse modo, buscando exercitar o paciente de maneira lúdica. 
+
+---
+
+### UC06 — Executar Game Plataforma
+
+**Objetivo:** Realizar o exercício terapêutico com o jogo de plataforma
+
+**Descrição:**
+O sistema permite que o paciente realize a sessão de exercício terapêutico do game de plataforma, no qual utiliza-se de sua respiração no instrumento PITACO para controlar um personagem verticalmente, assim o fazendo desviar de obstáculos que aparecem para completar o nível. Desse modo, buscando exercitar o paciente de maneira lúdica. 
+
+---
+
+### UC07 — Personalizar Fases ou Níveis
+
+**Objetivo:** Personalizar as fases para adequar ao perfil, fisiologia e evolução do paciente
+
+**Descrição:**
+O sistema permite que o profissional da saúde personalize as fases para conter o tamanho e desafios adequados ao caso clínico do paciente. Esta funcionalidade permite a alteração dos níveis, fases e desafios do jogo de plataforma.
+
+---
+
+### UC08 — Acompanhar Sessão
+
+**Objetivo:** Permitir supervisão por parte do profissional de saúde sobre a atividade terapêutica.
+
+**Descrição:**
+O sistema permite que o profissional de saúde acompanhe a realização da sessão terapêutica. Assim, possibilitando observar o andamento e desempenho da execução do paciente, permitindo a tomada de decisões durante ou breve após a sessão.
+
+---
+
+## UC09 — Ajustar Dificuldade Dinamicamente
+
+**Objetivo:** Adequar a dificuldade do jogo à capacidade e ao desempenho do paciente.
+
+**Descrição:**
+O sistema ajusta a dificuldade da atividade em tempo de execução do exercício terapêutico, adequando-se ao desempenho do paciente. Esse ajuste se caracteriza por envolver mudanças em parâmetros do jogo, tais como obstáculos, velocidade, alvos ou nível de desafio.
+
+---
+
+### UC10 — Registrar Histórico de Sessão
+
+**Objetivo:** Armazenar dados da sessão fisioterápica para avaliação futura.
+
+**Descrição:**
+O sistema registra os dados gerados durante a sessão, tais como calibração, desempenho e dados respiratórios capturados. Esses dados constituem o histórico do paciente, podendo ser consultados posteriormente pelo profissional da saúde.
+
+---
+
+### UC11 — Consultar Dados / Relatórios
+
+**Objetivo:** Disponibilizar informações obtidas anteriormente para acompanhamento do avanço clínico.
+
+**Descrição:**
+O sistema permite que o profissional da saúde consulte os dados e relatórios obtidos das sessões já realizadas. Essa funcionalidade auxilia o profissional na análise da evolução do paciente e tomada de decisões eventuais envolvendo o tratamento. 
+
+---
+
+### UC12 — Interromper Sessão
+
+**Objetivo:** Garantir soberania do profissional da saúde sobre a sessão terapêutica.
+
+**Descrição:**
+O sistema permite que o profissional da saúde interrompa a sessão quando achar necessário. Essa ocorrendo por decisão clínica exclusiva do profissional da saúde, baseada em sua experiência e supervisão sobre o paciente em casos onde o paciente possa estar demonstrando desconforto, dificuldade na execução ou necessidade do encerramento da sessão de terapia.
+
+---
+
+Logo abaixo consta o diagrama de tais casos de uso e suas respectivas correlações: 
+
+<img width="3404" height="4328" alt="image" src="https://github.com/user-attachments/assets/cef341ac-0b1d-4151-b5bc-1792789c4cc3" />
+
+Já para a versão melhorada foram acrescentados alguns casos, referentes ao novo módulo contendo o SpO2, como pode-se ver abaixo:
+
+### UC13 — Capturar Dados Respiratórios e SpO2 via PITACO Ampliado
+
+**Objetivo:** Ampliar a coleta de dados fisiológicos do paciente, integrando no mesmo dispositivo PITACO captura de informações respiratórias e de saturação sanguínea.
+
+**Descrição:**
+O sistema permite capturar dados fisiológicos, por meio do PITACO ampliado, tanto os já utilizados dados respiratórios do paciente quanto os dados de saturação de oxigênio. Isso sendo feito por meio da adição do módulo SpO2 ao corpo do PITACO, com dispositivo passando a fornecer mais informações fisiológicas durante a sessão terapêutica.
+
+---
+
+### UC14 — Validar, Filtrar e Transformar Sinais Brutos
+
+**Objetivo:** Garantir que os dados de saturação sanguínea capturados pelo SpO2 sejam consistentes, confiáveis e adequados para análise.
+
+**Descrição:**
+O sistema realiza a validação se os dados estão sendo capturados adequadamente e a transformação dos mesmos dados brutos obtidos pelo SpO2 para valores reais de saturação sanguínea, com a finalidade de fornecer tais dados processados para as outras partes interconectadas do sistema. Essa etapa permite validar se os dados estão sendo capturados de maneira adequada e que estejam sendo retornados também de maneira adequada para as demais partes.
+
+---
+
+### UC15 — Registrar Dados de saturação sanguínea 
+
+**Objetivo:** Armazenar os dados do SpO2 obtidos durante a sessão para fornecê-los no acompanhamento clínico e análises posteriores.
+
+**Descrição:**
+O sistema registra os dados de saturação sanguínea obtidos durante a sessão pelo módulo SpO2. Esses dados passam a compor, adjunto aos já existentes, o histórico do paciente, permitindo que o profissional da saúde, em consultas posteriores, tenha acesso a estas informações.
+
+---
+
+### UC16 — Emitir Alerta de Segurança
+
+**Objetivo:** Alertar o profissional da saúde sobre possíveis riscos fisiológicos ocorridos em tempo de execução da sessão terapêutica.
+
+**Descrição:**
+O sistema emite um alerta de segurança ao profissional da saúde quando identifica que os sinais fisiológicos do paciente indicam condições de risco ao mesmo, isso durante a sessão terapêutica. Esses alertas podem estar relacionados a sinais incompatíveis com a execução do exercício, como quedas inesperadas de saturação sanguínea, ou ainda a casos onde o dispositivo pode estar apresentando falhas na leitura.
+
+---
+
+### UC17 — Pausar/Interromper Sessão por Risco Fisiológico
+
+**Objetivo:** Proteger o paciente durante a sessão, interrompendo a atividade que demonstre situações de risco.
+
+**Descrição:**
+O sistema interrompe sessões em que forem identificados padrões anômalos ou de alto risco fisiológico ao paciente. Essa funcionalidade atua como medida de precaução e segurança, permitindo a pausa momentânea ou suspensão caso os sinais indiquem uma condição inadequada durante o exercício.
+
+****
+
+Abaixo pode-se ver o fluxo com a melhoria proposta:
+
+<img width="3284" height="5128" alt="image" src="https://github.com/user-attachments/assets/9f41649e-9723-4fd5-8456-7e1de6a08285" />
+
+---
+
+## 2.3 Requisitos Funcionais (RF)
+
+  Em vista dos trabalhos já realizados e documentados das versões passadas do software I Blue It, esta proposta de melhoria não se atém aos requisitos funcionais da versão atual do software, e sim apenas aos pertinentes a sua melhoria, nisto consistindo na integração do módulo de monitoramento de SpO2 para apoiar a segurança fisiológica durante as sessões de reabilitação respiratória, os quais estão presentes logo abaixo.
+  Outro adendo necessário, para diferenciar o local onde a melhoria será aplicada do software já existente, foi nomeada a melhoria como módulo SpO2, sendo este o módulo responsável pela captação, validação, correção e cálculo de saturação sanguínea do paciente, já o sistema existente sendo referido como sistema I Blue It, assim mostrando quais partes terão de fazer quais tarefas e suas respectivas interações e responsabilidades.  
+
+| ID | Requisito Funcional |
+|----|---------------------|
+| RF01 | O sistema deve permitir que o sensor SpO2 seja conectado ao sistema, sem interromper ou comprometer funcionalidades existentes. |
+| RF02 | O sistema deve permitir que o sensor SpO2 envie dados durante a sessão a todos os módulos pertinentes do software I Blue It. |
+| RF03 | O sistema deve permitir que o software I Blue It receba dados do módulo SpO2 em tempo real. |
+| RF04 | O sistema deve permitir que o módulo SpO2 valide o contato do sensor ao paciente. |
+| RF05 | O sistema deve permitir que o módulo SpO2 valide a qualidade do sinal recebido. |
+| RF06 | O sistema deve permitir que o módulo SpO2 ignore leituras inválidas de saturação sanguínea. |
+| RF07 | O sistema deve permitir que o sistema monitore a saturação sanguínea do paciente durante a execução do jogo. |
+| RF08 | O sistema deve permitir que o terapeuta configure o limite mínimo de saturação sanguínea. |
+| RF09 | O sistema deve permitir que o módulo SpO2 compare a saturação sanguínea obtida com o limite definido pelo terapeuta. |
+| RF10 | O sistema deve permitir que o módulo SpO2 alerte o software I Blue It quando a saturação sanguínea estiver abaixo do limite definido. |
+| RF11 | O sistema deve permitir que o módulo SpO2 emita alerta quando o sensor estiver desconectado. |
+| RF12 | O sistema deve permitir que o módulo SpO2 emita alerta quando o sensor estiver mal posicionado, pausando a sessão. |
+| RF13 | O sistema deve permitir que o módulo SpO2 registre a série temporal de saturação sanguínea da sessão no software I Blue It. |
+| RF14 | O sistema deve permitir que o módulo SpO2 registre o menor valor de saturação sanguínea da sessão. |
+| RF15 | O sistema deve permitir que o módulo SpO2 registre eventos de queda de SpO2. |
+| RF16 | O sistema deve permitir que se registrem eventos de falha ou perda de sinal do módulo SpO2. |
+| RF17 | O sistema deve permitir que o módulo SpO2 recomende pausa ao terapeuta quando houver risco fisiológico ao paciente. |
+| RF18 | O sistema deve permitir que o módulo SpO2 pause automaticamente a sessão no software I Blue It caso a saturação sanguínea esteja em condição crítica. |
+| RF19 | O sistema deve permitir que o terapeuta autorize a retomada da sessão após normalização da SpO2. |
+| RF20 | O sistema deve permitir que o software I Blue It apresente o estado do monitoramento fisiológico na interface. |
+| RF21 | O sistema deve permitir que o terapeuta visualize os dados do módulo SpO2 durante e após a sessão. |
+| RF22 | O sistema deve permitir que o módulo SpO2 gere um resumo fisiológico da sessão para ser apresentado no software I Blue It. |
+| RF23 | O sistema deve permitir a associação dos dados obtidos pelo módulo SpO2 aos dados já obtidos pelo software I Blue It durante a sessão terapêutica. |
+| RF24 | O sistema deve permitir que o terapeuta consulte os registros fisiológicos de sessões anteriores. |
+| RF25 | O sistema deve permitir que os dados de SpO2 válidos sejam enviados ao módulo DeepDDA durante a execução da sessão. |
+| RF26 | O sistema deve permitir que, em caso de eventuais pausas, os dados fisiológicos até então captados não sejam perdidos e possam ser recuperados. |
+| RF27 | O módulo DeepDDA deve considerar dados de desempenho do jogo, dados respiratórios e dados de SpO2 para compor o estado observado do paciente. |
+| RF28 | O módulo DeepDDA deve decidir entre manter, aumentar ou reduzir a dificuldade do jogo com base no estado observado. |
+| RF29 | O módulo DeepDDA deve recomendar pausa ou interrupção quando os dados fisiológicos indicarem condição de risco. |
+| RF30 | O sistema deve registrar cada decisão tomada pelo DeepDDA, incluindo estado observado, ação escolhida, parâmetros alterados, recompensa calculada e horário da decisão. |
+| RF31 | O sistema deve aplicar no jogo as ações de ajuste de dificuldade decididas pelo DeepDDA. |
+| RF32 | O sistema deve permitir rastrear os parâmetros do jogo antes e depois de cada ajuste realizado pela IA. |
+| RF33 | O sistema deve calcular ou registrar a recompensa associada à decisão tomada pela IA. |
+| RF34 | O sistema deve armazenar o estado resultante após a aplicação da ação da IA. |
+
+---
+
+## 2.4 Requisitos Não Funcionais (RNF)
+
+Os requisitos não funcionais descritos nesta seção seguem o mesmo princípio descrito nos Funcionais, onde o foco para elencá-los foi ter em mente a solução e o que ela alterará no modelo atual, porém agora estipulando métricas qualitativas de desempenho, segurança, confiabilidade, usabilidade, compatibilidade e manutenção que devem ser atendidas pela melhoria proposta.
+
+| ID | Categoria | Requisito Não Funcional |
+|----|-----------|--------------------------|
+| RNF01 | Compatibilidade | O módulo SpO2 deve ser integrado ao software I Blue It sem comprometer as funcionalidades já existentes no software ou hardware. |
+| RNF02 | Modularidade | O módulo SpO2 deve ser desenvolvido de forma independente, permitindo sua manutenção sem necessidade de alterar partes centrais do software I Blue It. |
+| RNF03 | Interoperabilidade | O módulo SpO2 deve se comunicar com o software I Blue It por meio de um formato de dados definido e compreensível pelos dois componentes. |
+| RNF04 | Desempenho | O módulo SpO2 deve atualizar os dados de saturação sanguínea em tempo compatível com o acompanhamento da sessão terapêutica. |
+| RNF05 | Tempo de resposta | O módulo SpO2 deve emitir alertas de risco fisiológico em tempo suficiente para que o terapeuta possa intervir durante a sessão. |
+| RNF06 | Confiabilidade | O módulo SpO2 deve evitar o uso de leituras inválidas, instáveis ou incompatíveis com um sinal fisiológico confiável. |
+| RNF07 | Robustez | A perda de conexão com o sensor SpO2 não deve causar travamento ou encerramento inesperado do software I Blue It, mas deve gerar alertas e avisos. |
+| RNF08 | Segurança fisiológica | O módulo SpO2 deve priorizar a segurança do paciente em relação à continuidade da sessão no jogo. |
+| RNF09 | Segurança operacional | O software I Blue It deve ser capaz de interromper, pausar ou sinalizar risco quando o módulo SpO2 indicar condição fisiológica crítica. |
+| RNF10 | Usabilidade | O estado do módulo SpO2 deve ser apresentado de forma clara ao terapeuta, indicando se o sensor está conectado, desconectado, válido, inválido ou em alerta. |
+| RNF11 | Clareza de interface | Os alertas relacionados à saturação sanguínea, perda de sinal ou mau posicionamento do sensor devem ser compreensíveis para o terapeuta durante a sessão. |
+| RNF12 | Rastreabilidade | Os dados fisiológicos registrados pelo módulo SpO2 devem estar associados à sessão, ao paciente e ao momento em que foram coletados. |
+| RNF13 | Integridade dos dados | Os dados de saturação sanguínea e eventos de alerta devem ser armazenados sem sobrescrever ou corromper os dados já registrados pelo software I Blue It. |
+| RNF14 | Persistência | Os registros fisiológicos da sessão devem permanecer disponíveis para consulta após o encerramento do jogo. |
+| RNF15 | Privacidade | Os dados fisiológicos do paciente devem ser tratados como informações sensíveis e não devem ser expostos indevidamente. |
+| RNF16 | Manutenibilidade | O código do módulo SpO2 deve ser organizado de forma a facilitar ajustes, correções e futuras expansões. |
+| RNF17 | Testabilidade | O módulo SpO2 deve permitir testes com dados simulados, possibilitando verificar conexão, validação de sinal, alertas e registro de dados sem depender exclusivamente do sensor físico. |
+| RNF18 | Extensibilidade | A estrutura do módulo SpO2 deve ser desenvolvida com foco na modularidade com o fim de permitir futura adaptação para outros sensores fisiológicos, caso necessário. |
+| RNF19 | Consistência | As nomenclaturas, unidades e formas de apresentação dos dados fisiológicos devem ser consistentes em todo o sistema. |
+| RNF20 | Recuperação de falhas | O módulo SpO2 deve permitir a retomada do monitoramento após falha temporária de conexão ou reposicionamento do sensor. |
+| RNF21 | Compatibilidade | O módulo SpO2 deve ser codificado em linguagens e tecnologias já presentes no software |
+
+---
+
+## 2.5 Regras de Negócio
+
+As regras de negócio aqui presentes foram elencadas com mesmo intuito de mostrar apenas a melhoria, tratando tanto o módulo da melhoria (módulo SpO2) quanto o sistema I Blue It já existente apenas como um único sistema unificado, porém abrangendo apenas os aspectos presentes no I Blue It que competem a ser tratados na melhoria. Assim, não remodelamos as regras de negócio do sistema biomédico existente.
+
+| Código | Regra de Negócio |
+|---|---|
+| RN01 | Apenas o terapeuta pode definir o limite mínimo de saturação sanguínea. |
+| RN02 | O terapeuta responsável pode pausar ou parar a sessão a qualquer momento. |
+| RN03 | O terapeuta responsável pode adaptar a sessão conforme sua análise clínica. |
+| RN04 | Em situações fisiológicas críticas, a segurança do paciente deve prevalecer em relação à continuidade da sessão em andamento. |
+| RN05 | Uma sessão fisioterápica apenas pode ocorrer se os equipamentos de medição estiverem aptos, posicionados e captando os sinais vitais do paciente corretamente. |
+| RN06 | Durante uma sessão, caso ocorram problemas de medições devido a problemas no equipamento, mau posicionamento e/ou no processamento dos dados, o sistema deve pausar a sessão e notificar o usuário (paciente e médico). |
+| RN07 | Durante as sessões, o sistema deve avisar o terapeuta de anomalias nos biossinais. |
+| RN08 | Em casos de parada da sessão, o sistema deve manter os dados já obtidos da sessão e possibilitar tanto a retomada do exercício do estado atual do exercício, ou eventual encerramento da sessão. |
+| RN09 | Apenas a equipe médica e o paciente devem ter acesso aos dados fisiológicos do paciente. |
+| RN10 | O sistema deve disponibilizar os dados captados do paciente à equipe médica. |
+| RN11 | A sessão pausada só pode ser retomada após autorização do terapeuta. |
+| RN12 | A sessão deve ser pausada caso o sistema identifique risco fisiológico ao paciente. |
+| RN13 | A leitura do módulo SpO2 só deve ser considerada válida se houver contato adequado do sensor com o paciente. |
+| RN14 | A saturação sanguínea deve ser calculada somente com dados válidos. |
+| RN15 | Em caso de leituras inválidas ou instáveis, não devem ser utilizadas tais medições para o cálculo da saturação sanguínea do paciente. |
+| RN16 | O limite mínimo de saturação sanguínea definido pelo terapeuta deve ser usado como referência para classificar a condição fisiológica do paciente durante a sessão. |
+| RN17 | Os dados do novo módulo SpO2 não devem substituir os dados já presentes no ecossistema I Blue It. |
+| RN18 | Os dados do novo módulo SpO2 devem ser integrados aos dados já presentes no ecossistema I Blue It. |
+| RN19 | Eventos de alerta, tais como queda de saturação sanguínea, perda de sinal e/ou pausa da sessão, devem ser registrados no histórico da sessão. |
+| RN20 | Em casos de muito breve ausência de sinal fisiológico, não devem ser interpretados automaticamente como condições críticas do paciente. |
+| RN21 | O terapeuta responsável deve ter acesso aos registros fisiológicos da sessão após seu encerramento. |
+
+---
+
+## 2.6 Fora do Escopo
+
+Aqui constam alguns pontos que esta proposta não realizará, apenas ilustrados com fim de sanar eventuais dúvidas sobre o escopo do projeto (entenda o sistema como a melhoria a ser desenvolvida).
+
+- O sistema não realizará diagnóstico médico do paciente.
+- O sistema não prescreverá sessões de exercícios respiratórios de forma autônoma.
+- O sistema não alterará a lógica principal de jogabilidade e utilização já presentes no I Blue It.
+- O sistema não realizará integração com eventuais prontuários eletrônicos externos.
+- O sistema não realizará diagnóstico médico, prescrição terapêutica autônoma ou decisão clínica final. A IA poderá realizar decisões operacionais de ajuste dinâmico de dificuldade, alerta, recomendação de pausa e interrupção de segurança, sempre dentro de regras previamente definidas e com supervisão do profissional responsável.
+- O sistema não adicionará sensores fisiológicos adicionais além do sensor de SpO2.
+
+---
+
+# 3. Fluxos e Comportamento do Sistema
+
+Para descrever o fluxo do software nesta seção, utiliza-se o diagrama de sequência, no qual estão contidas as principais funções do sistema biomédico I Blue It, já com o aprimoramento proposto.
+
+---
+
+## 3.1 Fluxo Principal do Usuário
+
+Abaixo pode-se observar o diagrama de sequência na íntegra, ao qual contém o fluxo principal do sistema: 
+
+<img width="5784" height="3804" alt="image" src="https://github.com/user-attachments/assets/a364c9cb-7605-45e5-90ce-2392111606e4" />
+
+O fluxo principal é composto por três operações principais e distintas, sendo elas:
+- A primeira etapa é a preparação de sessão fisioterápica. Nesta etapa, o sistema é configurado pelo fisioterapeuta para se adequar ao paciente, além da checagem se o próprio sistema está operando corretamente.
+
+<img width="5812" height="2212" alt="image" src="https://github.com/user-attachments/assets/b13b23e1-24f4-43be-947e-1a3256dd25b4" />
+
+- A segunda etapa consiste na execução da sessão fisioterápica em si, na qual o paciente realiza o exercício supervisionado pelo fisioterapeuta, e na qual o sistema capta todos os dados para análise posterior.
+
+<img width="5452" height="2124" alt="image" src="https://github.com/user-attachments/assets/f6bd5a6f-eca8-4b3c-a410-6e886cada184" />
+
+- Na terceira etapa, o sistema organiza, armazena e disponibiliza para o terapeuta todos os dados obtidos pela sessão, e se necessário, de sessões anteriores.
+
+<img width="5452" height="1060" alt="image" src="https://github.com/user-attachments/assets/9c07fa43-6e4e-44a8-9f1f-6b280354a8de" />
+
+---
+
+## 3.2 Fluxos Alternativos
+
+O fluxo apresentado até então consistia no principal fluxo do sistema, porém sem erros ou problemas em nenhum de seus módulos, assim representado o caso ideal onde apenas demonstramos as validações de modo simplificado, porém existem casos excepcionais onde o sistema possui tratativas específicas para os principais casos de erros, estes descritos abaixo:
+
+O primeiro trata-se de uma validação que ocorre no elemento número 9 do fluxo ideal, no qual a liberação do acesso se dá apenas em caso de o PITACO aprimorado com todos os seus módulos demonstrarem a coleta e processamento adequado dos biossinais, no qual, em caso contrário, há o reposicionamento do equipamento em loop, assim permitindo o início da sessão apenas caso o equipamento apresente êxito e esteja devidamente posicionado e funcional.
+
+<img width="5828" height="1836" alt="image" src="https://github.com/user-attachments/assets/90bb9540-ffbb-45bc-95c6-2fa733884e85" />
+
+O segundo e mais problemático trata-se da validação do estado de saturação sanguínea do paciente, no qual, a cada instante após a sessão se iniciar, os dados coletados pelo módulo SpO2 são analisados em busca de padrões que indiquem se o paciente irá sofrer ou está sofrendo com a dificuldade do exercício, em falta de saturação sanguínea, tendo como objetivo evitar casos de fadiga extrema e possíveis desmaios ocasionados pelo exercício. 
+
+<img width="6044" height="3188" alt="image" src="https://github.com/user-attachments/assets/c511ad33-d3d0-4505-9abb-8355578113b4" />
+
+Sendo assim, o fluxo acima demonstra como o sistema interrompe a sessão, implementando um sistema de pausa ao qual permite a pausa da sessão pelo sistema, o qual salva os dados obtidos até então para análise posterior, comunica o terapeuta e permite que o mesmo ou retome a sessão no estado em que se encontrava, ou a encerre a depender da análise do profissional qualificado.
+
+<!--
+Ainda podemos citar duas variantes, presentes no loop principal do jogo, ao qual seria o da possibilidade de pausa ou encerramento a qualquer momento da sessão, pelo fisioterapeuta, e o segundo sendo em caso de mau posicionamento após o início do jogo, ao qual o jogo pausaria e entraria em loop de posicionamento até sendo ou encerrado a sessão, ou posicionado corretamente o equipamento, dando assim continuidade a sessão.
+-->
+
+---
+
+# 4. Mockups e Experiência do Usuário (UX)
+---
+
+## 4.1 Fluxo de Navegação
+
+O sistema biomédico I Blue It é composto por várias camadas, indo desde o IoT físico, frontend e backend até ao jogo em Unity. Sendo assim, nesta etapa, descreveremos os fluxos visuais, os quais a melhoria interfere, sendo eles o de execução do jogo e o de dashboard clínico.
+
+Abaixo, o fluxo do dashboard clínico:
+<img width="8684" height="1724" alt="image" src="https://github.com/user-attachments/assets/7f6d979d-83b9-4b8e-a35a-a33c07e57b24" />
+
+Abaixo, o fluxo do jogo:
+
+<img width="15004" height="1604" alt="image" src="https://github.com/user-attachments/assets/9ff6dcf1-4c9c-4e93-a5c1-475e148ede3c" />
+
+[17]
+
+---
+
+## 4.2 Wireframes ou Mockups das Telas
+
+Os mockups foram divididos em dois fluxos, o primeiro mostra as alterações feitas nas telas já existentes no dashboard clínico, enquanto o segundo mostra os modals de erro e alertas do sistema de monitoramento proposto pela melhoria durante a sessão. O sistema de dashboards pode ser acessado pelo terapeuta, que, por sua vez, pode acessar os dados de todos os seus pacientes, enquanto os pacientes apenas podem visualizar os seus próprios. 
+
+#### 4.2.1 - Dashboard Clínico
+
+---
+#### Adição à tela inicial da taxa de saturação sanguínea média do paciente
+
+<img width="2880" height="1344" alt="image" src="https://github.com/user-attachments/assets/f6d8b151-46bc-4662-9f2c-5b41177ab4eb" />
+
+Esta é a tela inicial do sistema, a qual apresenta os dados resumidamente ao usuário, na qual foi adicionado um novo componente aos demais do dashboard padrão, sendo este o dado de saturação sanguínea média do paciente.
+
+---
+#### Adição na tela de calibração do dado de saturação sanguínea do paciente
+<img width="1356" height="635" alt="image" src="https://github.com/user-attachments/assets/05ee743c-3213-4464-ab51-e49854f1cd41" />
+
+Esta tela mostra os dados da leitura basal dos sensores, ao qual foi adicionado um dado de calibração referente à saturação sanguínea do paciente.
+
+
+---
+<img width="2880" height="1344" alt="image" src="https://github.com/user-attachments/assets/45281218-707a-4d38-a404-7acbb33d99d4" />
+
+Esta tela adiciona um botão de acesso ao novo gráfico, que possui as estatísticas obtidas nos minijogos sobre a saturação sanguínea do paciente ao longo das sessões.
+
+---
+<img width="2880" height="1344" alt="image" src="https://github.com/user-attachments/assets/de172724-b3b9-4398-8b23-71e2841cc5ae" />
+
+Esta tela mostra a configuração feita apenas pelo terapeuta das sessões que ele aplicará ao paciente, na qual foi adicionado um campo para definir a taxa mínima de saturação sanguínea do paciente, dado este utilizado pelo sistema para definir os parâmetros de avisos e parada de sessões. 
+
+#### 4.2.2 - Modals Jogo
+---
+<img width="743" height="480" alt="image" src="https://github.com/user-attachments/assets/ef362ddb-2468-4426-9d22-da609cbd92b6" />
+
+Modal de alerta com parada da sessão ao paciente e terapeuta, para o terapeuta analisar e reposicionar o dispositivo de maneira que a captura de dados se normalize.
+
+---
+<img width="743" height="480" alt="image" src="https://github.com/user-attachments/assets/db1a5e84-db50-45b8-9649-059310092135" />
+
+Modal de alerta para saturação sanguínea do paciente em estado crítico, com parada do sistema, ao qual permite ao terapeuta analisar o paciente e decidir ou pelo encerramento da sessão ou pela continuidade.
+
+---
+<img width="743" height="480" alt="image" src="https://github.com/user-attachments/assets/b4002980-6968-4f3b-a6d2-c643bf9f618d" />
+
+Modal de aviso de iminente saturação sanguínea do paciente em estado anormal, sem parada do sistema, ao qual permite ao terapeuta analisar o paciente e decidir ou pelo fechamento do alerta ou pausa da sessão.
+
+---
+
+<img width="1472" height="952" alt="image" src="https://github.com/user-attachments/assets/d33e9db5-aa88-463c-87b0-954ab8200727" />
+
+Modal de informativo de parada, ao qual o terapeuta preenche o motivo pelo qual ele pausou ou encerrou prematuramente a sessão.
+
+---
+
+## 4.3 Fluxo de Interação do Usuário
+
+O fluxo abaixo demonstra o fluxo que o terapeuta realiza para analisar os dados obtidos, em forma de dashboards e posteriormente, exportar tais dados dos pacientes em uma planilha CSV.
+
+### Fluxo de acesso e análise no sistema
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 20, "rankSpacing": 25}} }%%
+flowchart TD
+    A[O usuário acessa o sistema] --> B[Realiza login]
+    B --> C[Entra no dashboard / InfoChart]
+    C --> D[Seleciona o paciente]
+    D --> E[Visualiza o resumo dos dados do paciente]
+    E --> F[Acessa a análise detalhada do terapeuta]
+    F --> G[Filtra sessões, período ou indicadores]
+    G --> H[Registra alterações na sessão, se necessário]
+    H --> I[Exporta os dados]
+```
+
+<details>
+<summary><strong>O usuário acessa o sistema</strong></summary>
+
+<br>
+
+<img width="1365" height="634" alt="image" src="https://github.com/user-attachments/assets/b1422f6c-45af-406f-96ff-3728d2322e94" />
+
+</details>
+
+<details>
+<summary><strong>Realiza login</strong></summary>
+
+<br>
+
+<img width="1365" height="634" alt="image" src="https://github.com/user-attachments/assets/04155bfd-bcb0-40c8-8dbe-43e1123df19b" />
+
+</details>
+
+<details>
+<summary><strong>Entra no dashboard / InfoChart</strong></summary>
+
+<br>
+
+<img width="197" height="634" alt="image" src="https://github.com/user-attachments/assets/b90b12dc-68e6-4b6e-bc6e-c56affa4cc1b" />
+
+</details>
+
+<details>
+<summary><strong>Seleciona o paciente</strong></summary>
+
+<br>
+
+<img width="197" height="634" alt="image" src="https://github.com/user-attachments/assets/c9e5e76d-fd43-4674-9673-b41b69e7505f" />
+
+</details>
+
+<details>
+<summary><strong>Visualiza o resumo dos dados do paciente</strong></summary>
+
+<br>
+
+<img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/cd415f66-6093-47e4-b1ff-6d6a6cc90fc8" />
+
+</details>
+
+<details>
+<summary><strong>Acessa a análise detalhada do terapeuta e filtra sessões, período ou indicadores</strong></summary>
+
+<br>
+
+<img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/e64c1734-0191-49cd-88c4-2b7a64df8640" />
+
+</details>
+
+<details>
+<summary><strong>Registra alterações na sessão, se necessário</strong></summary>
+
+<br>
+
+<img width="1361" height="637" alt="image" src="https://github.com/user-attachments/assets/27869996-240b-4551-9b82-58bdfec96f35" />
+
+</details>
+
+<details>
+<summary><strong>Exporta os dados</strong></summary>
+
+<br>
+
+<img width="5464" height="2544" alt="image" src="https://github.com/user-attachments/assets/b5e8b6ac-99cc-453b-9763-f462f7fa86c4" />
+
+</details>
+
+---
+
+# 5. Arquitetura do Sistema
+---
+
+## 5.1 Diagrama C4
+
+### 5.1.1 Nível 1 — Diagrama de Contexto
+
+O diagrama de contexto apresenta o sistema biomédico I Blue It com a melhoria proposta como uma caixa preta central. Neste nível, tratamos todos os componentes internos do sistema, como jogo, backend, banco de dados, dashboard e sensores como um único ecossistema. O objetivo é mostrar apenas como o sistema se relaciona com os principais atores externos.
+
+Os principais atores são: 
+
+- Paciente, que realiza os exercícios respiratórios e recebe feedback durante a sessão,
+- Profissional da saúde, que configura os parâmetros terapêuticos, acompanha os dados registrados e analisa os resultados.
+
+<img width="5208" height="1048" alt="image" src="https://github.com/user-attachments/assets/cb25a766-02ff-4838-9c78-b2bc4d4f6532" />
+
+---
+### 5.1.2 Nível 2 — Diagrama de Containers
+
+Neste nível, mostramos quais são os seus principais componentes, stacks e protocolos de comunicação, tendo um resumo em forma de tabela logo abaixo e abaixo deste o diagrama referente: 
+
+| Container | Função no sistema |
+|---|---|
+| **Jogo I Blue It** | Executa a sessão de reabilitação, controla o personagem, ajusta dinamicamente a dificuldade, interpreta os sinais respiratórios e aplica as regras de pausa ou interrupção da sessão.|
+| **Dispositivos biomédicos** | Capturam sinais respiratórios e fisiológicos do paciente, como fluxo respiratório, pressão, expansão torácica e saturação sanguínea. |
+| **Back-end / API** | Recebe os dados gerados pelo jogo, processa requisições do dashboard e centraliza a comunicação com o banco de dados. |
+| **Banco de Dados** | Armazena pacientes, sessões, medições, histórico de uso, eventos de pausa, eventos de interrupção e dados de segurança. |
+| **Health InfoCharts** | Interface web utilizada pelo profissional da saúde para visualizar gráficos, histórico, estatísticas e eventos relevantes da sessão. |
+| **Módulo de Exportação** | Permite gerar arquivos ou relatórios com os dados registrados, facilitando análises externas ou documentação clínica. |
+<!-- <img width="7040" height="2228" alt="image" src="https://github.com/user-attachments/assets/61d7fb7f-51ac-4984-8dc9-f0c608b36c23" /> -->
+
+<img width="7040" height="2768" alt="image" src="https://github.com/user-attachments/assets/2999079d-73b7-4ad7-8fb0-7623eb79ec14" />
+
+---
+
+### 5.1.3 Nível 3 — Diagrama de Componentes
+
+Neste nível selecionamos para o aprofundamento e detalhamento sobre a estrutura e organização do software do novo sensor ao PITACO, o SpO2(oxímetro), presente abaixo:
+
+<img width="6448" height="3760" alt="image" src="https://github.com/user-attachments/assets/54b82195-488a-4a96-861f-ce4b1a23e57e" />
+
+---
+## 5.2 Modelo de Dados
+
+O modelo abaixo contempla uma abstração DER (diagrama entidade-relacionamento) das principais entidades presentes no banco de dados NoSQL MongoDB do sistema biomédico I Blue It atualmente.
+
+<img width="4156" height="2920" alt="image" src="https://github.com/user-attachments/assets/6a4cd675-c584-4966-bcbd-578d2f8a035c" />
+
+A melhoria utiliza-se de todo o escopo demonstrado no DER, porém estende os atributos das entidades e suas conexões para suportar o Flow Psicofisiológico com DeepDDA. Dessa forma, o modelo passa a registrar não apenas os dados da sessão, dos dispositivos e dos resultados do jogo, mas também os dados psicofisiológicos observados pela IA, as decisões tomadas pelo agente, as ações aplicadas no jogo, as recompensas calculadas e os parâmetros antes e depois dos ajustes dinâmicos. Tais mudanças podem ser vistas abaixo, junto às suas explicações.
+
+Vale resltar que como o DeepDDA opera por ciclos de observação, decisão, ação e recompensa, o modelo de dados precisa registrar não apenas os dados fisiológicos e de desempenho, mas também o estado observado pela IA, a ação escolhida, os parâmetros alterados, a recompensa atribuída e o resultado da decisão. Essa rastreabilidade é necessária para analisar se a integração com dados reais está reproduzindo corretamente o comportamento previsto na prova de conceito de Dias (2024).[2]
+
+
+<img width="11472" height="13528" alt="image" src="https://github.com/user-attachments/assets/00151e1e-1dde-4abc-9d5b-adb594d2bb4b" />
+
+Segue abaixo uma lista das alterações que a melhoria realiza no banco de dados atual:
+
+#### Renomear FLOW_DATA_DEVICE para SESSION_DEVICE_DATA
+- A estrutura deixa de representar apenas dados de fluxo respiratório. Isso foi feito porque agora a sessão também pode receber dados de outros dispositivos, como o oxímetro, além dos dispositivos respiratórios já utilizados no sistema.
+
+#### Renomear DEVICE_FLOW para DEVICE_SIGNAL
+- O dispositivo passa a registrar diferentes tipos de sinais, não apenas fluxo. Isso foi feito para permitir sinais como flowValue, SpO2 e respiratoryRate.
+
+#### Renomear FLOW_SAMPLE para DEVICE_SAMPLE
+- Cada amostra passa a representar qualquer leitura de dispositivo. Isso foi feito porque uma amostra pode ser de fluxo respiratório, SpO2 ou outro sinal fisiológico usado no Flow Psicofisiológico.
+
+#### Adicionar oxímetro como dispositivo da sessão
+- O oxímetro passa a ser tratado junto aos demais dispositivos usados durante o jogo. Isso foi feito para incluir o monitoramento fisiológico sem criar uma estrutura paralela ao modelo atual.
+
+#### Adicionar campos de status em PLAY_SESSION
+- A sessão passa a armazenar estados como iniciada, em andamento, pausada, finalizada, interrompida ou com erro. Isso foi feito para registrar corretamente sessões que não terminam de forma normal.
+
+#### Adicionar dados de pausa e interrupção em PLAY_SESSION
+- A sessão passa a guardar informações como quantidade de pausas, momento da interrupção, origem da interrupção e motivo. Isso foi feito para explicar por que uma sessão foi pausada ou encerrada antes do previsto.
+
+#### Adicionar limites fisiológicos da sessão
+- A sessão passa a armazenar valores usados para monitoramento, como limite mínimo de SpO2, ação em caso de SpO2 baixa e demais parâmetros de segurança. Isso foi feito para deixar claro quais regras foram usadas pelo sistema durante a execução da sessão.
+
+#### Adicionar eventos da sessão em PLAY_SESSION
+- A sessão passa a guardar eventos como pausa por SpO2 baixa, retomada, interrupção, alerta fisiológico ou ação gerada pela IA. Isso foi feito para manter um histórico do que aconteceu durante a execução do jogo.
+
+#### Adicionar playSessionId em PLATAFORM_OVERVIEW e MINIGAME_OVERVIEW
+- Os resultados da plataforma e dos minigames passam a estar ligados diretamente a uma sessão. Isso foi feito para saber em qual sessão cada resultado ocorreu, especialmente quando houver pausa, interrupção ou ajuste dinâmico durante o uso do jogo.
+
+#### Adicionar suporte ao Flow Psicofisiológico com DeepDDA
+- O modelo passa a registrar se a sessão utilizou o módulo DeepDDA, qual modelo de IA foi usado, quais observações foram feitas, quais ações foram tomadas e quais recompensas foram calculadas. Isso foi feito porque o Flow Psicofisiológico considera dados multimodais, multidados e inteligência artificial para ajustar o esforço exigido ao estado do paciente.
+
+#### Adicionar registro de decisões do DeepDDA
+- Cada decisão tomada pela IA passa a ser registrada com os dados observados, a ação escolhida, o estado resultante e a recompensa recebida. Isso foi feito para garantir rastreabilidade e permitir análise posterior das decisões tomadas pelo agente.
+
+#### Adicionar snapshots dos parâmetros do jogo
+- Os parâmetros do jogo passam a ser registrados antes e depois de ajustes realizados pela IA. Isso foi feito para saber quais configurações estavam ativas no momento da decisão e quais alterações foram aplicadas.
+
+#### Adicionar elementos de ajuste dinâmico de dificuldade
+- O modelo passa a incluir alteração de fase, nível, velocidade, tamanho, posição, repetição ou outros parâmetros do jogo, quando definidos pelo DeepDDA. Isso foi feito porque a melhoria proposta implementa o Flow Psicofisiológico, e não apenas pausa ou interrupção da sessão.
+
+---
+
+Como já citado, o banco de dados da aplicação será o NoSQL MongoDB. Segue abaixo a lista de coleções, diagrama NoSQL/documental e, por fim, os JSONs de exemplificação.
+
+---
+
+```text
+MongoDB
+ ├── pacients
+ ├── userAccounts
+ ├── calibrationOverviews
+ ├── gameParameters
+ ├── playSessions
+ ├── plataformOverviews
+ ├── minigameOverviews
+ ├── sessionDeviceData
+ ├── deepDdaModels
+ ├── deepDdaDecisions
+ └── gameParameterSnapshots
+```
+
+### Suas conexões:
+
+<img width="4976" height="1972" alt="image" src="https://github.com/user-attachments/assets/2d7cde95-61d9-42c8-a823-301e7e90630c" />
+
+## Estrutura dos dados em JSON:
+
+<details>
+<summary><strong>pacients</strong></summary>
+
+#### pacients
+
+```json
+{
+  "_id": "ObjectId",
+  "_gameToken": "string",
+
+  "name": "string",
+  "birthday": "Date",
+  "sex": "string",
+  "height": "number",
+  "weight": "number",
+  "condition": "string",
+  "ethnicity": "string",
+  "observations": "string",
+
+  "capacitiesPitaco": {
+    "insPeakFlow": "number",
+    "expPeakFlow": "number",
+    "insFlowDuration": "number",
+    "expFlowDuration": "number",
+    "respiratoryRate": "number"
+  },
+
+  "capacitiesMano": {
+    "insPeakFlow": "number",
+    "expPeakFlow": "number",
+    "insFlowDuration": "number",
+    "expFlowDuration": "number",
+    "respiratoryRate": "number"
+  },
+
+  "capacitiesCinta": {
+    "insPeakFlow": "number",
+    "expPeakFlow": "number",
+    "insFlowDuration": "number",
+    "expFlowDuration": "number",
+    "respiratoryRate": "number"
+  },
+
+  "unlockedLevels": "number",
+  "accumulatedScore": "number",
+  "playSessionsDone": "number",
+
+  "calibrationPitacoDone": "boolean",
+  "calibrationManoDone": "boolean",
+  "calibrationCintaDone": "boolean",
+  "howToPlayDone": "boolean",
+
+  "pitacoThreshold": "number",
+  "manoThreshold": "number",
+  "cintaThreshold": "number",
+
+  "defaultMinSpo2": "number",
+  "defaultSpo2Action": "string",
+
+  "created_at": "Date",
+  "updated_at": "Date"
+}
+```
+
+</details>
+
+<details>
+<summary><strong>userAccounts</strong></summary>
+
+#### userAccounts
+
+```json
+{
+  "_id": "ObjectId",
+
+  "fullname": "string",
+  "username": "string",
+  "password": "string",
+  "email": "string",
+  "role": "string",
+
+  "pacientId": "ObjectId",
+
+  "gameToken": {
+    "token": "string",
+    "description": "string"
+  },
+
+  "created_at": "Date",
+  "updated_at": "Date"
+}
+```
+
+</details>
+
+<details>
+<summary><strong>calibrationOverviews</strong></summary>
+
+#### calibrationOverviews
+
+```json
+{
+  "_id": "ObjectId",
+  "_gameToken": "string",
+
+  "pacientId": "ObjectId",
+  "gameDevice": "string",
+  "calibrationExercise": "string",
+  "calibrationValue": "number",
+
+  "created_at": "Date"
+}
+```
+
+</details>
+
+<details>
+<summary><strong>gameParameters</strong></summary>
+
+#### gameParameters
+
+```json
+{
+  "_id": "ObjectId",
+
+  "pacientId": "ObjectId",
+  "stageId": "number",
+  "phase": "number",
+  "level": "number",
+
+  "ObjectSpeedFactor": "number",
+  "HeightIncrement": "number",
+  "HeightUpThreshold": "number",
+  "HeightDownThreshold": "number",
+  "SizeIncrement": "number",
+  "SizeUpThreshold": "number",
+  "SizeDownThreshold": "number",
+  "Loops": "number",
+
+  "gameScript": [
+    {
+      "ObjectType": "string",
+      "DifficultyFactor": "number",
+      "PositionYFactor": "number",
+      "PositionXSpacing": "number"
+    }
+  ],
+
+  "source": "string",
+  "basedOnParameterId": "ObjectId",
+  "appliedDuringSessionId": "ObjectId",
+  "changeReason": "string",
+
+  "created_at": "Date",
+  "updated_at": "Date"
+}
+```
+
+</details>
+
+<details>
+<summary><strong>playSessions</strong></summary>
+
+#### playSessions
+
+```json
+{
+  "_id": "ObjectId",
+
+  "pacientId": "ObjectId",
+  "sessionNumber": "number",
+
+  "startedAt": "Date",
+  "finishedAt": "Date",
+  "status": "string",
+
+  "wasPaused": "boolean",
+  "pauseCount": "number",
+  "totalPausedDuration": "number",
+  "lastPauseAt": "Date",
+  "lastResumeAt": "Date",
+
+  "wasInterrupted": "boolean",
+  "interruptedAt": "Date",
+  "interruptionReason": "string",
+  "interruptionDescription": "string",
+  "interruptionSource": "string",
+
+  "minSpo2Allowed": "number",
+  "actionOnLowSpo2": "string",
+
+  "deepDdaEnabled": "boolean",
+  "deepDdaModelId": "ObjectId",
+  "initialGameParameterId": "ObjectId",
+  "finalGameParameterId": "ObjectId",
+
+  "flowPsychophysiologicalSummary": {
+    "avgPsychicFlow": "number",
+    "avgPhysiologicalFlow": "number",
+    "minSpo2": "number",
+    "avgSpo2": "number",
+    "avgRespiratoryRate": "number",
+    "totalDdaAdjustments": "number",
+    "totalSafetyEvents": "number"
+  },
+
+  "sessionEvents": [
+    {
+      "eventType": "string",
+      "reason": "string",
+      "timestamp": "Date",
+      "source": "string",
+
+      "signal": "string",
+      "measuredValue": "number",
+      "thresholdValue": "number",
+      "unit": "string",
+
+      "actionTaken": "string",
+      "description": "string"
+    }
+  ],
+
+  "created_at": "Date",
+  "updated_at": "Date"
+}
+```
+
+</details>
+
+<details>
+<summary><strong>plataformOverviews</strong></summary>
+
+#### plataformOverviews
+
+```json
+{
+  "_id": "ObjectId",
+  "_gameToken": "string",
+
+  "pacientId": "ObjectId",
+  "playSessionId": "ObjectId",
+  "sessionDeviceDataId": "ObjectId",
+
+  "gameDevice": "string",
+  "devices": ["string"],
+
+  "playStart": "Date",
+  "playFinish": "Date",
+  "duration": "number",
+  "result": "string",
+
+  "sessionStatus": "string",
+  "finishReason": "string",
+
+  "stageId": "number",
+  "phase": "number",
+  "level": "number",
+  "relaxTimeSpawned": "boolean",
+
+  "deepDdaUsed": "boolean",
+  "initialPhase": "number",
+  "initialLevel": "number",
+  "finalPhase": "number",
+  "finalLevel": "number",
+  "ddaAdjustmentsCount": "number",
+
+  "score": "number",
+  "maxScore": "number",
+  "scoreRatio": "number",
+
+  "TargetsSpawned": "number",
+  "TargetsSuccess": "number",
+  "TargetsInsSuccess": "number",
+  "TargetsExpSuccess": "number",
+  "TargetsFails": "number",
+  "TargetsInsFail": "number",
+  "TargetsExpFail": "number",
+
+  "ObstaclesSpawned": "number",
+  "ObstaclesSuccess": "number",
+  "ObstaclesInsSuccess": "number",
+  "ObstaclesExpSuccess": "number",
+  "ObstaclesFail": "number",
+  "ObstaclesInsFail": "number",
+  "ObstaclesExpFail": "number",
+
+  "PlayerHp": "number",
+  "BorgScale": "number",
+
+  "deviceDataSummary": {
+    "minSpo2": "number",
+    "avgSpo2": "number",
+    "respiratoryFlowPeak": "number"
+  },
+
+  "created_at": "Date"
+}
+```
+
+</details>
+
+<details>
+<summary><strong>minigameOverviews</strong></summary>
+
+#### minigameOverviews
+
+```json
+{
+  "_id": "ObjectId",
+  "_gameToken": "string",
+
+  "pacientId": "ObjectId",
+  "playSessionId": "ObjectId",
+
+  "gameDevice": "string",
+  "minigameName": "string",
+  "respiratoryExercise": "string",
+  "devices": ["string"],
+
+  "sessionStatus": "string",
+  "finishReason": "string",
+
+  "deepDdaUsed": "boolean",
+  "ddaAdjustmentsCount": "number",
+  "initialDifficulty": "number",
+  "finalDifficulty": "number",
+
+  "flowDataRounds": [
+    {
+      "minigameRound": "number",
+      "roundScore": "number",
+      "roundFlowScore": "number",
+      "sessionDeviceDataId": "ObjectId",
+      "roundStatus": "string",
+      "finishReason": "string"
+    }
+  ],
+
+  "created_at": "Date"
+}
+```
+
+</details>
+
+<details>
+<summary><strong>sessionDeviceData</strong></summary>
+
+#### sessionDeviceData
+
+```json
+{
+  "_id": "ObjectId",
+  "_gameToken": "string",
+
+  "pacientId": "ObjectId",
+  "playSessionId": "ObjectId",
+
+  "deviceName": "string",
+  "deviceType": "string",
+  "connectionStatus": "string",
+
+  "startedAt": "Date",
+  "finishedAt": "Date",
+  "lastConnectionAt": "Date",
+  "disconnectedAt": "Date",
+
+  "deviceErrorCode": "string",
+  "deviceErrorDescription": "string",
+
+  "deviceSummary": {
+    "minValue": "number",
+    "maxValue": "number",
+    "avgValue": "number",
+    "minSpo2": "number",
+    "avgSpo2": "number",
+    "signalQualityAvg": "number"
+  },
+
+  "signals": [
+    {
+      "signalName": "string",
+      "signalType": "string",
+      "unit": "string",
+      "signalRole": "string",
+      "samplingRate": "number",
+
+      "samples": [
+        {
+          "timestamp": "Date",
+          "measuredValue": "number",
+          "signalQuality": "number",
+          "isValid": "boolean",
+          "invalidReason": "string"
+        }
+      ]
+    }
+  ],
+
+  "created_at": "Date",
+  "updated_at": "Date"
+}
+```
+
+</details>
+
+<details>
+<summary><strong>deepDdaModels</strong></summary>
+
+#### deepDdaModels
+
+```json
+{
+  "_id": "ObjectId",
+
+  "name": "string",
+  "version": "string",
+  "algorithm": "string",
+  "framework": "string",
+  "modelFile": "string",
+
+  "observationSpace": [
+    "scoreRatio",
+    "targetsSuccessRate",
+    "obstaclesFailRate",
+    "spo2",
+    "respiratoryRate",
+    "borgScale",
+    "flowPsychic",
+    "flowPhysiological"
+  ],
+
+  "actionSpace": [
+    "KEEP_DIFFICULTY",
+    "INCREASE_DIFFICULTY",
+    "DECREASE_DIFFICULTY",
+    "PAUSE_SESSION",
+    "INTERRUPT_SESSION"
+  ],
+
+  "isActive": "boolean",
+
+  "created_at": "Date",
+  "updated_at": "Date"
+}
+```
+
+</details>
+
+<details>
+<summary><strong>deepDdaDecisions</strong></summary>
+
+#### deepDdaDecisions
+
+```json
+{
+  "_id": "ObjectId",
+
+  "playSessionId": "ObjectId",
+  "pacientId": "ObjectId",
+  "deepDdaModelId": "ObjectId",
+
+  "timestamp": "Date",
+
+  "observation": {
+    "phase": "number",
+    "level": "number",
+    "scoreRatio": "number",
+    "targetsSuccessRate": "number",
+    "obstaclesFailRate": "number",
+
+    "spo2": "number",
+    "respiratoryRate": "number",
+    "borgScale": "number",
+
+    "flowPsychic": "number",
+    "flowPhysiological": "number"
+  },
+
+  "action": {
+    "actionType": "string",
+    "description": "string"
+  },
+
+  "previousGameParameterId": "ObjectId",
+  "newGameParameterId": "ObjectId",
+
+  "reward": {
+    "value": "number",
+    "reason": "string"
+  },
+
+  "resultingState": {
+    "phase": "number",
+    "level": "number",
+    "spo2": "number",
+    "scoreRatio": "number"
+  },
+
+  "created_at": "Date"
+}
+```
+
+</details>
+
+<details>
+<summary><strong>gameParameterSnapshots</strong></summary>
+
+#### gameParameterSnapshots
+
+```json
+{
+  "_id": "ObjectId",
+
+  "playSessionId": "ObjectId",
+  "pacientId": "ObjectId",
+
+  "source": "string",
+  "basedOnParameterId": "ObjectId",
+
+  "stageId": "number",
+  "phase": "number",
+  "level": "number",
+
+  "ObjectSpeedFactor": "number",
+  "HeightIncrement": "number",
+  "HeightUpThreshold": "number",
+  "HeightDownThreshold": "number",
+  "SizeIncrement": "number",
+  "SizeUpThreshold": "number",
+  "SizeDownThreshold": "number",
+  "Loops": "number",
+
+  "gameScript": [
+    {
+      "ObjectType": "string",
+      "DifficultyFactor": "number",
+      "PositionYFactor": "number",
+      "PositionXSpacing": "number"
+    }
+  ],
+
+  "changeReason": "string",
+  "created_at": "Date"
+}
+```
+
+</details>
+
+---
+
+#### 5.3 Principais Componentes
+
+A melhoria proposta para o I Blue It mantém a estrutura principal do sistema biomédico atual, mas adiciona componentes voltados ao Flow Psicofisiológico com DeepDDA, permitindo que o sistema utilize dados do jogo, dados respiratórios, biossinais e percepção de esforço para apoiar o ajuste dinâmico de dificuldade durante a sessão terapêutica.
+
+Nesse sentido este trabalho dá continuidade à tese de Dias (2024), implementando no sistema I Blue It a integração prática do Flow Psicofisiológico com DeepDDA, substituindo dados emulados por dados coletados durante a sessão e ajustando o modelo de dados, o fluxo da sessão, o registro de decisões da IA e a visualização dos resultados.[2]
+
+Nesse escopo, o sistema atual já possui componentes como cadastro de jogador, calibração respiratória, histórico de uso, registros de dados da plataforma e dos minigames, além de dashboards para acompanhamento do quadro por parte dos profissionais da saúde. A melhoria amplia esse sistema ao incorporar o monitoramento fisiológico, o registro das decisões da IA, o controle de segurança e os ajustes dinâmicos de dificuldade realizados pelo DeepDDA.
+
+Abaixo consta, em duas partes, uma lista com os componentes do sistema e suas respectivas funções ou alterações feitas pela melhoria, consistindo na primeira parte os componentes já presentes no ecossistema atual e, na segunda, os novos módulos adicionados ou aprofundados pela melhoria.
+
+---
+
+#### 5.3.1 - Componentes já presentes no ecossistema atual
+
+#### Jogo / Plataforma I Blue It
+
+A plataforma é o componente principal do jogo. Nela, o paciente controla o personagem Blue por meio da respiração, realizando ações como alcançar alvos e desviar de obstáculos.
+
+Na melhoria proposta, esse componente é mantido, mas passa a se comunicar com o módulo DeepDDA. Dessa forma, além de executar a sessão terapêutica, o jogo passa a fornecer dados de desempenho, fase, nível, pontuação, acertos, erros, alvos, obstáculos e estado atual da sessão para que a IA possa avaliar o desempenho psicofisiológico do paciente.
+
+Além disso, o jogo pode receber ações da IA relacionadas ao ajuste dinâmico de dificuldade, como manter, aumentar ou reduzir o desafio, alterar parâmetros do exergame, pausar a sessão ou interrompê-la em caso de risco fisiológico.
+
+---
+
+#### Cadastro e Perfil do Jogador
+
+O sistema atual já possui cadastro de jogador e carregamento dos dados do paciente. Esse componente permite identificar o jogador e associar suas sessões ao seu histórico de uso.
+
+Na melhoria, esse componente passa a associar o perfil do jogador também aos dados psicofisiológicos usados pelo DeepDDA. Assim, o histórico do paciente pode ser utilizado para análise de desempenho, recomendação de parâmetros, acompanhamento da evolução terapêutica e registro das decisões tomadas pela IA durante as sessões.
+
+---
+
+#### Calibração Respiratória
+
+O I Blue It já possui calibração respiratória antes da execução da plataforma e dos minigames. Essa calibração permite ajustar os parâmetros respiratórios do jogo conforme a capacidade do paciente.
+
+Na melhoria, a calibração respiratória não é substituída. Ela passa a compor o conjunto de dados iniciais utilizados pelo Flow Psicofisiológico, servindo como base para o setup inicial do exergame e para a avaliação do desempenho fisiológico durante a sessão.
+
+Além dos dados respiratórios já existentes, a sessão passa a considerar também biossinais, como SpO2, quando disponíveis, para que o DeepDDA tenha uma visão mais completa do estado do paciente.
+
+---
+
+#### Histórico e Persistência de Dados
+
+O sistema atual já registra dados como histórico, calibração, dados da plataforma e minigames. Esses dados podem ser usados pelos profissionais como base de acompanhamento do desempenho do paciente.
+
+A melhoria se apoia nesse componente, mas amplia o tipo de informação registrada. Além dos dados de desempenho, o sistema passa a registrar dados psicofisiológicos, decisões da IA, ações aplicadas no jogo, recompensas calculadas e parâmetros antes e depois dos ajustes realizados pelo DeepDDA.
+
+| Novo dado registrado | Finalidade |
+|---|---|
+| Status da sessão | Identificar se a sessão foi concluída, pausada ou interrompida |
+| Dados de biossinais | Registrar SpO2 e outros sinais fisiológicos |
+| Observações do DeepDDA | Armazenar o estado analisado pela IA |
+| Ação escolhida pela IA | Registrar se a dificuldade foi mantida, aumentada, reduzida, pausada ou interrompida |
+| Recompensa calculada | Registrar a avaliação usada no aprendizado por reforço |
+| Parâmetros anteriores | Saber qual configuração estava ativa antes da decisão |
+| Parâmetros novos | Registrar o ajuste aplicado pela IA |
+| Motivo da decisão | Justificar a ação tomada pelo agente |
+| Momento da decisão | Identificar em qual fase, nível ou instante ocorreu o ajuste |
+| Observação do terapeuta | Permitir registro clínico complementar |
+
+---
+
+#### Dashboards / Relatórios de Acompanhamento
+
+O ecossistema do I Blue It também possui recursos voltados à visualização de dados e acompanhamento profissional, como dashboards, gráficos e relatórios.
+
+Na melhoria, esse componente pode ser aproveitado para destacar não apenas os dados de desempenho, mas também os dados relacionados ao Flow Psicofisiológico. Assim, os dashboards passam a apresentar informações sobre biossinais, ajustes dinâmicos, decisões do DeepDDA, evolução da dificuldade, pausas, interrupções e tolerância fisiológica do paciente durante a atividade.
+
+---
+
+#### IA / Ajuste Dinâmico de Dificuldade
+
+No escopo da melhoria, a IA deixa de ser tratada como um recurso separado e passa a ser o núcleo do Flow Psicofisiológico. O DeepDDA atua durante a sessão, analisando dados do jogo, dados respiratórios, biossinais e percepção de esforço para ajustar dinamicamente a dificuldade do exergame.
+
+Esse componente tem como objetivo manter o equilíbrio entre desafio, segurança, conforto físico, conforto motivacional e diversão, evitando que o paciente fique em um estado de fadiga, marasmo, frustração ou tédio.
+
+---
+
+#### 5.3.2 - Componentes adicionados ou aprofundados pela melhoria
+
+#### Módulo de Monitoramento Psicofisiológico
+
+Este é um dos principais componentes da melhoria. Ele recebe os dados fisiológicos e respiratórios do paciente durante a sessão, principalmente fluxo respiratório, a saturação sanguínea e a frequência respiratória.
+
+Sua função é fornecer ao DeepDDA uma visão do estado atual do paciente. Esses dados são utilizados para avaliar se o desafio do jogo está adequado à condição fisiológica e psíquica do paciente durante a sessão.
+
+---
+
+#### Módulo DeepDDA
+
+O módulo DeepDDA é o agente de Inteligência Artificial responsável por realizar o ajuste dinâmico de dificuldade no I Blue It. Ele observa o estado atual da sessão, interpreta os dados do paciente e decide qual ação deve ser tomada no jogo.
+
+Esse módulo utiliza dados como desempenho no jogo, fase, nível, pontuação, acertos, erros, saturação sanguínea e frequência respiratória, escala de Borg e demais informações psicofisiológicas disponíveis.
+
+| Entrada analisada | Finalidade |
+|---|---|
+| Pontuação | Avaliar desempenho geral no jogo |
+| Acertos e erros | Medir sucesso nas tarefas propostas |
+| Fase e nível | Identificar o desafio atual |
+| Dados respiratórios | Avaliar execução do exercício terapêutico |
+| SpO2 | Verificar segurança fisiológica |
+| Escala de Borg | Considerar percepção subjetiva de esforço |
+| Histórico do paciente | Apoiar decisões mais personalizadas |
+
+---
+
+#### Módulo de Observação do Estado
+
+Esse módulo organiza os dados que serão enviados ao DeepDDA em cada momento da sessão. Ele transforma os dados coletados pelo jogo e pelos dispositivos em um estado observável pela IA.
+
+Esse estado pode conter dados de desempenho, dados fisiológicos, dados respiratórios e dados subjetivos do paciente. A partir dessa observação, o DeepDDA decide se deve manter, aumentar ou reduzir a dificuldade, ou se deve acionar uma pausa/interrupção por segurança.
+
+Exemplo de estado observado:
+
+| Dado observado | Exemplo |
+|---|---|
+| Fase atual | Fase 2 |
+| Nível atual | Nível 3 |
+| Desempenho | 78% |
+| SpO2 | 93% |
+| Escala de Borg | 4 |
+| Erros em obstáculos | 3 |
+| Acertos em alvos | 12 |
+
+---
+
+#### Módulo de Decisão do DeepDDA
+
+Esse módulo representa a etapa em que a IA escolhe uma ação com base no estado observado. A decisão pode envolver a manutenção da dificuldade, o aumento do desafio, a redução do desafio, a pausa da sessão ou a interrupção por segurança.
+
+| Condição identificada | Ação possível do sistema |
+|---|---|
+| Desempenho adequado e sinais estáveis | Mantém a dificuldade |
+| Desempenho alto e sinais estáveis | Aumenta gradualmente a dificuldade |
+| Desempenho baixo ou sinais de esforço elevado | Reduz a dificuldade |
+| SpO2 abaixo do limite de alerta | Pausa a sessão ou reduz o desafio |
+| SpO2 abaixo do limite crítico | Interrompe a sessão |
+| Sinal fisiológico inválido ou desconectado | Pausa a sessão e solicita verificação |
+
+---
+
+#### Módulo de Ação no Jogo
+
+Esse módulo aplica no jogo a decisão tomada pelo DeepDDA. Ele é responsável por transformar a ação da IA em alterações concretas na sessão.
+
+As ações podem envolver ajustes de dificuldade, alteração de parâmetros do jogo ou controle da sessão.
+
+| Ação da IA | Efeito no jogo |
+|---|---|
+| Manter dificuldade | O jogo continua com a configuração atual |
+| Aumentar dificuldade | A fase, nível, velocidade ou desafio pode ser elevado |
+| Reduzir dificuldade | A fase, nível, velocidade ou desafio pode ser reduzido |
+| Pausar sessão | O jogo é temporariamente interrompido |
+| Interromper sessão | A sessão é encerrada antes do previsto |
+
+---
+
+#### Módulo de Recompensa
+
+Esse módulo calcula a recompensa usada pelo aprendizado por reforço. A recompensa indica se a ação tomada pela IA foi adequada ou não para o estado do paciente.
+
+A recompensa pode considerar desempenho, segurança, conforto físico, conforto motivacional e equilíbrio da dificuldade. Assim, o DeepDDA aprende a buscar ações que mantenham o paciente em um estado adequado de Flow Psicofisiológico.
+
+| Situação | Tipo de recompensa |
+|---|---|
+| Bom desempenho com sinais estáveis | Recompensa positiva |
+| Desafio adequado à capacidade do paciente | Recompensa positiva |
+| SpO2 em queda | Penalidade |
+| Excesso de esforço percebido | Penalidade |
+| Dificuldade muito baixa | Penalidade por marasmo/tédio |
+| Dificuldade muito alta | Penalidade por fadiga/frustração |
+
+---
+
+#### Módulo de Snapshots de Parâmetros
+
+Esse módulo registra os parâmetros do jogo antes e depois das decisões tomadas pela IA. Ele permite rastrear como o DeepDDA modificou a sessão durante o uso.
+
+Esse registro é importante porque o sistema precisa saber qual configuração estava ativa antes da decisão, qual nova configuração foi aplicada e por qual motivo o ajuste ocorreu.
+
+| Dado registrado | Finalidade |
+|---|---|
+| Parâmetro anterior | Saber como o jogo estava configurado |
+| Novo parâmetro | Saber o que foi alterado |
+| Motivo da alteração | Justificar a decisão da IA |
+| Momento da alteração | Identificar quando o ajuste ocorreu |
+| Sessão associada | Relacionar o ajuste ao histórico do paciente |
+
+---
+
+#### Módulo de Controle de Estado da Sessão
+
+Esse módulo controla a situação atual da sessão terapêutica. Ele permite que o sistema diferencie uma sessão concluída normalmente de uma sessão pausada, retomada ou interrompida.
+
+No escopo do Flow Psicofisiológico, esse módulo não substitui o DeepDDA. Ele apenas registra e controla o estado da sessão conforme as decisões tomadas pelo sistema ou pelo terapeuta.
+
+| Estado da sessão | Descrição |
+|---|---|
+| Em andamento | Sessão ocorrendo normalmente |
+| Pausada | Sessão temporariamente parada |
+| Retomada | Sessão reiniciada após uma pausa |
+| Interrompida | Sessão encerrada antes do previsto |
+| Finalizada | Sessão concluída normalmente |
+
+---
+
+#### Módulo de Registro de Decisões e Eventos
+
+Esse módulo registra os eventos importantes ocorridos durante a sessão. Ele armazena tanto eventos de segurança, como pausas e interrupções, quanto decisões do DeepDDA relacionadas ao ajuste dinâmico de dificuldade.
+
+| Dado | Exemplo |
+|---|---|
+| Tipo do evento | Ajuste de dificuldade, pausa, retomada, interrupção |
+| Motivo | Queda de SpO2, baixo desempenho, esforço elevado |
+| Horário do evento | 10:35 |
+| Fase e nível | Fase 2, Nível 3 |
+| SpO2 registrada | 88% |
+| Ação da IA | Reduzir dificuldade |
+| Recompensa | -0.5 |
+| Observação | Paciente relatou cansaço |
+
+---
+
+#### Módulo de Setup Terapêutico e Parâmetros do Exergame
+
+Esse módulo permite definir os parâmetros iniciais da sessão antes do início do jogo. Ele pode utilizar dados de calibração respiratória, histórico do paciente, perfil clínico e recomendações do sistema para configurar o setup inicial.
+
+Esses parâmetros servem como ponto de partida para o DeepDDA, que poderá ajustá-los dinamicamente durante a sessão.
+
+| Parâmetro | Exemplo |
+|---|---|
+| Fase inicial | Fase 1 |
+| Nível inicial | Nível 2 |
+| Velocidade dos objetos | 1.0 |
+| Limite mínimo de SpO2 | 90% |
+| Tempo máximo de sessão | 10 minutos |
+| Escala de Borg inicial | 3 |
+| Permitir ajustes automáticos | Sim |
+
+---
+
+#### Módulo de Relatório Psicofisiológico da Sessão
+
+Esse módulo organiza os dados da sessão em uma visualização útil para o profissional. Ele complementa os relatórios já existentes, acrescentando informações sobre Flow Psicofisiológico, decisões da IA, ajustes de dificuldade, segurança e tolerância fisiológica do paciente durante a atividade.
+
+| Informação | Utilidade |
+|---|---|
+| Sessão finalizada ou interrompida | Saber se o exercício foi concluído |
+| Quantidade de ajustes da IA | Identificar quanto o jogo precisou se adaptar |
+| Motivos dos ajustes | Apoiar decisão terapêutica |
+| Menor SpO2 registrada | Avaliar segurança fisiológica |
+| Evolução da dificuldade | Observar progressão ou redução do desafio |
+| Recompensas calculadas | Avaliar resposta do agente |
+| Observações do terapeuta | Registrar contexto clínico |
+
+---
+
+#### Resumo dos componentes e alterações
+
+| Componente | Situação | Papel na melhoria |
+|---|---|---|
+| Jogo / Plataforma | Já existente | Passa a enviar dados ao DeepDDA e receber ações de ajuste |
+| Cadastro e Perfil | Já existente | Associa paciente, histórico, sessões e decisões da IA |
+| Calibração Respiratória | Já existente | Continua sendo usada como base respiratória e entrada do setup |
+| Histórico e Persistência | Já existente | É ampliado para registrar biossinais, decisões, recompensas e parâmetros |
+| Dashboards / Relatórios | Já existente no ecossistema | Passa a exibir dados psicofisiológicos, ajustes e decisões da IA |
+| IA / Ajuste Dinâmico de Dificuldade | Aprofundado pela melhoria | Torna-se o núcleo do Flow Psicofisiológico com DeepDDA |
+| Monitoramento Psicofisiológico | Adicionado/aprofundado | Captura SpO2, frequência respiratória e percepção de esforço |
+| Módulo DeepDDA | Novo/aprofundado | Observa o estado da sessão e decide ações de dificuldade ou segurança |
+| Observação do Estado | Novo | Organiza os dados que serão analisados pela IA |
+| Decisão do DeepDDA | Novo | Define manter, aumentar, reduzir, pausar ou interromper |
+| Ação no Jogo | Novo | Aplica no jogo a ação decidida pela IA |
+| Recompensa | Novo | Avalia se a ação tomada foi adequada ao estado do paciente |
+| Snapshots de Parâmetros | Novo | Registra parâmetros antes e depois dos ajustes |
+| Controle de Estado da Sessão | Novo/aprofundado | Registra sessão em andamento, pausada, retomada, interrompida ou finalizada |
+| Registro de Decisões e Eventos | Novo | Salva decisões da IA, eventos, motivos e contexto |
+| Setup Terapêutico e Parâmetros | Novo/aprofundado | Define configuração inicial para a sessão e para o DeepDDA |
+| Relatório Psicofisiológico | Novo/aprofundado | Exibe desempenho, biossinais, ajustes e segurança da sessão |
+
+---
+## 5.4 Stack Tecnológica
+
+O sistema I Blue It é composto por diferentes camadas tecnológicas: o jogo sério, os dispositivos biomédicos, a comunicação entre hardware e software, o back-end, o banco de dados, o painel web e os módulos de inteligência artificial. Abaixo consta uma lista simplificada das stacks no sistema atual sem a melhoria.
+
+#### Stack atual do sistema
+
+| Camada | Tecnologias contempladas |
+|---|---|
+| Jogo sério | Unity, C# |
+| Dispositivos biomédicos | PITACO, MANO-BD, Arduino/microcontroladores |
+| Comunicação | USB/Serial |
+| Arquitetura multimodal | 123-SGR |
+| Inteligência Artificial | DeepDDA, ML-Agents, TensorFlow, PyTorch |
+| Back-end/API | Node.js, Microsoft Azure Functions |
+| Banco de dados | MongoDB Atlas, Mongoose |
+| Dashboard web | React, Material UI, Recharts, Axios |
+| Infraestrutura | Docker, Nginx |
+
+A melhoria, por sua vez, adiciona novo componente de hardware, novas funções e ajustes, porém tendo sempre em mente o ecossistema em que está inserida, sendo assim priorizamos e não alteramos as stacks já presentes no sistema. Tendo isso em mente, abaixo está a lista de componentes adicionados, suas stacks e justificativas.
+
+#### Stack adicionada pela melhoria proposta
+
+| Componente adicionado | Stack / tecnologia utilizada | Justificativa |
+|---|---|---|
+| Oxímetro de pulso | Sensor biomédico / hardware de monitoramento | Adicionado para capturar dados fisiológicos do paciente durante a sessão, principalmente SpO2. |
+| Leitura do oxímetro | Firmware em C/C++ com ESP-IDF | Utilizado para programar o microcontrolador responsável pela leitura dos dados do oxímetro. |
+| Integração com o jogo | Unity e C# | Utilizada para receber os dados do oxímetro dentro do jogo e acionar ações como pausa, retomada ou interrupção da sessão. |
+| Registro de eventos da sessão | Node.js e Azure Functions | Adicionado para permitir que a API registre eventos como pausa, retomada, interrupção, motivo da interrupção e horário da ocorrência. |
+| Módulo de monitoramento fisiológico | C# | Adicionado para interpretar os dados de SpO2, comparando-os com limites de segurança definidos para o paciente. |
+| Controle de estado da sessão | C# | Adicionado para registrar e controlar os estados da sessão, como em andamento, pausada, retomada, interrompida ou finalizada. |
+| Regras de pausa e interrupção | C# | Utilizadas para pausar ou interromper a sessão quando os sinais fisiológicos indicarem risco, sem alterar diretamente a mecânica principal do jogo. |
+| Persistência dos novos dados | MongoDB Atlas e Mongoose | Utilizada para armazenar os novos dados da melhoria, como valores fisiológicos, estado da sessão e eventos de segurança. |
+| Atualização do dashboard | React, Material UI, Recharts e Axios | Adicionada para permitir que o profissional visualize pausas, interrupções e dados fisiológicos coletados durante a sessão. |
+| Logs de segurança | Node.js, MongoDB Atlas e Mongoose | Adicionados para garantir rastreabilidade dos eventos críticos, permitindo análise posterior pelo profissional ou equipe técnica. |
+
+---
+
+# 6. Segurança e Privacidade
+
+O ecossistema I Blue It, em sua versão 5.0, manipula dados sensíveis relacionados ao acompanhamento terapêutico de pacientes em sessões de reabilitação respiratória. Esses dados incluem informações de cadastro, calibração respiratória, histórico de sessões, desempenho no jogo, parâmetros definidos pelo fisioterapeuta e sinais fisiológicos utilizados pelo sistema para adaptação da dificuldade. Tais dados são utilizados em diversas camadas de tecnologias e protocolos, os quais já foram citados ao longo deste documento, abaixo, podemos ver uma abstração das principais preocupações de segurança e como são sanadas já pelo modelo atual: 
+
+| Preocupação de segurança                          | Aplicação no I Blue It 5.0                                                                                                                                                                            |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Autenticação de usuários**                      | O sistema atual utiliza acesso por **e-mail e senha**, permitindo que apenas usuários cadastrados acessem o ambiente.                                                                                 |
+| **Autorização por roles**                         | O sistema diferencia os perfis de acesso por **roles**, principalmente entre **paciente** e **fisioterapeuta**, limitando as ações disponíveis para cada tipo de usuário.                             |
+| **Controle de acesso do paciente**                | O paciente acessa apenas os próprios dados, como histórico, sessões e informações relacionadas ao seu acompanhamento.                                                                                 |
+| **Controle de acesso do fisioterapeuta**          | O fisioterapeuta acessa os dados dos pacientes vinculados ao seu acompanhamento, podendo visualizar informações de sessões e exportar dados quando autorizado.                                        |
+| **Exportação controlada em CSV**                  | Os dados podem ser exportados em **CSV** pelo fisioterapeuta autorizado, mantendo a retirada de informações restrita ao perfil profissional responsável.                                              |
+| **Comunicação segura via HTTPS**                  | A comunicação entre o sistema web, o backend e os serviços associados ocorre por **HTTPS/TLS**, protegendo os dados trafegados contra interceptação durante a transmissão.                            |
+| **Arquitetura cliente-servidor**                  | O sistema separa interface, backend e banco de dados. Com isso, pacientes e fisioterapeutas não acessam diretamente a base de dados, mas passam pela aplicação.                                       |
+| **Comunicação frontend-backend**                  | A aplicação web se comunica com o backend por requisições HTTP seguras, com envio de dados estruturados, como JSON, permitindo que o backend valide usuário, role e dados solicitados.                |
+| **Backend como camada intermediária**             | O backend centraliza as regras de acesso, valida as requisições e controla quais dados podem ser consultados, gravados ou exportados.                                                                 |
+| **Comunicação jogo-backend**                      | Após a sessão, o jogo envia os dados coletados ao backend, mantendo o vínculo entre jogo, paciente, sessão e registros armazenados.                                                                   |
+| **Envio controlado da sessão**                    | Os dados da sessão não são enviados de forma isolada; eles são associados ao paciente, à sessão e ao contexto terapêutico correspondente.                                                             |
+| **Comunicação local com dispositivos de captura** | Dispositivos como o **PITACO** se comunicam localmente com o jogo por conexão física/local, como USB/serial, reduzindo a exposição direta do sensor na rede.                                          |
+| **Separação entre sensor, jogo e banco**          | O dispositivo captura os sinais respiratórios, o jogo processa a sessão e o backend armazena os dados, evitando que o sensor tenha acesso direto ao banco de dados.                                   |
+| **Banco de dados centralizado**                   | Os dados são armazenados em **MongoDB em nuvem**, acessado pela aplicação/backend e não diretamente pelos usuários finais.                                                                            |
+| **Restrição de acesso ao banco**                  | O acesso ao banco ocorre por credenciais da aplicação/backend, reduzindo a possibilidade de acesso direto por paciente, fisioterapeuta ou jogo fora do fluxo esperado.                                |
+| **Organização por sessão**                        | Os dados coletados são vinculados à sessão realizada, permitindo relacionar paciente, fisioterapeuta, desempenho e histórico terapêutico.                                                             |
+| **Rastreabilidade por usuário autenticado**       | Como o acesso ocorre por usuários identificados, ações como visualização, exportação e consulta podem ser relacionadas ao perfil responsável.                                                         |
+| **Proteção dos dados em trânsito**                | O uso de **HTTPS/TLS** protege os dados durante o tráfego entre cliente, backend e serviços do sistema.                                                                                               |
+| **Proteção contra falhas de controle de acesso**  | A separação entre paciente e fisioterapeuta atua como proteção contra falhas de controle de acesso, uma das categorias tratadas pela OWASP Top 10.                                                    |
+| **Proteção contra falhas criptográficas**         | O uso de HTTPS/TLS no tráfego dos dados contribui para mitigar falhas criptográficas relacionadas à exposição de dados sensíveis em trânsito.                                                         |
+| **Proteção contra injeção e dados inválidos**     | Como as requisições passam pelo backend antes de chegar ao banco, o sistema possui uma camada central para validação dos dados recebidos do jogo e da aplicação web.                                  |
+| **Proteção contra exposição direta do banco**     | O banco de dados não é acessado diretamente pela interface do usuário, mas por meio do backend, reduzindo riscos de exposição indevida.                                                               |
+
+O modelo atual contempla medidas básicas associadas à autenticação, autorização, criptografia em trânsito, controle de acesso e separação de camadas, que se relacionam com riscos presentes na OWASP Top 10, assim já apresentando nativamente um foco em segurança.
+
+Ao se adicionar o novo módulo SpO2 ao PITACO, e todos os ajustes em cada módulo que isto necessite, esperamos manter o mesmo rigor no tratamento, coleta e armazenamento de dados existente. Nesse sentido vale ressaltar que o módulo IoT SpO2 será desenvolvido com o mesmo sistema de transmissão USB serial, que mitiga vazamentos de informações, além de após as alterações pertinentes nos módulos subsequentes para comportar a melhoria (tais como o jogo, o InfoChart e o backend), esperamos manter o mesmo nível de segurança já presente no ecossistema I Blue It.
+
+---
+
+## 6.1 Privacidade e LGPD
+
+Abaixo consta uma lista de todos os dados coletados (já imaginando um cenário com a melhoria implantada) adjunto de onde ele é armazenado e processo de exclusão:
+
+| Categoria                                 | Dados coletados                                                                                                                                                                                | Como são armazenados no modelo atual                                                                                                                                                                                                                      | Como podem ser removidos                                                                                                                                                                                          |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Cadastro do paciente**                  | Nome, sexo, data de nascimento, peso, altura, etnia, condição respiratória e observações clínicas                                                                                              | Coleção `Pacient` no MongoDB Atlas, via backend em Azure Functions/Mongoose. O schema público mostra campos como `name`, `sex`, `birthday`, `condition`, `weight`, `height`, `ethnicity` e `observations`.                                                | Pela rota `DELETE /pacients/{pacientId}`. O backend possui uma função `DeletePacient` que remove o paciente mediante `GameToken`.                                                                                 |
+| **Capacidades respiratórias do paciente** | Pico inspiratório, pico expiratório, duração da inspiração, duração da expiração e frequência respiratória para PITACO, Manovacuômetro e Cinta                                                 | Também ficam no documento `Pacient`, em `capacitiesPitaco`, `capacitiesMano` e `capacitiesCinta`.                                                                                                                                                         | Removidas junto ao cadastro do paciente, se a exclusão completa for executada.                                                                                                                                    |
+| **Conta de acesso**                       | Nome completo, usuário, senha, e-mail, papel/perfil de acesso, vínculo com paciente e token do jogo                                                                                            | Coleção `UserAccount`, com campos `fullname`, `username`, `password`, `email`, `role`, `pacientId` e `gameToken`.                                                                                                                                         | A função `DeletePacient` remove a conta vinculada ao `pacientId` quando executa a exclusão completa.                                                                                                              |
+| **Calibração respiratória**               | Dispositivo usado, exercício calibrado e valor de calibração                                                                                                                                   | Coleção `CalibrationOverview`, com `pacientId`, `gameDevice`, `calibrationExercise` e `calibrationValue`.                                                                                                                                                 | A exclusão completa remove registros de `CalibrationOverview` associados ao paciente.                                                                                                                             |
+| **Parâmetros personalizados do jogo**     | Fase, nível, velocidade dos objetos, quantidade de loops, incrementos de altura/tamanho e limiares de ajuste                                                                                   | Coleção `GameParameter`, associada ao `pacientId`.                                                                                                                                                                                                        | **Ponto de atenção:** a função `DeletePacient` atual não mostra remoção de `GameParameter`, então esses dados devem ser incluídos na rotina de exclusão para adequação à LGPD.                                    |
+| **Sessão/jogada da plataforma**           | Início, fim, duração, resultado, fase, nível, pontuação, pontuação máxima, razão de pontuação, vida do jogador, Borg, alvos gerados/capturados/falhados e obstáculos gerados/evitados/falhados | Coleção `PlataformOverview`. Cada jogada gera um registro com `pacientId`, `playStart`, `playFinish`, `duration`, `result`, `stageId`, `phase`, `level`, `score`, `BorgScale`, entre outros campos.                                                       | A exclusão completa remove `PlataformOverview` do paciente.                                                                                                                                                       |
+| **Dados brutos dos dispositivos**         | Nome do dispositivo, valor medido e timestamp. Exemplo: `deviceName`, `flowValue`, `timestamp`                                                                                                 | Coleção `FlowDataDevice`, separada dos resumos da sessão. A plataforma salva uma referência `flowDataDevicesId` para esses dados brutos.                                                                                                                  | **Ponto crítico:** a função `DeletePacient` atual não remove explicitamente `FlowDataDevice`. Assim, dados brutos podem ficar órfãos no banco se não forem apagados por referência antes da exclusão dos resumos. |
+| **Minigames**                             | Nome do minigame, exercício respiratório, rodada, pontuação da rodada, pontuação do fluxo e referência aos dados dos dispositivos                                                              | Coleção `MinigameOverview`, com referências para `FlowDataDevice`.                                                                                                                                                                                        | A exclusão completa remove `MinigameOverview`, mas deve também remover os `FlowDataDevice` referenciados.                                                                                                         |
+| **Sessão clínica/dia de uso**             | Identificador do paciente e número da sessão                                                                                                                                                   | Coleção `PlaySession`, com `pacientId` e `sessionNumber`.                                                                                                                                                                                                 | A função `DeletePacient` remove `PlaySession` do paciente.                                                                                                                                                        |
+| **SpO2 / biossinais da melhoria**         | Saturação de oxigênio e, possivelmente, eventos de alerta, pausa ou interrupção por queda de SpO2                                                                                              | Na tese, o oxímetro entra como dispositivo de monitoramento fisiológico para segurança do paciente; porém, no backend público consultado, os validadores aceitam PITACO, Manovacuômetro e Cinta, mas ainda não listam “Oxímetro” como dispositivo válido. | Para a melhoria, a remoção deve seguir o mesmo vínculo por `pacientId`, mas o schema/validador precisa ser atualizado para garantir que os dados de SpO2 também sejam apagados.                                   |
+
+Tais dados têm como finalidade serem captados, processados e utilizados pelo software durante a gameplay da sessão de terapia, para análise posterior do terapeuta, ou garantia da segurança do paciente durante a execução, não sendo vendidos, transferidos ou compartilhados com terceiros que não o médico e seu paciente.
+
+Abaixo, podemos ver uma abstração do fluxo de captura e processamento dos dados pelo software:
+
+```code
+Pitaco/Oxímetro
+   ↓ capta os dados
+Unity / I Blue It
+   ↓ envia JSON com GameToken
+Azure Function
+   ↓ valida token e dados
+MongoDB Atlas
+   ↓ armazena por coleções
+Health InfoCharts
+   ↓ consulta e exibe ao terapeuta/paciente
+```
+Assim todos os dados são centralizados no banco de dados MongoDB, o que permite sua criação, visualização, manipulação e exclusão caso requerido tanto pelo sistema como pelos usuários. Para tal finalidade de exclusão de dados o paciente, ou seu responsável legal, pode solicitar a remoção de seus dados ao responsável pelo sistema, clínica, pesquisador ou administrador do I Blue It. Após a solicitação, o operador autorizado deverá localizar o pacientId correspondente e executar a rotina de exclusão no backend, removendo o cadastro do paciente, conta vinculada, calibrações, sessões, resultados da plataforma, minigames e dados brutos dos dispositivos.
+
+---
+
+# 7. Planejamento do Projeto
+
+O cronograma foi organizado em marcos de desenvolvimento, priorizando primeiro a preparação do ambiente e a prova de conceito do módulo SpO2, depois a integração com o jogo, backend, banco de dados, dashboard e, por fim, a etapa de testes, ajustes e documentação.
+
+| Marco | Descrição | Prazo |
+|---|---|---|
+| M1 | Setup do ambiente de desenvolvimento, análise do código existente do I Blue It, definição dos pontos de integração com o PITACO, Unity, backend, banco de dados e dashboard. | 27/07/2026 a 07/08/2026 |
+| M2 | Prova de conceito da leitura do sensor SpO2 integrado ao PITACO ampliado, incluindo captura inicial de saturação sanguínea, validação de contato e testes com dados simulados. | 10/08/2026 a 21/08/2026 |
+| M3 | Integração inicial entre o módulo SpO2 e o jogo I Blue It, permitindo que o Unity receba dados fisiológicos em tempo de execução sem comprometer a captura respiratória já existente. | 24/08/2026 a 04/09/2026 |
+| M4 | Implementação da validação, filtragem e tratamento dos sinais fisiológicos, incluindo identificação de leituras inválidas, perda de sinal, mau posicionamento do sensor e inconsistências nos dados. | 07/09/2026 a 18/09/2026 |
+| M5 | Implementação das regras de monitoramento fisiológico, alertas de segurança, recomendação de pausa e interrupção automática da sessão em casos críticos de SpO2. | 21/09/2026 a 02/10/2026 |
+| M6 | Atualização do backend, API e modelo de dados para registrar SpO2, eventos de alerta, pausas, interrupções e associação desses dados à sessão terapêutica. | 05/10/2026 a 16/10/2026 |
+| M7 | Integração dos dados fisiológicos ao módulo DeepDDA, permitindo que a IA utilize SpO2 como parâmetro adicional no ajuste dinâmico de dificuldade e nas decisões de segurança. | 19/10/2026 a 30/10/2026 |
+| M8 | Atualização do dashboard clínico Health InfoCharts para exibir dados de saturação sanguínea, eventos de pausa/interrupção, resumo fisiológico da sessão e histórico dos novos registros. | 02/11/2026 a 13/11/2026 |
+| M9 | Consolidação do MVP funcional da melhoria, integrando PITACO ampliado, módulo SpO2, jogo, backend, banco de dados, dashboard e registros de eventos da sessão. | 16/11/2026 a 20/11/2026 |
+| M10 | Testes funcionais, testes de integração, testes com dados simulados, verificação dos requisitos funcionais e não funcionais, correções e ajustes finais. | 23/11/2026 a 04/12/2026 |
+| M11 | Finalização da documentação técnica, revisão do RFC, organização dos resultados, preparação da apresentação e entrega final da melhoria. | 07/12/2026 a 11/12/2026 |
+
+## 7.1 Entregas Esperadas por Etapa
+
+| Etapa | Entrega esperada |
+|---|---|
+| Setup e estudo do sistema | Ambiente configurado e pontos de integração identificados |
+| Prova de conceito do SpO2 | Leitura inicial do sensor validada com dados reais ou simulados |
+| Integração com o jogo | Unity recebendo dados fisiológicos durante a sessão |
+| Monitoramento fisiológico | Regras de alerta, pausa e interrupção implementadas |
+| Persistência dos dados | Banco de dados e backend preparados para armazenar os novos registros |
+| Integração com DeepDDA | IA considerando SpO2 e biossinais no ajuste da sessão |
+| Dashboard clínico | Dados de saturação sanguínea e eventos de segurança visíveis ao terapeuta |
+| MVP funcional | Fluxo completo da melhoria operando de forma integrada |
+| Testes e ajustes | Requisitos verificados e falhas corrigidas |
+| Entrega final | Documentação, apresentação e versão final da proposta concluídas |
+
+---
+
+# 8. Referências
+
+- [1]SANTOS, Adam Mews dos; GRIMES, Renato Hartmann; HOUNSELL, Marcelo da Silva; NOVELETTO, Fabrício; SOARES, Antônio Vinícius; SILVA, Helton Eckermann da. I Blue It: Um Jogo Sério para auxiliar na Reabilitação Respiratória. SBGames, 2018.
+- [2] DIAS, Claudinei. Flow Psicofisiológico em Jogos Digitais: Inteligência Artificial em Jogos Sérios Multimodais para Reabilitação Respiratória. Tese de Doutorado, UDESC, 2024.
+- [3] GRIMES, Renato Hartmann. **Sistema Biomédico com Jogo Sério e Dispositivo Especial para Reabilitação Respiratória**. Dissertação de Mestrado, Universidade do Estado de Santa Catarina, Joinville, 2018.
+
+- [4] DIAS, Claudinei; ROMAGNO, Amilto; HOUNSELL, Marcelo da Silva; SOMA, Rodrigo Yuji Seto; TONDORF, Diego Fellipe; LEAL, André Bittencourt; ENGLEITNER, Matheus. **Uso da Inteligência Artificial em Jogos Digitais aplicados à Reabilitação Respiratória: um mapeamento sistemático da literatura**. SBGames, 2020.
+
+- [5] NERY, Jhonatan Thallisson Cabral; HENRIQUE, Yuri Andreas May; HOUNSELL, Marcelo da Silva. **123-SGR: Uma Arquitetura para Jogos Sérios Multimodais para Reabilitação**. SBGames, 2020.
+
+- [6] UDESC-LARVA. **iblueit-health-InfoCharts**. GitHub, [s.d.]. Disponível em: https://github.com/UDESC-LARVA/iblueit-health-InfoCharts. Acesso em: 7 jun. 2026.
+
+- [7] UDESC-LARVA. **iblueit-multimodal**. GitHub, [s.d.]. Disponível em: https://github.com/UDESC-LARVA/iblueit-multimodal. Acesso em: 7 jun. 2026.
+
+- [8] UDESC-LARVA. **iblueit-psychophysiological-flow**. GitHub, [s.d.]. Disponível em: https://github.com/UDESC-LARVA/iblueit-psychophysiological-flow. Acesso em: 7 jun. 2026.
+
+- [9] UDESC-LARVA. **BlueApiFunctions**. GitHub, [s.d.]. Disponível em: https://github.com/UDESC-LARVA/BlueApiFunctions. Acesso em: 7 jun. 2026.
+
+- [10] UDESC-LARVA. **BlueApiFront**. GitHub, [s.d.]. Disponível em: https://github.com/UDESC-LARVA/BlueApiFront. Acesso em: 7 jun. 2026.
+
+---
+
+# 9. Apêndices
+
+- [11] HCILAB. **BubbleBreather: breathing exercise games for pneumonia recovery**. GitHub.  
+  Link: https://github.com/hcilab/BubbleBreather
+
+- [12] CAMBRIDGE JUDGE BUSINESS SCHOOL. **PlayPhysio venture profile**.  
+  Link: https://www.jbs.cam.ac.uk/ventures/playphysio/
+
+- [13] PLAYPHYSIO. **PlayPhysio official website**.  
+  Link: https://play.physio/
+
+- [14] ACCELERATED CARE PLUS. **ACPlus Respiratory Assessment**.  
+  Link: https://acplus.com/acplus-respiratory-assessment-lp/
+
+- [15] ACCELERATED CARE PLUS. **OmniFlow: respiratory therapy technology**.  
+  Link: https://acplus.com/technology/omniflow/
+
+- [16] ACCELERATED CARE PLUS. **OmniFlow in action: restoring speech, confidence and connection**.  
+  Link: https://acplus.com/blog/success-stories/omniflow-in-action-restoring-speech-confidence-and-connection/
+
+- [17] O protótipo visual da melhoria pode ser consultado no Figma:
+  Link: https://www.figma.com/design/38AvtwGYmDuDnZylhIduTf/Melhoria-Iblueit?m=auto&t=n2BUf4xlO5QlKDo9-1
+
+---
+
+# 10. Parecer do Comitê de Avaliação
+
+(A ser preenchido pelos professores)
+
+**Avaliador 1:** __________________________  
+**Status:** [ ] Aprovado  [ ] Ajustar
+
+Observações:
+
+---
+
+**Avaliador 2:** __________________________  
+**Status:** [ ] Aprovado  [ ] Ajustar
+
+Observações:
+
+---
