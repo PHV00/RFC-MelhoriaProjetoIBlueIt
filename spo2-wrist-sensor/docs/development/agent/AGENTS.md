@@ -10,22 +10,23 @@ O projeto envolve software de apoio à reabilitação respiratória e processame
 
 Antes de planejar ou modificar código, leia, nesta ordem:
 
-1. `docs/context/PROJECT_BRIEF.md`;
-2. `docs/context/SOFTWARE_REQUIREMENTS.md`;
-3. `docs/context/ARCHITECTURE.md`;
-4. `docs/context/DECISIONS.md`;
-5. `docs/context/TRACEABILITY_MATRIX.md`;
-6. `docs/context/LIMITATIONS.md`;
-7. `docs/context/OPEN_RESEARCH_QUESTIONS.md`.
+1. `docs/development/context/PROJECT_BRIEF.md`;
+2. `docs/development/context/SOFTWARE_REQUIREMENTS.md`;
+3. `ReadME.md` e `docs/development/dev/Structure.md`, equivalentes arquiteturais atuais;
+4. `docs/development/context/TRACEABILITY_MATRIX.md`;
+5. `docs/development/context/LIMITATIONS.md`;
+6. `docs/development/context/OPEN_RESEARCH_QUESTIONS.md`.
 
-Consulte `docs/context/GLOSSARY.md` sempre que encontrar termos de domínio, siglas, estados, métricas ou identificadores que não estejam inequívocos.
+`docs/development/context/DECISIONS.md` ainda não existe. Até que seja criado e revisado, referências a ADR/DM sem artefato são **não verificáveis** e não devem ser tratadas como decisões aceitas.
+
+`docs/development/context/GLOSSARY.md` também ainda não existe. Quando um termo de domínio, sigla, estado, métrica ou identificador não estiver inequívoco, registre a ambiguidade em vez de presumir uma definição.
 
 Antes de alterar protocolo experimental, critérios de aceitação, coleta com seres humanos, métricas de comparação ou alegações científicas, leia também:
 
-- `docs/context/SCIENTIFIC_CONTEXT.md`;
-- `docs/context/EVIDENCE_MATRIX.md`;
-- `docs/context/HYPOTHESES.md`;
-- `docs/context/RESEARCH_PROTOCOL.md`.
+- `docs/development/context/SCIENTIFIC_CONTEXT.md`;
+- `docs/development/context/EVIDENCE_MATRIX.md`;
+- `docs/development/context/HYPOTHESES.md`;
+- `docs/development/context/RESEARCH_PROTOCOL.md`.
 
 Não inicie trabalho com base apenas em conversas, issues, comentários ou trechos isolados. Use-os para localizar o contexto canônico e registre lacunas quando ele não existir.
 
@@ -49,7 +50,7 @@ O código mostra o que o sistema faz, não o que ele deveria fazer nem o que é 
 Use esta ordem:
 
 1. requisitos clínicos e de segurança confirmados em `SOFTWARE_REQUIREMENTS.md`;
-2. decisões marcadas como `aceita` em `DECISIONS.md`;
+2. decisões marcadas como `aceita` em `DECISIONS.md`, quando esse documento existir;
 3. requisitos funcionais e não funcionais confirmados;
 4. arquitetura documentada;
 5. protocolo de pesquisa aprovado;
@@ -197,20 +198,20 @@ Uma alteração importante só está concluída quando:
 
 ## Depois de alterações importantes
 
-Atualize, quando necessário:
+Atualize, quando necessário, os equivalentes existentes:
 
-- `docs/context/SOFTWARE_REQUIREMENTS.md`;
-- `docs/context/ARCHITECTURE.md`;
-- `docs/context/DECISIONS.md`;
-- `docs/context/TRACEABILITY_MATRIX.md`;
-- `docs/context/LIMITATIONS.md`;
-- `docs/context/OPEN_RESEARCH_QUESTIONS.md`;
-- `docs/context/CONTEXT_INDEX.md`;
-- `docs/context/CONTEXT_CHANGELOG.md`.
+- `docs/development/context/SOFTWARE_REQUIREMENTS.md`;
+- `ReadME.md` e `docs/development/dev/Structure.md` para arquitetura;
+- `docs/development/context/TRACEABILITY_MATRIX.md`;
+- `docs/development/context/LIMITATIONS.md`;
+- `docs/development/context/OPEN_RESEARCH_QUESTIONS.md`;
+- `docs/development/context/CONTEXT_INDEX.md`.
+
+`DECISIONS.md`, `GLOSSARY.md` e `CONTEXT_CHANGELOG.md` devem entrar nessa lista quando forem criados; não invente seu conteúdo para preencher a ausência.
 
 Atualize `EVIDENCE_MATRIX.md`, `HYPOTHESES.md` e `RESEARCH_PROTOCOL.md` quando a alteração produzir evidência, modificar hipótese, métrica, teste, protocolo ou critério de aceitação.
 
-O `CONTEXT_CHANGELOG.md` deve registrar o que mudou e por quê, mas não substituir histórico do Git, ADR, resultado de teste ou relatório experimental.
+Quando criado, `CONTEXT_CHANGELOG.md` deve registrar o que mudou e por quê, mas não substituir histórico do Git, ADR, resultado de teste ou relatório experimental.
 
 ## Revisão humana obrigatória
 
@@ -242,4 +243,4 @@ Não use frases como “clinicamente validado”, “seguro para pacientes”, �
 
 ## Manutenção deste arquivo
 
-Mantenha este arquivo curto o suficiente para orientar trabalho, sem copiar literatura, transcrições ou especificações extensas. O detalhe pertence aos documentos de contexto. Quando estas instruções mudarem, registre a alteração em `docs/context/CONTEXT_CHANGELOG.md`.
+Mantenha este arquivo curto o suficiente para orientar trabalho, sem copiar literatura, transcrições ou especificações extensas. O detalhe pertence aos documentos de contexto. Enquanto `CONTEXT_CHANGELOG.md` não existir, preserve alterações no histórico do Git e registre a lacuna em `CONTEXT_INDEX.md`.

@@ -1,0 +1,1277 @@
+/*
+ * Módulo de avaliação da qualidade do sinal PPG.
+ *
+ * SIGLAS UTILIZADAS
+ * -----------------
+ *
+ * PPG:
+ *   Photoplethysmography — Fotopletismografia.
+ *   Técnica óptica usada para observar variações no volume sanguíneo.
+ *
+ * IR:
+ *   Infrared — Infravermelho.
+ *   Canal do MAX30102 associado ao LED infravermelho.
+ *
+ * RED:
+ *   Red — Vermelho.
+ *   Canal do MAX30102 associado ao LED vermelho.
+ *
+ * ADC:
+ *   Analog-to-Digital Converter — Conversor Analógico-Digital.
+ *   Converte a corrente medida pelo fotodiodo em um valor digital.
+ *
+ * DC:
+ *   Direct Current — Componente contínua.
+ *   Representa o nível médio do sinal, associado à absorção constante
+ *   dos tecidos, sangue não pulsátil, geometria e contato do sensor.
+ *
+ * AC:
+ *   Alternating Current — Componente variável/pulsátil.
+ *   Representa principalmente a variação causada pela pulsação arterial.
+ *
+ * RMS:
+ *   Root Mean Square — Raiz do valor quadrático médio.
+ *   É usada para representar a amplitude efetiva de um sinal variável.
+ *
+ * SNR:
+ *   Signal-to-Noise Ratio — Relação sinal-ruído.
+ *   Neste código é calculada como amplitude AC dividida pelo ruído residual.
+ *
+ * PI:
+ *   Perfusion Index — Índice de perfusão.
+ *   Neste código é calculado como AC_IR / DC_IR.
+ *
+ * O fluxo geral deste arquivo é:
+ *
+ *   1. Copiar a janela mais recente do buffer.
+ *   2. Remover a média e a tendência linear dos canais IR e RED.
+ *   3. Calcular as amplitudes AC dos dois canais.
+ *   4. Estimar o ruído residual do canal IR.
+ *   5. Calcular SNR, correlação RED/IR e índice de perfusão.
+ *   6. Detectar clipping e descontinuidade temporal.
+ *   7. Produzir motivos de invalidação.
+ *   8. Produzir uma pontuação de qualidade entre 0 e 1.
+ */
+
+#include "processing/signal_quality.h"
+
+#include <math.h>   // fabs(), fabsf(), sqrt()
+#include <string.h> // memset()
+
+#include "storage/config_repo.h"
+
+/*
+ * Valor máximo de um ADC com 18 bits:
+ *
+ *   2^18 - 1 = 262143
+ *
+ * O MAX30102 pode fornecer amostras com resolução de até 18 bits,
+ * dependendo da largura de pulso configurada.
+ *
+ * Este limite é usado para detectar saturação no extremo superior.
+ */
+#define PPG_ADC_MAX_VALUE 262143.0f
+
+/*
+ * Nível DC mínimo aceito para o canal infravermelho.
+ *
+ * Se a média do canal IR estiver abaixo de 5000 contagens, o código
+ * considera que provavelmente não há sinal óptico suficiente.
+ *
+ * Esse valor é heurístico e deverá ser calibrado com o hardware final.
+ */
+#define MIN_DC_IR 5000.0f
+
+/*
+ * Amplitude RMS mínima da componente pulsátil do canal IR.
+ *
+ * Se AC_IR estiver abaixo de 20 contagens, o sinal é considerado
+ * fraco demais para uma análise confiável.
+ *
+ * Também é um limiar experimental.
+ */
+#define MIN_AC_RMS 20.0f
+
+/*
+ * Índice de perfusão mínimo.
+ *
+ * Neste código:
+ *
+ *   PI = AC_IR / DC_IR
+ *
+ * 0.0002 equivale a:
+ *
+ *   0.02%
+ *
+ * Valores inferiores indicam uma componente pulsátil muito pequena
+ * em relação ao nível óptico total.
+ */
+#define MIN_PERFUSION_INDEX 0.0002f
+
+/*
+ * Fração máxima de amostras saturadas permitida.
+ *
+ * 0.01 representa 1% da janela.
+ *
+ * Se mais de 1% das amostras estiverem próximas de zero ou do limite
+ * máximo do ADC, a janela é marcada como contendo clipping.
+ */
+#define MAX_CLIPPING_FRACTION 0.01f
+
+/*
+ * Correlação mínima permitida entre os canais RED e IR.
+ *
+ * Como os dois sinais observam a mesma pulsação arterial, espera-se
+ * que possuam formas temporalmente semelhantes.
+ *
+ * Uma correlação absoluta abaixo de 0.60 é considerada insuficiente.
+ */
+#define MIN_RED_IR_CORRELATION 0.60f
+
+/*
+ * Buffers estáticos de trabalho.
+ *
+ * "static" faz com que esses vetores sejam alocados permanentemente,
+ * em vez de serem criados na pilha toda vez que a função é executada.
+ *
+ * Isso é útil em sistemas embarcados, pois:
+ *
+ *   - reduz o uso da pilha;
+ *   - evita alocação dinâmica;
+ *   - torna o uso de memória previsível.
+ *
+ * Consequência:
+ *   esta implementação não é reentrante. Duas tarefas não devem executar
+ *   signal_quality_evaluate_window() simultaneamente.
+ */
+
+/* Cópia das amostras originais RED, IR, timestamp etc. */
+static ppg_sample_t s_samples[SAMPLE_BUFFER_SIZE];
+
+/* Canal IR após remoção da média e da tendência linear. */
+static float s_ir[SAMPLE_BUFFER_SIZE];
+
+/* Canal RED após remoção da média e da tendência linear. */
+static float s_red[SAMPLE_BUFFER_SIZE];
+
+/*
+ * Vetor usado para guardar a versão suavizada do sinal IR.
+ *
+ * Ele é usado durante a estimativa de ruído residual.
+ */
+static float s_ir_smooth[SAMPLE_BUFFER_SIZE];
+
+/*
+ * Limita um valor ao intervalo de 0 a 1.
+ *
+ * Exemplos:
+ *
+ *   clamp01(-0.3) = 0
+ *   clamp01(0.7)  = 0.7
+ *   clamp01(1.4)  = 1
+ *
+ * É utilizada para normalizar as métricas que compõem o quality_score.
+ */
+static float clamp01(float x)
+{
+    if (x < 0.0f) return 0.0f;
+    if (x > 1.0f) return 1.0f;
+    return x;
+}
+
+/*
+ * Remove a média e uma tendência linear de um canal PPG.
+ *
+ * Essa operação é conhecida como "linear detrending".
+ *
+ * PARÂMETROS
+ * ----------
+ *
+ * samples:
+ *   Vetor com as amostras PPG originais.
+ *
+ * n:
+ *   Quantidade de amostras que será processada.
+ *
+ * ir_channel:
+ *   true  -> processa o canal IR.
+ *   false -> processa o canal RED.
+ *
+ * out:
+ *   Vetor onde será armazenado o sinal sem média e sem tendência linear.
+ *
+ * dc:
+ *   Ponteiro onde será armazenada a média do sinal original.
+ *   Essa média é utilizada como estimativa da componente DC.
+ *
+ * PROCESSAMENTO
+ * -------------
+ *
+ * Esta função ajusta uma reta:
+ *
+ *   y_estimado = média + inclinação × x
+ *
+ * Em seguida, subtrai essa reta do sinal:
+ *
+ *   sinal_sem_tendência = sinal_original - y_estimado
+ *
+ * Isso remove:
+ *
+ *   - a componente média;
+ *   - uma subida ou descida lenta aproximadamente linear.
+ *
+ * O resultado "out" fica aproximadamente centralizado em zero e
+ * representa principalmente a parte variável do PPG.
+ */
+static void detrend_linear(
+    const ppg_sample_t *samples,
+    size_t n,
+    bool ir_channel,
+    float *out,
+    float *dc
+) {
+    /*
+     * sum_y:
+     *   Soma das amplitudes do canal selecionado.
+     *   Será usada para calcular a média.
+     */
+    double sum_y = 0.0;
+
+    /*
+     * sum_x:
+     *   Soma das posições temporais centralizadas.
+     *
+     * Como x é centralizado em torno de zero, essa soma deve ficar
+     * muito próxima de zero.
+     */
+    double sum_x = 0.0;
+
+    /*
+     * sum_xx:
+     *   Soma dos quadrados das posições x.
+     *   Participa do cálculo da inclinação da reta.
+     */
+    double sum_xx = 0.0;
+
+    /*
+     * sum_xy:
+     *   Soma do produto entre posição x e amplitude y.
+     *   Também participa do cálculo da inclinação.
+     */
+    double sum_xy = 0.0;
+
+    /*
+     * Índice central da janela.
+     *
+     * Para n = 400:
+     *
+     *   center = 199.5
+     *
+     * Assim, os valores de x ficam aproximadamente entre:
+     *
+     *   -199.5 e +199.5
+     *
+     * Centralizar x melhora a estabilidade numérica do ajuste.
+     */
+    const double center = ((double)n - 1.0) * 0.5;
+
+    /*
+     * Primeiro percurso pela janela:
+     *
+     *   - seleciona IR ou RED;
+     *   - constrói as somas necessárias para a regressão linear;
+     *   - prepara o cálculo da média e da inclinação.
+     */
+    for (size_t i = 0; i < n; ++i) {
+        /*
+         * Posição da amostra em relação ao centro da janela.
+         */
+        double x = (double)i - center;
+
+        /*
+         * Amplitude da amostra.
+         *
+         * Se ir_channel for true, usa samples[i].ir.
+         * Caso contrário, usa samples[i].red.
+         */
+        double y = ir_channel
+            ? (double)samples[i].ir
+            : (double)samples[i].red;
+
+        sum_y += y;
+        sum_x += x;
+        sum_xx += x * x;
+        sum_xy += x * y;
+    }
+
+    /*
+     * Média aritmética do canal.
+     *
+     * Neste código, ela é usada como estimativa da componente DC.
+     */
+    double mean = sum_y / (double)n;
+
+    /*
+     * Denominador da regressão linear.
+     *
+     * Fórmula geral:
+     *
+     *   Σx² - (Σx)² / n
+     */
+    double denominator =
+        sum_xx - (sum_x * sum_x / (double)n);
+
+    /*
+     * Inclinação da reta ajustada.
+     *
+     * Fórmula:
+     *
+     *            Σxy - (Σx × Σy)/n
+     *   slope = ---------------------
+     *             Σx² - (Σx)²/n
+     *
+     * fabs(denominator) > 1e-12 evita divisão por um número
+     * praticamente igual a zero.
+     */
+    double slope = fabs(denominator) > 1e-12
+        ? (sum_xy - (sum_x * sum_y / (double)n)) / denominator
+        : 0.0;
+
+    /*
+     * Segundo percurso pela janela:
+     *
+     * Remove de cada amostra:
+     *
+     *   - a média;
+     *   - a tendência linear.
+     */
+    for (size_t i = 0; i < n; ++i) {
+        double x = (double)i - center;
+
+        /*
+         * out[i] passa a conter apenas a variação em torno da linha
+         * de base estimada.
+         */
+        out[i] = (float)(
+            (
+                ir_channel
+                    ? (double)samples[i].ir
+                    : (double)samples[i].red
+            )
+            -
+            (mean + slope * x)
+        );
+    }
+
+    /*
+     * Retorna a média do sinal original como estimativa de DC.
+     *
+     * Observação:
+     * a tendência linear é removida de out, mas dc recebe somente
+     * a média global da janela.
+     */
+    *dc = (float)mean;
+}
+
+/*
+ * Calcula o RMS de um vetor.
+ *
+ * Fórmula:
+ *
+ *                 n-1
+ *                ─────
+ *                ╲
+ *                 ╲ x[i]²
+ *                 ╱
+ *                ╱
+ *                ─────
+ *                 i=0
+ *   RMS = sqrt(-------------)
+ *                    n
+ *
+ * Como os sinais IR e RED já tiveram sua média e tendência removidas,
+ * o RMS é usado como estimativa da amplitude AC.
+ */
+static float rms(const float *x, size_t n)
+{
+    /*
+     * Proteção contra ponteiro inválido ou janela vazia.
+     */
+    if (x == NULL || n == 0u) {
+        return 0.0f;
+    }
+
+    /*
+     * A soma é feita em double para reduzir erros acumulados.
+     */
+    double sum = 0.0;
+
+    for (size_t i = 0; i < n; ++i) {
+        sum += (double)x[i] * (double)x[i];
+    }
+
+    return (float)sqrt(sum / (double)n);
+}
+
+/*
+ * Calcula a semelhança entre dois vetores.
+ *
+ * A fórmula usada é:
+ *
+ *                Σ(a[i] × b[i])
+ *   correlação = ------------------
+ *                sqrt(Σa² × Σb²)
+ *
+ * Matematicamente, essa expressão é a similaridade de cosseno.
+ *
+ * Como os sinais recebidos por esta função já passaram por detrend
+ * e estão aproximadamente centralizados em zero, o resultado se
+ * aproxima de uma correlação normalizada entre os sinais.
+ *
+ * IMPORTANTE:
+ * Esta função não subtrai internamente as médias. Portanto, ela só
+ * deve ser interpretada como correlação porque s_ir e s_red já foram
+ * centralizados anteriormente.
+ *
+ * RESULTADOS TÍPICOS
+ * ------------------
+ *
+ * +1:
+ *   sinais com formatos muito semelhantes e mesma polaridade.
+ *
+ * 0:
+ *   ausência de relação linear clara.
+ *
+ * -1:
+ *   sinais semelhantes, mas invertidos.
+ *
+ * Mais adiante, o código utiliza fabsf(corr), aceitando tanto
+ * correlação positiva quanto negativa.
+ */
+static float correlation(
+    const float *a,
+    const float *b,
+    size_t n
+) {
+    /*
+     * São necessárias pelo menos duas amostras.
+     */
+    if (a == NULL || b == NULL || n < 2u) {
+        return 0.0f;
+    }
+
+    /*
+     * aa:
+     *   Energia do vetor a.
+     *
+     * bb:
+     *   Energia do vetor b.
+     *
+     * ab:
+     *   Produto interno entre a e b.
+     */
+    double aa = 0.0;
+    double bb = 0.0;
+    double ab = 0.0;
+
+    for (size_t i = 0; i < n; ++i) {
+        aa += (double)a[i] * (double)a[i];
+        bb += (double)b[i] * (double)b[i];
+        ab += (double)a[i] * (double)b[i];
+    }
+
+    /*
+     * Denominador da normalização.
+     */
+    double den = sqrt(aa * bb);
+
+    /*
+     * Evita divisão por zero quando um ou ambos os sinais
+     * possuem energia praticamente nula.
+     */
+    return den > 1e-12
+        ? (float)(ab / den)
+        : 0.0f;
+}
+
+/*
+ * Estima o ruído residual de alta frequência.
+ *
+ * Estratégia utilizada:
+ *
+ *   1. Cria uma versão suavizada por média móvel de cinco pontos.
+ *   2. Subtrai a versão suavizada do sinal original.
+ *   3. Calcula o RMS do resíduo.
+ *
+ * Média móvel:
+ *
+ *   smooth[i] =
+ *       (x[i-2] + x[i-1] + x[i] + x[i+1] + x[i+2]) / 5
+ *
+ * Resíduo:
+ *
+ *   residual[i] = x[i] - smooth[i]
+ *
+ * O resíduo é interpretado como uma aproximação do ruído.
+ *
+ * LIMITAÇÃO:
+ * A diferença entre o sinal e a média móvel não contém somente ruído.
+ * Partes rápidas e legítimas da onda PPG também podem aparecer no resíduo.
+ */
+static float residual_noise_rms(
+    const float *x,
+    size_t n
+) {
+    /*
+     * Uma média móvel de cinco pontos exige pelo menos cinco amostras.
+     */
+    if (n < 5u) {
+        return 0.0f;
+    }
+
+    /*
+     * Zera somente a parte utilizada do buffer auxiliar.
+     *
+     * Os pontos das extremidades não receberão média móvel porque
+     * não possuem dois vizinhos de cada lado.
+     */
+    memset(
+        s_ir_smooth,
+        0,
+        n * sizeof(s_ir_smooth[0])
+    );
+
+    /*
+     * Soma dos quadrados dos resíduos.
+     */
+    double residual_sum = 0.0;
+
+    /*
+     * Quantidade efetiva de pontos utilizados.
+     *
+     * Os dois primeiros e os dois últimos pontos são ignorados.
+     */
+    size_t used = 0u;
+
+    /*
+     * Começa em i = 2 e termina em n - 3 para garantir a existência de:
+     *
+     *   i - 2
+     *   i - 1
+     *   i
+     *   i + 1
+     *   i + 2
+     */
+    for (size_t i = 2u; i + 2u < n; ++i) {
+        /*
+         * Média móvel simples de cinco amostras.
+         */
+        float smooth =
+            (
+                x[i - 2u] +
+                x[i - 1u] +
+                x[i] +
+                x[i + 1u] +
+                x[i + 2u]
+            ) / 5.0f;
+
+        /*
+         * Guarda o sinal suavizado.
+         *
+         * Neste código ele não é utilizado posteriormente fora desta
+         * função, mas pode ser útil para depuração.
+         */
+        s_ir_smooth[i] = smooth;
+
+        /*
+         * Diferença entre o sinal original e sua versão suavizada.
+         */
+        float residual = x[i] - smooth;
+
+        residual_sum +=
+            (double)residual * (double)residual;
+
+        used++;
+    }
+
+    /*
+     * Retorna o RMS do resíduo.
+     */
+    return used > 0u
+        ? (float)sqrt(residual_sum / (double)used)
+        : 0.0f;
+}
+
+/*
+ * Avalia a qualidade de uma janela específica do buffer PPG.
+ *
+ * PARÂMETROS
+ * ----------
+ *
+ * buffer:
+ *   Buffer circular contendo amostras PPG RED e IR.
+ *
+ * window_samples:
+ *   Quantidade de amostras que deve ser copiada e analisada.
+ *
+ * expected_sample_rate_hz:
+ *   Frequência de amostragem esperada, em hertz.
+ *
+ *   Exemplo:
+ *
+ *     100 Hz = 100 amostras por segundo
+ *            = uma amostra a cada 10 ms
+ *
+ * out_quality:
+ *   Estrutura onde serão armazenadas todas as métricas de qualidade.
+ *
+ * RETORNO
+ * -------
+ *
+ * true:
+ *   A janela foi copiada e processada.
+ *
+ * false:
+ *   Não foi possível realizar a avaliação, por exemplo:
+ *
+ *   - ponteiro inválido;
+ *   - janela pequena;
+ *   - amostras insuficientes;
+ *   - frequência inválida.
+ *
+ * IMPORTANTE:
+ * Retornar true não significa que o sinal é válido.
+ *
+ * true significa apenas que o processamento foi realizado.
+ * A validade do sinal deve ser verificada por:
+ *
+ *   out_quality->invalid_reasons
+ *   out_quality->signal_present
+ *   out_quality->quality_score
+ */
+bool signal_quality_evaluate_window(
+    const sample_buffer_t *buffer,
+    size_t window_samples,
+    float expected_sample_rate_hz,
+    signal_quality_t *out_quality
+) {
+    /*
+     * Sem uma estrutura de saída válida, não há onde armazenar
+     * os resultados.
+     */
+    if (out_quality == NULL) {
+        return false;
+    }
+
+    /*
+     * Inicializa todos os campos da estrutura com zero.
+     *
+     * Isso evita que valores antigos permaneçam em campos que não
+     * forem preenchidos devido a uma saída antecipada.
+     */
+    memset(out_quality, 0, sizeof(*out_quality));
+
+    /*
+     * Validação dos parâmetros básicos.
+     *
+     * Rejeita:
+     *
+     *   - buffer nulo;
+     *   - janela com menos de 100 amostras;
+     *   - janela maior que a capacidade do buffer;
+     *   - frequência de amostragem igual ou inferior a zero.
+     *
+     * A exigência de pelo menos 100 amostras é uma regra do software,
+     * não uma exigência direta do MAX30102.
+     */
+    if (
+        buffer == NULL ||
+        window_samples < 100u ||
+        window_samples > SAMPLE_BUFFER_SIZE ||
+        expected_sample_rate_hz <= 0.0f
+    ) {
+        /*
+         * Marca que a janela é curta ou inválida.
+         *
+         * PPG_INVALID_WINDOW_SHORT deve ser uma flag definida
+         * em outro arquivo, provavelmente signal_quality.h
+         * ou app_types.h.
+         */
+        out_quality->invalid_reasons =
+            PPG_INVALID_WINDOW_SHORT;
+
+        return false;
+    }
+
+    /*
+     * Quantidade de amostras efetivamente copiadas.
+     */
+    size_t n = 0u;
+
+    /*
+     * Copia as amostras mais recentes do buffer circular para
+     * o vetor estático s_samples.
+     *
+     * Espera-se que sample_buffer_copy_latest():
+     *
+     *   - copie até window_samples;
+     *   - informe em n quantas amostras foram copiadas;
+     *   - retorne false se a operação falhar.
+     */
+    if (
+        !sample_buffer_copy_latest(
+            buffer,
+            s_samples,
+            window_samples,
+            &n
+        )
+        ||
+        n < window_samples
+    ) {
+        /*
+         * Registra quantas amostras estavam disponíveis.
+         */
+        out_quality->window_samples = n;
+
+        /*
+         * Informa que a janela não possui o tamanho solicitado.
+         */
+        out_quality->invalid_reasons =
+            PPG_INVALID_WINDOW_SHORT;
+
+        return false;
+    }
+
+    /*
+     * Componentes DC dos canais IR e RED.
+     *
+     * Serão preenchidas por detrend_linear() com as médias
+     * das amostras originais.
+     */
+    float dc_ir = 0.0f;
+    float dc_red = 0.0f;
+
+    /*
+     * Remove média e tendência linear do canal IR.
+     *
+     * Resultado:
+     *
+     *   s_ir = componente variável/detrended do IR
+     *   dc_ir = média do IR original
+     */
+    detrend_linear(
+        s_samples,
+        n,
+        true,
+        s_ir,
+        &dc_ir
+    );
+
+    /*
+     * Remove média e tendência linear do canal RED.
+     *
+     * Resultado:
+     *
+     *   s_red = componente variável/detrended do RED
+     *   dc_red = média do RED original
+     */
+    detrend_linear(
+        s_samples,
+        n,
+        false,
+        s_red,
+        &dc_red
+    );
+
+    /*
+     * Calcula a amplitude RMS do canal IR após o detrend.
+     *
+     * Neste código, esse valor é utilizado como AC_IR.
+     */
+    float ac_ir = rms(s_ir, n);
+
+    /*
+     * Calcula a amplitude RMS do canal RED após o detrend.
+     *
+     * Neste código, esse valor é utilizado como AC_RED.
+     */
+    float ac_red = rms(s_red, n);
+
+    /*
+     * Estima o ruído residual do canal IR.
+     *
+     * Somente o IR é usado para essa estimativa.
+     */
+    float noise = residual_noise_rms(s_ir, n);
+
+    /*
+     * Calcula uma relação sinal-ruído linear:
+     *
+     *   SNR = AC_IR / ruído
+     *
+     * IMPORTANTE:
+     * Este valor não está em decibéis.
+     *
+     * Para expressá-lo em dB seria necessário algo como:
+     *
+     *   SNR_dB = 20 × log10(AC_IR / ruído)
+     *
+     * Caso o ruído seja praticamente zero, é atribuído o valor 100
+     * para evitar divisão por zero.
+     */
+    float snr = noise > 1e-6f
+        ? ac_ir / noise
+        : 100.0f;
+
+    /*
+     * Calcula a semelhança entre os formatos dos canais IR e RED.
+     *
+     * Como os dois vetores já foram centralizados por detrend,
+     * o resultado funciona como uma correlação normalizada.
+     */
+    float corr = correlation(s_ir, s_red, n);
+
+    /*
+     * Calcula o índice de perfusão:
+     *
+     *   PI = AC_IR / DC_IR
+     *
+     * Exemplo:
+     *
+     *   AC_IR = 500
+     *   DC_IR = 50000
+     *
+     *   PI = 500 / 50000 = 0.01 = 1%
+     *
+     * Se DC_IR for praticamente zero, retorna zero para evitar
+     * divisão por zero.
+     */
+    float pi = dc_ir > 1e-6f
+        ? ac_ir / dc_ir
+        : 0.0f;
+
+    /*
+     * Conta quantas amostras estão saturadas ou próximas dos
+     * limites do ADC.
+     */
+    size_t clipping_count = 0u;
+
+    /*
+     * Conta quantos intervalos consecutivos possuem duração
+     * compatível com a frequência esperada.
+     *
+     * Para n amostras existem n - 1 intervalos temporais.
+     */
+    size_t continuous_count = 0u;
+
+    /*
+     * Calcula o período esperado entre amostras, em milissegundos.
+     *
+     * Exemplos:
+     *
+     *   100 Hz -> 1000 / 100 = 10 ms
+     *   50 Hz  -> 1000 / 50  = 20 ms
+     */
+    const float expected_dt_ms =
+        1000.0f / expected_sample_rate_hz;
+
+    /*
+     * Percorre todas as amostras para detectar:
+     *
+     *   - clipping;
+     *   - continuidade temporal.
+     */
+    for (size_t i = 0u; i < n; ++i) {
+        /*
+         * Uma amostra é considerada em clipping quando:
+         *
+         *   - IR está próximo de zero;
+         *   - RED está próximo de zero;
+         *   - IR está próximo do máximo de 18 bits;
+         *   - RED está próximo do máximo de 18 bits.
+         *
+         * O limite inferior usa <= 1.
+         * O limite superior usa ADC_MAX - 1.
+         */
+        if (
+            s_samples[i].ir <= 1u ||
+            s_samples[i].red <= 1u ||
+            (float)s_samples[i].ir >=
+                PPG_ADC_MAX_VALUE - 1.0f ||
+            (float)s_samples[i].red >=
+                PPG_ADC_MAX_VALUE - 1.0f
+        ) {
+            clipping_count++;
+        }
+
+        /*
+         * A partir da segunda amostra, calcula o intervalo de tempo
+         * em relação à amostra anterior.
+         */
+        if (i > 0u) {
+            /*
+             * dt:
+             *   diferença temporal entre duas amostras consecutivas,
+             *   em milissegundos.
+             *
+             * Assume que timestamp_ms é monotonicamente crescente.
+             */
+            uint32_t dt =
+                s_samples[i].timestamp_ms -
+                s_samples[i - 1u].timestamp_ms;
+
+            /*
+             * O intervalo é considerado aceitável quando está entre:
+             *
+             *   60% e 140% do período esperado.
+             *
+             * Para 100 Hz, período esperado de 10 ms:
+             *
+             *   mínimo = 6 ms
+             *   máximo = 14 ms
+             *
+             * Portanto, intervalos entre 6 e 14 ms são aceitos.
+             */
+            if (
+                (float)dt >= expected_dt_ms * 0.60f &&
+                (float)dt <= expected_dt_ms * 1.40f
+            ) {
+                continuous_count++;
+            }
+        }
+    }
+
+    /*
+     * Fração de amostras com clipping.
+     *
+     * Exemplo:
+     *
+     *   4 amostras saturadas em 400
+     *
+     *   clipping_fraction = 4 / 400 = 0.01 = 1%
+     */
+    float clipping_fraction =
+        (float)clipping_count / (float)n;
+
+    /*
+     * Fração de intervalos temporais considerados corretos.
+     *
+     * Exemplo:
+     *
+     *   395 intervalos corretos em 399
+     *
+     *   continuity = 395 / 399 ≈ 0.99
+     */
+    float continuity = n > 1u
+        ? (float)continuous_count / (float)(n - 1u)
+        : 0.0f;
+
+    /*
+     * Máscara de bits que reúne os motivos de invalidação.
+     *
+     * Inicialmente nenhuma falha está ativa.
+     */
+    uint32_t reasons = PPG_INVALID_NONE;
+
+    /*
+     * Considera que existe sinal quando:
+     *
+     *   - o nível médio IR é suficiente;
+     *   - a componente pulsátil IR possui amplitude suficiente.
+     *
+     * Isso é uma estimativa de presença de sinal, e não necessariamente
+     * uma detecção confiável da presença do dedo.
+     */
+    bool signal_present =
+        dc_ir >= MIN_DC_IR &&
+        ac_ir >= MIN_AC_RMS;
+
+    /*
+     * Cada condição utiliza OR bit a bit para acrescentar uma flag
+     * à máscara de motivos de invalidação.
+     *
+     * Isso permite que várias falhas sejam registradas simultaneamente.
+     */
+
+    /*
+     * Sem nível óptico ou pulsação suficientes.
+     */
+    if (!signal_present) {
+        reasons |= PPG_INVALID_NO_SIGNAL;
+    }
+
+    /*
+     * Componente pulsátil muito pequena em relação à componente DC.
+     */
+    if (pi < MIN_PERFUSION_INDEX) {
+        reasons |= PPG_INVALID_LOW_PERFUSION;
+    }
+
+    /*
+     * RED e IR possuem formatos pouco semelhantes.
+     *
+     * fabsf() usa o valor absoluto, aceitando correlação positiva
+     * ou negativa.
+     */
+    if (fabsf(corr) < MIN_RED_IR_CORRELATION) {
+        reasons |= PPG_INVALID_LOW_CORRELATION;
+    }
+
+    /*
+     * Mais de 1% da janela está próxima dos limites do ADC.
+     */
+    if (clipping_fraction > MAX_CLIPPING_FRACTION) {
+        reasons |= PPG_INVALID_CLIPPING;
+    }
+
+    /*
+     * Menos de 95% dos intervalos temporais estão dentro
+     * da tolerância esperada.
+     */
+    if (continuity < 0.95f) {
+        reasons |= PPG_INVALID_DISCONTINUITY;
+    }
+
+    /*
+     * A partir daqui são construídas pontuações normalizadas
+     * entre 0 e 1.
+     */
+
+    /*
+     * Pontuação do índice de perfusão.
+     *
+     * A função faz uma interpolação linear:
+     *
+     *   PI mínimo       -> score 0
+     *   PI igual a 1.5% -> score 1
+     *
+     * Valores fora da faixa são limitados por clamp01().
+     */
+    float score_pi = clamp01(
+        (pi - MIN_PERFUSION_INDEX) /
+        (0.015f - MIN_PERFUSION_INDEX)
+    );
+
+    /*
+     * Pontuação da correlação RED/IR.
+     *
+     *   correlação 0.60 -> score 0
+     *   correlação 0.98 -> score 1
+     */
+    float score_corr = clamp01(
+        (
+            fabsf(corr) -
+            MIN_RED_IR_CORRELATION
+        )
+        /
+        (
+            0.98f -
+            MIN_RED_IR_CORRELATION
+        )
+    );
+
+    /*
+     * Pontuação da relação sinal-ruído linear.
+     *
+     * Fórmula:
+     *
+     *   score_snr = (SNR - 2) / 10
+     *
+     * Assim:
+     *
+     *   SNR <= 2  -> score 0
+     *   SNR = 7   -> score 0.5
+     *   SNR >= 12 -> score 1
+     */
+    float score_snr = clamp01(
+        (snr - 2.0f) / 10.0f
+    );
+
+    /*
+     * Pontuação de ausência de clipping.
+     *
+     *   clipping = 0% -> score 1
+     *   clipping = 1% -> score 0
+     *
+     * Acima de 1%, clamp01() mantém o score em zero.
+     */
+    float score_clip = clamp01(
+        1.0f -
+        clipping_fraction /
+        MAX_CLIPPING_FRACTION
+    );
+
+    /*
+     * Pontuação final ponderada.
+     *
+     * Pesos:
+     *
+     *   25% índice de perfusão;
+     *   25% correlação RED/IR;
+     *   20% relação sinal-ruído;
+     *   20% continuidade temporal;
+     *   10% ausência de clipping.
+     *
+     * Soma dos pesos:
+     *
+     *   0.25 + 0.25 + 0.20 + 0.20 + 0.10 = 1.00
+     */
+    float quality_score =
+        0.25f * score_pi +
+        0.25f * score_corr +
+        0.20f * score_snr +
+        0.20f * continuity +
+        0.10f * score_clip;
+
+    /*
+     * Se não houver sinal básico, a qualidade é zerada,
+     * independentemente das outras métricas.
+     */
+    if (!signal_present) {
+        quality_score = 0.0f;
+    }
+
+    /*
+     * Preenche a estrutura de saída.
+     */
+
+    /*
+     * Indica se foram detectados nível DC e amplitude AC mínimos.
+     */
+    out_quality->signal_present = signal_present;
+
+    /*
+     * Máscara com todos os motivos de invalidação detectados.
+     */
+    out_quality->invalid_reasons = reasons;
+
+    /*
+     * Quantidade de amostras processadas.
+     */
+    out_quality->window_samples = n;
+
+    /*
+     * Frequência de amostragem esperada informada pelo sistema.
+     *
+     * Esta função não calcula a frequência real a partir dos timestamps.
+     */
+    out_quality->sample_rate_hz =
+        expected_sample_rate_hz;
+
+    /*
+     * Duração real da janela segundo os timestamps.
+     *
+     * Exemplo:
+     *
+     *   timestamp final   = 5000 ms
+     *   timestamp inicial = 1000 ms
+     *
+     *   duração = 4000 / 1000 = 4 segundos
+     */
+    out_quality->window_duration_s =
+        (float)(
+            s_samples[n - 1u].timestamp_ms -
+            s_samples[0].timestamp_ms
+        ) / 1000.0f;
+
+    /*
+     * Componentes DC estimadas pelas médias dos canais originais.
+     */
+    out_quality->dc_ir = dc_ir;
+    out_quality->dc_red = dc_red;
+
+    /*
+     * Componentes AC estimadas pelo RMS dos sinais após detrend.
+     */
+    out_quality->ac_ir = ac_ir;
+    out_quality->ac_red = ac_red;
+
+    /*
+     * RMS do resíduo entre o IR original detrended e sua
+     * média móvel de cinco pontos.
+     */
+    out_quality->noise = noise;
+
+    /*
+     * Relação AC_IR / ruído.
+     *
+     * Este valor é linear, não está em decibéis.
+     */
+    out_quality->snr = snr;
+
+    /*
+     * Índice de perfusão calculado por AC_IR / DC_IR.
+     */
+    out_quality->perfusion_index = pi;
+
+    /*
+     * Semelhança normalizada entre os canais RED e IR.
+     */
+    out_quality->red_ir_correlation = corr;
+
+    /*
+     * Fração de intervalos temporais válidos.
+     */
+    out_quality->continuity_score = continuity;
+
+    /*
+     * Fração de amostras próximas dos limites do ADC.
+     */
+    out_quality->clipping_fraction = clipping_fraction;
+
+    /*
+     * Pontuação combinada final, garantida entre 0 e 1.
+     */
+    out_quality->quality_score =
+        clamp01(quality_score);
+
+    /*
+     * A avaliação foi executada com sucesso.
+     *
+     * Isso não significa necessariamente que a janela é válida.
+     * Os motivos de invalidação ainda precisam ser examinados.
+     */
+    return true;
+}
+
+/*
+ * Função simplificada para avaliar a qualidade usando a configuração
+ * global do sistema.
+ *
+ * Em vez de o chamador informar manualmente:
+ *
+ *   - tamanho da janela;
+ *   - frequência de amostragem;
+ *
+ * esses valores são obtidos de config_repo_get().
+ */
+bool signal_quality_evaluate(
+    const sample_buffer_t *buffer,
+    signal_quality_t *out_quality
+) {
+    /*
+     * Recupera a configuração central do firmware.
+     *
+     * Espera-se que system_config_t contenha, entre outros campos:
+     *
+     *   processing_window_samples:
+     *     quantidade de amostras analisadas em cada janela.
+     *
+     *   sensor_sample_rate_hz:
+     *     frequência configurada no MAX30102.
+     */
+    const system_config_t *cfg =
+        config_repo_get();
+
+    /*
+     * Executa a versão completa da avaliação utilizando os valores
+     * armazenados na configuração.
+     */
+    return signal_quality_evaluate_window(
+        buffer,
+        cfg->processing_window_samples,
+        (float)cfg->sensor_sample_rate_hz,
+        out_quality
+    );
+}
+```

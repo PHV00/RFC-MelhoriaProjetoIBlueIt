@@ -21,6 +21,14 @@
 
 ---
 
+## Estado de implementação auditado
+
+O código presente neste repositório, no commit `a74986d93098367b9e0b2085ed6d113f29ffa1d0`, corresponde ao firmware de uma prova de conceito ESP32-C3/MAX3010x. Por inspeção estática, ele contém aquisição PPG, FIFO em lote, qualidade, HR, estimativa não calibrada de SpO2, confiança, estados e telemetria serial parcial.
+
+Unity, DeepDDA, backend, MongoDB, dashboard, regras clínicas, override e persistência descritos neste RFC pertencem ao ecossistema externo ou ao escopo planejado; sua integração não está demonstrada pelo código deste checkout. Não foram localizados testes automatizados/HIL do firmware. Essas pendências representam o estado atual e devem ser atualizadas conforme forem implementadas e testadas.
+
+---
+
 # 1. Visão do Produto e Impacto (O Problema)
   
 Este projeto tem como finalidade aprimorar o jogo sério I Blue It, um sistema biomédico composto por dispositivos, jogos sérios e telemetria, desenvolvido pelo Laboratory for Research on Visual Applications (LARVA) da Universidade do Estado de Santa Catarina (UDESC), com o objetivo de auxiliar na fisioterapia de pacientes com problemas respiratórios. Esse auxílio ocorre por meio de exercícios respiratórios e da análise dos resultados obtidos durante sua execução. Assim, o projeto propõe a aplicação de melhorias tanto no hardware quanto no software do sistema biomédico.
@@ -58,7 +66,7 @@ Nesse modelo, dispositivos como o PITACO continuam fornecendo dados respiratóri
 
 Entretanto, a tese de Dias (2024) apresenta o uso da SpO₂ no I Blue It 5.0 no contexto de uma prova de conceito do Flow Psicofisiológico e do módulo DeepDDA. Embora essa prova de conceito demonstre a viabilidade técnica do uso da oximetria para apoiar decisões de segurança e adaptação dinâmica, ela não caracteriza, por si só, uma integração operacional definitiva do oxímetro ao ecossistema. Assim, ainda permanecem pontos a serem especificados e consolidados, como hardware, firmware, comunicação, confiabilidade da leitura, tratamento de erros, persistência dos dados e segurança da transmissão.
 
-Com base nessa estrutura, a melhoria proposta neste RFC se divide em três partes, sendo a primeira a integração do módulo de oximetria ao dispositivo PITACO, permitindo que dados de saturação de oxigênio sejam coletados, transmitidos, armazenados e disponibilizados ao sistema de forma segura, a segunda tratando da adição de tais dados ao módulo de Flow Psicofisiológico, tendo isso já sido validado na prova de conceito descrita por Dias (2024), e agora sendo de fato implantado no sistema, e, por fim, o ajuste dos dashboards clínicos para o novo parâmetro de saturação sanguínea. A proposta, deste modo, não busca alterar a mecânica principal do jogo e sua jogabilidade em si, mas aprimorar a camada de monitoramento fisiológico, ampliando a capacidade do I Blue It de acompanhar sinais relevantes durante a execução dos exercícios respiratórios, trazendo mais segurança para os pacientes.[2]
+Com base nessa estrutura, a melhoria proposta neste RFC se divide em três partes: integrar o módulo de oximetria ao PITACO; estudar a utilização desses dados no Flow Psicofisiológico/DeepDDA; e ajustar os dashboards para o novo parâmetro. A tese de Dias (2024) fornece uma prova de conceito com dados sintéticos, mas não valida o sensor, o pipeline ou a política clínica atuais. A proposta não busca alterar a mecânica principal do jogo; busca desenvolver uma camada de monitoramento com potencial para apoiar segurança e decisão profissional, benefício que ainda precisa ser testado.[2]
 
 ---
 
@@ -66,7 +74,7 @@ Com base nessa estrutura, a melhoria proposta neste RFC se divide em três parte
 
 A concepção do tema desta pesquisa surge no Laboratory for Research on Visual Applications (LARVA) da UDESC, em colaboração com profissionais da área de fisioterapia respiratória e áreas correlatas, com o objetivo de atender a problemáticas reais do domínio clínico. Sendo assim, desde o princípio, o sistema tem como foco atender às necessidades de ferramentas que auxiliem no processo de atendimento médico e tratamento de pacientes com problemas respiratórios.[1]
 
-Os primeiros resultados surgiram em 2018, com a pesquisa sendo feita com a participação de 80 profissionais da saúde (fisioterapeutas, médicos pneumologistas, fisioterapeutas respiratórios, neurologistas), os quais atuavam com a finalidade de garantir a efetividade da ferramenta ao longo do próprio desenvolvimento, e que, ao final, a avaliaram, obtendo um resultado muito satisfatório, uma nota 4.1 de 5, demonstrando grande satisfação por parte dos envolvidos. [1]
+Os documentos históricos registram avaliação participativa e nota média de utilidade percebida de 4,1/5. As contagens precisam ser conferidas na fonte primária antes de publicação: o pacote de contexto registra 106 atores, 85 especialistas e 15 avaliações, enquanto versões anteriores deste RFC resumiam o estudo como “80 profissionais”. Esse resultado representa percepção de utilidade, não efetividade ou eficácia clínica.[1]
 
 Desde sua fase inicial até agora, houve diversas melhorias em cada uma das versões. Segue um histórico de versões de maneira resumida:
 
@@ -128,7 +136,7 @@ público-alvo: pessoas com problemas respiratórios de modo amplo
 | BubbleBreather | Exercícios respiratórios com foco em recuperação de pneumonia | Microfone / navegador | Não identificado | Não identificado | Não identificado | Não possui módulo clínico especializado | Escopo restrito, dependência de microfone e ausência de integração com sensores terapêuticos dedicados |
 | PlayPhysio | Exercícios respiratórios com foco em adesão ao tratamento, principalmente em crianças | Dispositivo IoT PhysioPal conectado via Bluetooth | Parcial | Não identificado | Dados vinculados ao uso do equipamento terapêutico | Camada clínica mais simplificada | Menor robustez clínica quando comparado a uma plataforma multimodal com dashboard terapêutico |
 | ACPlus Respiratory Assessment + OmniFlow | Diagnóstico, documentação clínica e terapia respiratória interativa | Espirômetro Bluetooth e iPad | Parcial | Não identificado | Dados respiratórios capturados por dispositivo dedicado | Possui documentação clínica e análise profissional | Solução comercial voltada ao contexto regulatório estadunidense |
-| I Blue It 6.0 | Reabilitação respiratória mediada por jogo sério ativo, com monitoramento fisiológico complementar | PITACO ampliado com sensor de SpO2 | Sim | Sim, com integração operacional ao DeepDDA / Flow Psicofisiológico utilizando dados reais de SpO2. | sensor SpO2 (saturação sanguínea) | Dashboard clínico com dados respiratórios, desempenho e saturação sanguínea | Solução em desenvolvimento, dependente de validação técnica da integração do oxímetro ao PITACO |
+| I Blue It 6.0 — proposta | Reabilitação respiratória mediada por jogo sério ativo, com monitoramento fisiológico complementar | PITACO ampliado com sensor de SpO2 | Planejada | Integração com DeepDDA / Flow Psicofisiológico proposta; não demonstrada neste repositório com dados reais | sensor SpO2 em desenvolvimento | Atualização do dashboard proposta | Depende de validação técnica, integração ponta a ponta e revisão clínica |
 
 ---
 
@@ -136,9 +144,9 @@ público-alvo: pessoas com problemas respiratórios de modo amplo
 
 Analisando as soluções elencadas, percebe-se que o campo de soluções digitais voltadas à reabilitação respiratória pode ser organizado em três grupos principais. O primeiro grupo é composto por soluções leves e acessíveis, como o BubbleBreather, que priorizam simplicidade tecnológica, acesso rápido e execução em navegador. O segundo grupo é formado por soluções voltadas ao engajamento e à adesão ao tratamento, como o PlayPhysio, que utiliza um dispositivo IoT para tornar os exercícios respiratórios mais atrativos, especialmente para o público infantil. O terceiro grupo envolve soluções com maior maturidade clínica e comercial, como o ACPlus Respiratory Assessment e o OmniFlow, que integram dispositivos respiratórios e recursos de análise profissional, porém com forte dependência do contexto regulatório e de implantação estadunidense.
 
-Apesar das contribuições dessas soluções, observa-se que nenhuma delas contempla, de forma integrada, todos os elementos que caracterizam a proposta do I Blue It 6.0: uso de jogo sério ativo voltado à reabilitação respiratória, arquitetura multimodal, integração com dispositivo IoT próprio, monitoramento fisiológico por SpO2, possibilidade de uso de inteligência artificial para ajuste dinâmico e dashboard clínico voltado ao acompanhamento profissional.
+Apesar das contribuições dessas soluções, a proposta do I Blue It 6.0 busca reunir jogo sério ativo, arquitetura multimodal, dispositivo IoT próprio, monitoramento por SpO2, ajuste dinâmico e dashboard clínico. A comparação documenta o diferencial pretendido; não demonstra que todos esses elementos já estejam integrados ou validados.
 
-Nesse contexto, o I Blue It 6.0 (a versão da proposta de melhoria) busca preencher uma lacuna técnica no ambiente fisioterapêutico brasileiro, ao propor uma solução que integra exergame respiratório, dispositivo terapêutico dedicado, monitoramento de saturação sanguínea e análise clínica dos dados do paciente. Dessa forma, o diferencial do projeto está na ampliação do ecossistema I Blue It para oferecer não apenas suporte lúdico aos exercícios respiratórios, mas também maior segurança fisiológica, rastreabilidade dos dados e apoio à tomada de decisão por parte do profissional da saúde.
+Nesse contexto, o I Blue It 6.0 busca investigar uma integração entre exergame respiratório, dispositivo dedicado, monitoramento de saturação e análise dos dados. O diferencial pretendido é ampliar rastreabilidade e apoio à decisão profissional; eventual ganho de segurança fisiológica permanece hipótese a validar.
 
 ---
 
@@ -156,7 +164,7 @@ Profissional de saúde: fisioterapeutas respiratórios, fisioterapeutas clínico
 
 ### Objetivo Geral
 
-O projeto se propõe a adicionar funções e módulos, tanto ao hardware como ao software, de modo a cobrir primariamente a segurança e monitoramento da saturação sanguínea do paciente em tempo de execução das sessões, sua coleta e processamento dos dados oriundos da oximetria, para aumentar a segurança fisiológica do sistema e auxiliar os profissionais responsáveis na tomada de decisões. Pretende-se assim adicionar um novo sensor de oximetria (SpO2) ao aparelho de captação de dados existente PITACO, ao qual serão utilizados estes novos dados de saturação sanguínea para a criação de um módulo, responsável pelo monitoramento e segurança do paciente durante a sessão, adjunto ao módulo de dificuldade dinâmica por Inteligência Artificial (IA) existente, assim operacionalizando o DeepDDA com dados reais do SpO2. Tais mudanças acarretam em alterações imediatas no sistema biomédico atual, como a adição ao dashboard clínico do dado de saturação sanguínea do paciente, com a finalidade de fornecer ao profissional da saúde responsável mais um dado em sua tomada de decisão. Também será necessário alterar a IA de monitoramento e detecção de anomalias, responsável pela avaliação do estado do paciente em tempo de execução, passando agora a se utilizar de um novo parâmetro, o biossinal de saturação sanguínea, em seu processo, e retornando recomendações de pausa ou interrupção imediata.  
+O projeto se propõe a desenvolver funções de hardware e software para coletar, qualificar e disponibilizar dados de oximetria durante as sessões. O objetivo é investigar se esses dados podem apoiar monitoramento e decisão profissional sem substituir julgamento clínico. A proposta inclui integrar um sensor SpO2 ao PITACO, preparar o dashboard e, após validação da medição e aprovação da política, estudar sua utilização pelo DeepDDA. Recomendações ou ações de pausa/interrupção permanecem planejadas e dependem de supervisão, critérios clínicos, replay e testes ponta a ponta.
 
 ---
 
@@ -177,11 +185,11 @@ Tendo em vista a problemática apresentada, este projeto tem como fim sanar as l
 As métricas de sucesso estipuladas são:
 
 - Registro correto de sessões com saturação sanguínea associada, advinda do novo componente SpO2, de modo a manter a velocidade e métricas do sistema atual.
-- Acurácia da IA de monitoramento fisiológico superior a 85% (para o acerto de decisões de interrupção e detecção de risco).
+- Desempenho do módulo de decisão medido por tarefa, classes, dataset, oráculo e custo de erro previamente definidos; a antiga meta genérica de 85% permanece suspensa até essa definição.
 - Ajuste dinâmico com delay de até 800 ms na dificuldade durante a sessão, ao utilizar a IA de monitoramento fisiológico.
 - Tempo de resposta do sistema inferior a 800 ms para feedback em gameplay.
 - Adição dos dados obtidos pelo SpO2 ao dashboard apresentando todos os dados já existentes e novos pertinentes, mantendo o tempo de resposta atual.
-- Acurácia dos cálculos do sensor SpO2 sobre saturação sanguínea igualada a equipamentos homologados.
+- Erro e concordância da SpO2 avaliados contra referência identificada, usando MAE, viés, limites de concordância e critérios aprovados antes da coleta.
 - Percentual de decisões do DeepDDA registradas corretamente com estado observado, ação, recompensa e parâmetros alterados.
 - Tempo entre captura da SpO2 válida e disponibilização do dado ao DeepDDA inferior a 800 ms.
 - Tempo entre decisão do DeepDDA e aplicação da ação no jogo inferior a 800 ms.
@@ -193,9 +201,9 @@ As métricas de sucesso estipuladas são:
 
 # 2. Engenharia de Requisitos
 
-Este segmento define o que a melhoria realizará para atender às novas necessidades de monitoramento e segurança do paciente, sobre o sistema biomédico I Blue It. Nesse sentido, os dados atualmente fornecidos são insuficientes para a utilização do módulo de IA (inteligência artificial), de modo a monitorar a segurança biofisiológica do paciente e garanti-la durante as sessões.
+Este segmento define o que a melhoria deverá realizar para investigar novas formas de monitoramento e apoio à segurança no I Blue It. Os dados atualmente disponíveis são insuficientes para autorizar o uso do módulo de IA em decisões fisiológicas; primeiro são necessários medição válida, rastreabilidade, política aprovada e supervisão profissional.
 
-Sendo assim, a melhoria abrange duas frentes, a primeira, adicionar a coleta de tais dados, sendo feita por meio de um incremento do sensor SpO2 (sensor de oximetria) ao dispositivo PITACO, e a segunda sendo os ajustes necessários no sistema biomédico atual para suportar tais mudanças, ajustes estes como adicionar parâmetros de oximetria à IA de Flow Psicofisiológico, assim ajustando ou interrompendo as sessões em casos identificados como anômalos ou de iminente risco fisiológico ao paciente, e aprimoração com a adição dos novos dados aos dashboards clínicos, utilizados pela equipe médica na tomada de decisão. Assim buscamos, em última instância, garantir que as sessões sejam realizadas na dificuldade adequada ao paciente, por meio do monitoramento contínuo e, em casos anômalos, parando a mesma.
+Sendo assim, a melhoria abrange duas frentes: adicionar a coleta qualificada de SpO2 ao PITACO e preparar os ajustes necessários para que o ecossistema possa consumir esse dado. O uso pela IA, os alertas e qualquer pausa/interrupção dependem antes de validade da medição, política aprovada, supervisão e testes. O objetivo é apoiar a adequação da sessão; não se assume que o protótipo já garanta segurança ou dificuldade clínica apropriada.
 
 O projeto tem como premissa que o software I Blue It já possui uma base funcional composta por jogo sério, dispositivos IoT para captura respiratória, armazenamento de dados, calibração por inteligência artificial e acompanhamento por profissional. Sendo assim, os requisitos estipulados abaixo descrevem as funcionalidades necessárias para a integração do novo módulo proposto, saturação sanguínea, ao sistema existente. 
 
@@ -1429,6 +1437,8 @@ Abaixo consta, em duas partes, uma lista com os componentes do sistema e suas re
 
 #### 5.3.1 - Componentes já presentes no ecossistema atual
 
+Os componentes desta subseção são descritos a partir dos repositórios e trabalhos do ecossistema I Blue It. Eles não estão contidos nem foram executados no checkout de firmware auditado. Para uma alegação de integração, cada componente deverá ser fixado por repositório/commit e coberto por teste ponta a ponta.
+
 #### Jogo / Plataforma I Blue It
 
 A plataforma é o componente principal do jogo. Nela, o paciente controla o personagem Blue por meio da respiração, realizando ações como alcançar alvos e desviar de obstáculos.
@@ -1702,6 +1712,8 @@ O sistema I Blue It é composto por diferentes camadas tecnológicas: o jogo sé
 
 #### Stack atual do sistema
 
+“Stack atual do sistema” refere-se ao ecossistema I Blue It documentado nas fontes externas. Neste repositório, foram verificados somente C, ESP-IDF, FreeRTOS, CMake, ESP32-C3, I2C e serial. As demais tecnologias abaixo não constituem implementação confirmada neste checkout.
+
 | Camada | Tecnologias contempladas |
 |---|---|
 | Jogo sério | Unity, C# |
@@ -1737,6 +1749,8 @@ A melhoria, por sua vez, adiciona novo componente de hardware, novas funções e
 
 O ecossistema I Blue It, em sua versão 5.0, manipula dados sensíveis relacionados ao acompanhamento terapêutico de pacientes em sessões de reabilitação respiratória. Esses dados incluem informações de cadastro, calibração respiratória, histórico de sessões, desempenho no jogo, parâmetros definidos pelo fisioterapeuta e sinais fisiológicos utilizados pelo sistema para adaptação da dificuldade. Tais dados são utilizados em diversas camadas de tecnologias e protocolos, os quais já foram citados ao longo deste documento, abaixo, podemos ver uma abstração das principais preocupações de segurança e como são sanadas já pelo modelo atual: 
 
+As medidas abaixo são alegações do ecossistema/documentação externa e não foram verificadas por teste de segurança nesta auditoria. Antes de tratar o conjunto como controle confirmado, devem ser fixados os commits, avaliados autenticação/autorização, gestão de segredos, criptografia, logs, retenção, exclusão e resposta a incidentes.
+
 | Preocupação de segurança                          | Aplicação no I Blue It 5.0                                                                                                                                                                            |
 | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Autenticação de usuários**                      | O sistema atual utiliza acesso por **e-mail e senha**, permitindo que apenas usuários cadastrados acessem o ambiente.                                                                                 |
@@ -1764,7 +1778,7 @@ O ecossistema I Blue It, em sua versão 5.0, manipula dados sensíveis relaciona
 
 O modelo atual contempla medidas básicas associadas à autenticação, autorização, criptografia em trânsito, controle de acesso e separação de camadas, que se relacionam com riscos presentes na OWASP Top 10, assim já apresentando nativamente um foco em segurança.
 
-Ao se adicionar o novo módulo SpO2 ao PITACO, e todos os ajustes em cada módulo que isto necessite, esperamos manter o mesmo rigor no tratamento, coleta e armazenamento de dados existente. Nesse sentido vale ressaltar que o módulo IoT SpO2 será desenvolvido com o mesmo sistema de transmissão USB serial, que mitiga vazamentos de informações, além de após as alterações pertinentes nos módulos subsequentes para comportar a melhoria (tais como o jogo, o InfoChart e o backend), esperamos manter o mesmo nível de segurança já presente no ecossistema I Blue It.
+Ao adicionar o módulo SpO2 ao PITACO, os controles de dados precisarão ser reavaliados em todas as camadas. USB serial reduz exposição direta à rede, mas não fornece, por si só, autenticação, confidencialidade, integridade ou associação correta a paciente e sessão. Jogo, InfoChart e backend deverão demonstrar os controles aplicáveis por revisão e testes.
 
 ---
 
@@ -1776,7 +1790,7 @@ Abaixo consta uma lista de todos os dados coletados (já imaginando um cenário 
 | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Cadastro do paciente**                  | Nome, sexo, data de nascimento, peso, altura, etnia, condição respiratória e observações clínicas                                                                                              | Coleção `Pacient` no MongoDB Atlas, via backend em Azure Functions/Mongoose. O schema público mostra campos como `name`, `sex`, `birthday`, `condition`, `weight`, `height`, `ethnicity` e `observations`.                                                | Pela rota `DELETE /pacients/{pacientId}`. O backend possui uma função `DeletePacient` que remove o paciente mediante `GameToken`.                                                                                 |
 | **Capacidades respiratórias do paciente** | Pico inspiratório, pico expiratório, duração da inspiração, duração da expiração e frequência respiratória para PITACO, Manovacuômetro e Cinta                                                 | Também ficam no documento `Pacient`, em `capacitiesPitaco`, `capacitiesMano` e `capacitiesCinta`.                                                                                                                                                         | Removidas junto ao cadastro do paciente, se a exclusão completa for executada.                                                                                                                                    |
-| **Conta de acesso**                       | Nome completo, usuário, senha, e-mail, papel/perfil de acesso, vínculo com paciente e token do jogo                                                                                            | Coleção `UserAccount`, com campos `fullname`, `username`, `password`, `email`, `role`, `pacientId` e `gameToken`.                                                                                                                                         | A função `DeletePacient` remove a conta vinculada ao `pacientId` quando executa a exclusão completa.                                                                                                              |
+| **Conta de acesso**                       | Nome completo, usuário, credencial, e-mail, papel/perfil de acesso, vínculo com paciente e token do jogo                                                                                        | Coleção `UserAccount`, com campos `fullname`, `username`, `password`, `email`, `role`, `pacientId` e `gameToken`. O schema exemplificativo não comprova hashing, política de senha ou gestão segura de tokens; esses controles precisam ser verificados no backend. | A função documentada `DeletePacient` remove a conta vinculada ao `pacientId`; integridade e completude da exclusão ainda exigem teste. |
 | **Calibração respiratória**               | Dispositivo usado, exercício calibrado e valor de calibração                                                                                                                                   | Coleção `CalibrationOverview`, com `pacientId`, `gameDevice`, `calibrationExercise` e `calibrationValue`.                                                                                                                                                 | A exclusão completa remove registros de `CalibrationOverview` associados ao paciente.                                                                                                                             |
 | **Parâmetros personalizados do jogo**     | Fase, nível, velocidade dos objetos, quantidade de loops, incrementos de altura/tamanho e limiares de ajuste                                                                                   | Coleção `GameParameter`, associada ao `pacientId`.                                                                                                                                                                                                        | **Ponto de atenção:** a função `DeletePacient` atual não mostra remoção de `GameParameter`, então esses dados devem ser incluídos na rotina de exclusão para adequação à LGPD.                                    |
 | **Sessão/jogada da plataforma**           | Início, fim, duração, resultado, fase, nível, pontuação, pontuação máxima, razão de pontuação, vida do jogador, Borg, alvos gerados/capturados/falhados e obstáculos gerados/evitados/falhados | Coleção `PlataformOverview`. Cada jogada gera um registro com `pacientId`, `playStart`, `playFinish`, `duration`, `result`, `stageId`, `phase`, `level`, `score`, `BorgScale`, entre outros campos.                                                       | A exclusão completa remove `PlataformOverview` do paciente.                                                                                                                                                       |
@@ -1785,7 +1799,7 @@ Abaixo consta uma lista de todos os dados coletados (já imaginando um cenário 
 | **Sessão clínica/dia de uso**             | Identificador do paciente e número da sessão                                                                                                                                                   | Coleção `PlaySession`, com `pacientId` e `sessionNumber`.                                                                                                                                                                                                 | A função `DeletePacient` remove `PlaySession` do paciente.                                                                                                                                                        |
 | **SpO2 / biossinais da melhoria**         | Saturação de oxigênio e, possivelmente, eventos de alerta, pausa ou interrupção por queda de SpO2                                                                                              | Na tese, o oxímetro entra como dispositivo de monitoramento fisiológico para segurança do paciente; porém, no backend público consultado, os validadores aceitam PITACO, Manovacuômetro e Cinta, mas ainda não listam “Oxímetro” como dispositivo válido. | Para a melhoria, a remoção deve seguir o mesmo vínculo por `pacientId`, mas o schema/validador precisa ser atualizado para garantir que os dados de SpO2 também sejam apagados.                                   |
 
-Tais dados têm como finalidade serem captados, processados e utilizados pelo software durante a gameplay da sessão de terapia, para análise posterior do terapeuta, ou garantia da segurança do paciente durante a execução, não sendo vendidos, transferidos ou compartilhados com terceiros que não o médico e seu paciente.
+Esses dados são propostos para processamento durante a sessão, análise posterior e eventual apoio à segurança. O protótipo não garante segurança clínica. Compartilhamento, acesso e eventual uso por terceiros devem seguir base legal, consentimento quando aplicável, minimização e governança documentada; não podem ser inferidos apenas deste RFC.
 
 Abaixo, podemos ver uma abstração do fluxo de captura e processamento dos dados pelo software:
 
@@ -1801,7 +1815,7 @@ MongoDB Atlas
 Health InfoCharts
    ↓ consulta e exibe ao terapeuta/paciente
 ```
-Assim todos os dados são centralizados no banco de dados MongoDB, o que permite sua criação, visualização, manipulação e exclusão caso requerido tanto pelo sistema como pelos usuários. Para tal finalidade de exclusão de dados o paciente, ou seu responsável legal, pode solicitar a remoção de seus dados ao responsável pelo sistema, clínica, pesquisador ou administrador do I Blue It. Após a solicitação, o operador autorizado deverá localizar o pacientId correspondente e executar a rotina de exclusão no backend, removendo o cadastro do paciente, conta vinculada, calibrações, sessões, resultados da plataforma, minigames e dados brutos dos dispositivos.
+No modelo proposto, os dados são centralizados em MongoDB e associados por identificadores. A possibilidade de exclusão completa ainda precisa ser demonstrada: o próprio levantamento identifica possíveis lacunas para `GameParameter` e `FlowDataDevice`. A rotina deve ser transacionalmente testada, abranger referências e backups conforme a política de retenção e produzir evidência auditável da solicitação e do resultado.
 
 ---
 

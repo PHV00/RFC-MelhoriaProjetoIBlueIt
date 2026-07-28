@@ -2,6 +2,7 @@
 > Gerado em: 2026-07-15
 > Natureza: síntese rastreável de literatura, documentos do projeto, conversas e repositório público.
 > Regra de interpretação: conversas e documentos de projeto são evidência interna do processo, não evidência científica externa nem validação clínica.
+> Baseline de código auditado: commit `a74986d93098367b9e0b2085ed6d113f29ffa1d0`, por inspeção estática.
 
 
 # SCIENTIFIC_CONTEXT
@@ -57,14 +58,18 @@ Cada seta exige evidência própria. Um sistema que calcula números plausíveis
 
 ## 5. Evidência interna do projeto
 
-As conversas indicam evolução rápida do protótipo, troca de MAX30105 para MAX30102, implementação de módulos de qualidade/HR/SpO2 e análise de logs. Essas informações orientam engenharia, mas são observações não controladas. O log com valores de SpO2/HR não informa referência simultânea, posição do dedo, corrente de LED, largura de pulso, movimento, temperatura, janela, algoritmo/calibração ou commit. Portanto, ele demonstra execução do software, não exatidão.
+As conversas indicam evolução rápida do protótipo, troca de MAX30105 para MAX30102 e análise de logs. Essas informações orientam engenharia, mas são observações não controladas. O log com valores de SpO2/HR não informa referência simultânea, posição do dedo, corrente de LED, largura de pulso, movimento, temperatura, janela, algoritmo/calibração ou commit. Portanto, ele demonstra execução de alguma versão do software, não exatidão.
+
+No commit `a74986d93098367b9e0b2085ed6d113f29ffa1d0`, a inspeção estática confirma que o controlador chama avaliação de qualidade, estimativa de HR, estimativa de SpO₂ e construção de confiança. O driver também lê `PART_ID`/`REV_ID`, verifica registradores e drena amostras disponíveis da FIFO em lote. Essa constatação resolve a dúvida sobre a presença dos módulos no HEAD, mas não demonstra compilação, temporização real, comportamento no hardware ou desempenho contra referência (EVD-018).
+
+A configuração permite uma estimativa experimental com curva marcada `calibrated=false`. O modelo interno separa `valid` de `clinical_valid`, porém a telemetria ativa não transmite `clinical_valid`, versão/calibração, motivos de invalidade, overflow ou status dos estimadores. Isso é uma discrepância atual de contrato e uma prioridade de correção; não é uma propriedade desejada ou permanente da arquitetura.
 
 ## 6. Alegações permitidas e proibidas no estado atual
 
 ### Permitidas
 
-- “Foi implementado um protótipo que adquire RED/IR e produz estimativas preliminares.”
-- “O pipeline está sendo estruturado com qualidade de sinal, confiança e fail-safe.”
+- “O código-fonte contém uma prova de conceito para adquirir RED/IR e produzir estimativas preliminares não calibradas.”
+- “O pipeline está sendo estruturado com qualidade de sinal, confiança e estados explícitos de invalidade; a política fail-safe completa ainda está planejada.”
 - “A literatura do ecossistema I Blue It sustenta a relevância de monitoramento multimodal e ajuste dinâmico.”
 
 ### Não sustentadas
@@ -94,8 +99,9 @@ As conversas indicam evolução rápida do protótipo, troca de MAX30105 para MA
 | SRC-LIT-005 | Dias, 2024, *Flow Psicofisiológico em Jogos Digitais* | tese | fundamento do DeepDDA, requisitos, prova de conceito, testes e limitações | fonte mais recente fornecida; não equivale a ensaio clínico |
 | SRC-PRJ-001 | Conversas do projeto, 2026-07-03 a 2026-07-15 | registro interno | decisões, observações, logs e dúvidas do desenvolvimento | não revisado por pares; trechos completos não estavam todos disponíveis nesta execução |
 | SRC-PRJ-002 | Repositório `PHV00/RFC-MelhoriaProjetoIBlueIt`, README, acessado em 2026-07-15 | documento vivo do projeto | objetivos, requisitos, KPIs e modelo de dados proposto | não fixado por hash nesta execução; conteúdo pode mudar |
-| SRC-PRJ-003 | `spo2-wrist-sensor/MELHORIA.md`, acessado em 2026-07-15 | análise estática interna | falhas identificadas no firmware e fluxo arquitetural desejado | pode estar desatualizado em relação ao binário/branch usado nos logs |
+| SRC-PRJ-003 | versão histórica de `docs/development/dev/MELHORIA.md` no commit `a74986d...` | análise estática interna histórica | rastrear problemas observados antes da atualização documental | diverge do código do mesmo baseline em vários itens; usar SRC-PRJ-005 para o estado atual |
 | SRC-PRJ-004 | Logs de oximetria reproduzidos em conversa de 2026-07-13 | observação interna | comportamento preliminar do protótipo | sensor/commit/condições não integralmente preservados; não é validação metrológica |
+| SRC-PRJ-005 | Código e configuração do commit `a74986d93098367b9e0b2085ed6d113f29ffa1d0` | artefato versionado do projeto | estado estático atual da implementação e inventário de testes | não houve build, execução HIL ou comparação com referência nesta auditoria |
 
 ### Convenção de localização
 

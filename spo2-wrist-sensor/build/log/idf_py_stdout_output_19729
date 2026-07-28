@@ -1,0 +1,120 @@
+Command: /home/pedro/.espressif/python_env/idf6.0_py3.12_env/bin/python /home/pedro/esp/esp-idf/tools/idf_monitor.py -p /dev/ttyACM0 -b 115200 --toolchain-prefix riscv32-esp-elf- --target esp32c3 --revision 3 --decode-panic backtrace /home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/sp02_ble.elf /home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/build/bootloader/bootloader.elf -m '/home/pedro/.espressif/python_env/idf6.0_py3.12_env/bin/python' '/home/pedro/esp/esp-idf/tools/idf.py' '-p' '/dev/ttyACM0'
+[0;32mI (102) esp_image: segment 3: paddr=00020020 vaddr=42000020 sizeESP-ROM:esp32c3-api1-20210207[0m
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xd (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40383748
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5830,len:0x155c
+load:0x403cbf10,len:0xce0
+load:0x403ce710,len:0x2fbc
+entry 0x403cbf1a
+[0;32mI (24) boot: ESP-IDF v6.0 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time Jul 27 2026 19:45:45[0m
+[0;32mI (25) boot: chip revision: v0.4[0m
+[0;32mI (25) boot: efuse block revision: v1.3[0m
+[0;32mI (28) boot.esp32c3: SPI Speed      : 80MHz[0m
+[0;32mI (32) boot.esp32c3: SPI Mode       : DIO[0m
+[0;32mI (35) boot.esp32c3: SPI Flash Size : 2MB[0m
+[0;32mI (39) boot: Enabling RNG early entropy source...[0m
+[0;32mI (44) boot: Partition Table:[0m
+[0;32mI (46) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (53) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (59) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (66) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (72) boot: End of partition table[0m
+[0;32mI (75) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=08fb4h ( 36788) map[0m
+[0;32mI (89) esp_image: segment 1: paddr=00018fdc vaddr=3fc8ae00 size=018e8h (  6376) load[0m
+[0;32mI (91) esp_image: segment 2: paddr=0001a8cc vaddr=40380000 size=0574ch ( 22348) load[0m
+[0;32mI (102) esp_image: segment 3: paddr=00020020 vaddr=42000020 size=1570ch ( 87820) map[0m
+[0;32mI (119) esp_image: segment 4: paddr=00035734 vaddr=4038574c size=0564ch ( 22092) load[0m
+[0;32mI (123) esp_image: segment 5: paddr=0003ad88 vaddr=50000000 size=00024h (    36) load[0m
+[0;32mI (127) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (128) boot: Disabling RNG early entropy source...[0m
+[0;32mI (144) cpu_start: Unicore app[0m
+[0;32mI (152) cpu_start: GPIO 20 and 21 are used as console UART I/O pins[0m
+[0;32mI (153) cpu_start: Pro cpu start user code[0m
+[0;32mI (153) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (155) app_init: Application information:[0m
+[0;32mI (158) app_init: Project name:     sp02_ble[0m
+[0;32mI (162) app_init: App version:      a74986d-dirty[0m
+[0;32mI (167) app_init: Compile time:     Jul 27 2026 19:45:38[0m
+[0;32mI (172) app_init: ELF file SHA256:  d4bb9e631...[0m
+[0;32mI (176) app_init: ESP-IDF:          v6.0[0m
+[0;32mI (180) efuse_init: Min chip rev:     v0.3[0m
+[0;32mI (184) efuse_init: Max chip rev:     v1.99 [0m
+[0;32mI (188) efuse_init: Chip rev:         v0.4[0m
+[0;32mI (192) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (198) heap_init: At 3FC95FE0 len 0002A020 (168 KiB): RAM[0m
+[0;32mI (203) heap_init: At 3FCC0000 len 0001C710 (113 KiB): Retention RAM[0m
+[0;32mI (209) heap_init: At 3FCDC710 len 00002950 (10 KiB): Retention RAM[0m
+[0;32mI (215) heap_init: At 50000024 len 00001FC4 (7 KiB): RTCRAM[0m
+[0;32mI (221) spi_flash: detected chip: generic[0m
+[0;32mI (224) spi_flash: flash io: dio[0m
+[0;33mW (227) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;33mW (239) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`[0m
+[0;32mI (249) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (255) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (262) main_task: Started on CPU0[0m
+[0;32mI (262) main_task: Calling app_main()[0m
+[0;32mI (262) APP: Inicializando prova de conceito de HR/SpO2[0m
+{"v":1,"type":"log","tag":"ERROR","message":"Sensor MAX3010x nao identificado/configurado"}
+{"v":1,"type":"log","tag":"RECOVERY","message":"Sensor reinicializado"}
+{"v":1,"type":"log","tag":"ERROR","message":"Falhas I2C consecutivas na aquisicao"}
+{"v":1,"type":"log","tag":"RECOVERY","message":"Sensor reinicializado"}
+{"v":1,"type":"log","tag":"FIFO","message":"Overflow detectado; FIFO limpa e janela invalidada"}
+Build:Feb  7 2021
+rst:0x7 (TG0WDT_SYS_RST),boot:0xd (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40383620
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5830,len:0x155c
+load:0x403cbf10,len:0xce0
+load:0x403ce710,len:0x2fbc
+entry 0x403cbf1a
+[0;32mI (24) boot: ESP-IDF v6.0 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time Jul 27 2026 19:45:45[0m
+[0;32mI (24) boot: chip revision: v0.4[0m
+[0;32mI (24) boot: efuse block revision: v1.3[0m
+[0;32mI (27) boot.esp32c3: SPI Speed      : 80MHz[0m
+[0;32mI (31) boot.esp32c3: SPI Mode       : DIO[0m
+[0;32mI (35) boot.esp32c3: SPI Flash Size : 2MB[0m
+[0;33mW (39) boot.esp32c3: PRO CPU has been reset by WDT.[0m
+[0;32mI (43) boot: Enabling RNG early entropy source...[0m
+[0;32mI (48) boot: Partition Table:[0m
+[0;32mI (50) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (63) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (70) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (76) boot: End of partition table[0m
+[0;32mI (79) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=08fb4h ( 36788) map[0m
+[0;32mI (93) esp_image: segment 1: paddr=00018fdc vaddr=3fc8ae00 size=018e8h (  6376) load[0m
+[0;32mI (95) esp_image: segment 2: paddr=0001a8cc vaddr=40380000 size=0574ch ( 22348) load[0m
+[0;32mI (106) esp_image: segment 3: paddr=00020020 vaddr=42000020 size=1570ch ( 87820) map[0m
+[0;32mI (123) esp_image: segment 4: paddr=00035734 vaddr=4038574c size=0564ch ( 22092) load[0m
+[0;32mI (127) esp_image: segment 5: paddr=0003ad88 vaddr=50000000 size=00024h (    36) load[0m
+[0;32mI (131) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (132) boot: Disabling RNG early entropy source...[0m
+[0;32mI (148) cpu_start: Unicore app[0m
+[0;32mI (156) cpu_start: GPIO 20 and 21 are used as console UART I/O pins[0m
+[0;32mI (157) cpu_start: Pro cpu start user code[0m
+[0;32mI (157) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (159) app_init: Application information:[0m
+[0;32mI (162) app_init: Project name:     sp02_ble[0m
+[0;32mI (166) app_init: App version:      a74986d-dirty[0m
+[0;32mI (171) app_init: Compile time:     Jul 27 2026 19:45:38[0m
+[0;32mI (176) app_init: ELF file SHA256:  d4bb9e631...[0m
+[0;32mI (180) app_init: ESP-IDF:          v6.0[0m
+[0;32mI (184) efuse_init: Min chip rev:     v0.3[0m
+[0;32mI (188) efuse_init: Max chip rev:     v1.99 [0m
+[0;32mI (192) efuse_init: Chip rev:         v0.4[0m
+[0;32mI (196) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (202) heap_init: At 3FC95FE0 len 0002A020 (168 KiB): RAM[0m
+[0;32mI (207) heap_init: At 3FCC0000 len 0001C710 (113 KiB): Retention RAM[0m
+[0;32mI (213) heap_init: At 3FCDC710 len 00002950 (10 KiB): Retention RAM[0m
+[0;32mI (219) heap_init: At 50000024 len 00001FC4 (7 KiB): RTCRAM[0m
+[0;32mI (225) spi_flash: detected chip: generic[0m
+[0;32mI (228) spi_flash: flash io: dio[0m
+[0;33mW (231) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;33mW (243) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`[0m
+[

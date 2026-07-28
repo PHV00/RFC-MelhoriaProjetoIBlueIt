@@ -2,6 +2,8 @@
 > Gerado em: 2026-07-15
 > Natureza: síntese rastreável de literatura, documentos do projeto, conversas e repositório público.
 > Regra de interpretação: conversas e documentos de projeto são evidência interna do processo, não evidência científica externa nem validação clínica.
+> Baseline de código auditado: commit `a74986d93098367b9e0b2085ed6d113f29ffa1d0`, por inspeção estática.
+> Regra de manutenção: limitações de implementação são estados do baseline e devem ser removidas ou reclassificadas quando houver correção e evidência correspondente.
 
 
 # LIMITATIONS
@@ -17,7 +19,7 @@
 ## 2. Limitações do material de projeto
 
 - O histórico completo de todos os chats não estava disponível como exportação; foram usados tópicos e trechos presentes no contexto desta execução.
-- O repositório foi lido pela interface pública, sem clone local e sem hash fixado; conteúdo pode mudar.
+- O código atual foi auditado localmente no commit `a74986d93098367b9e0b2085ed6d113f29ffa1d0`. Não houve build, execução em hardware ou inspeção de outros repositórios do ecossistema.
 - O commit/binário que gerou cada log não foi fornecido.
 - Não há dataset bruto anexado, equipamento de referência ou protocolo simultâneo.
 - A troca MAX30105 -> MAX30102 torna parte dos resultados anteriores obsoleta para a variante atual.
@@ -26,7 +28,7 @@
 
 | ID | Conflito | Impacto | Resolução necessária |
 |---|---|---|---|
-| CFLT-001 | SRC-PRJ-003 diz que HR/SpO2 eram stubs; logs posteriores mostram valores. | estado de implementação incerto | auditar HEAD e commit do log |
+| CFLT-001 | SRC-PRJ-003 diz que HR/SpO2 eram stubs; o HEAD atual implementa e chama ambos. | documento histórico diverge do código atual | resolvido quanto ao estado estático; faltam build/teste para comprovar execução |
 | CFLT-002 | PART_ID 0x15/REV 0x06 (MAX30105 provável) versus MAX30102 atual. | resultados não transferíveis | autoteste e nova caracterização |
 | CFLT-003 | texto da tese usa 95%/89%; figura central exibe principalmente decisão `SpO2 > 89%`. | ambiguidade de política | formalizar tabela de decisão completa |
 | CFLT-004 | tese usa linguagem de “garantir eficácia/segurança”, mas treinamento foi sintético e sem pacientes. | risco de sobreafirmação | reescrever como prova técnica/potencial |
@@ -36,10 +38,13 @@
 | CFLT-008 | confiança nos logs é baixa/moderada, mas `valid=true` aparece cedo. | falso válido possível | estabilização e gate de qualidade |
 | CFLT-009 | arquitetura proposta inclui MongoDB/DeepDDA/dashboard, mas implementação corrente do repo principal não foi demonstrada. | rastreabilidade não confirmada | teste ponta a ponta |
 | CFLT-010 | metas de 800 ms aparecem sem análise de risco ou medição. | pode ser inadequado/excessivo | medir por função e justificar |
+| CFLT-011 | o modelo interno possui `clinical_valid`, mas a telemetria ativa transmite apenas `valid` e omite calibração/motivos. | consumidor pode interpretar estimativa experimental sem contexto suficiente | completar e testar o contrato de telemetria antes de integração clínica |
 
 ## 4. Limitações técnicas previsíveis
 
 PPG de dedo é sensível a movimento, perfusão, posicionamento, luz, pressão de contato, pigmentação/tecido, temperatura e diferenças de hardware. Um único limiar de amplitude não basta. A curva de SpO2 depende do sistema óptico e precisa ser validada. Valores de HR podem sofrer detecção dupla/metade. Backlog de FIFO pode deslocar temporalmente o sinal.
+
+No baseline auditado, já existem leitura em lote da FIFO, avaliação multicomponente de qualidade, HR, razão dos quocientes e separação interna entre validade numérica e clínica. Continuam como pendências evolutivas: identificação explícita da variante, detecção de gaps de origem, preservação RAW, calibração, telemetria completa, testes automatizados, HIL, replay e integração ponta a ponta. A existência dessas pendências não implica que a arquitetura deva permanecer assim.
 
 ## 5. Limitações clínicas
 
@@ -55,8 +60,9 @@ PPG de dedo é sensível a movimento, perfusão, posicionamento, luz, pressão d
 | SRC-LIT-001/002 | versões 1.0/2018 | usar apenas histórico |
 | SRC-LIT-003 | estado da arte até 2020 | atualizar revisão |
 | SRC-LIT-004 | versão 2020; versão 2023 ausente | obter publicação mais recente |
-| SRC-PRJ-003 | conflita com logs posteriores | reexecutar análise estática no commit atual |
-| README/requisitos do repo | documento vivo e metas ainda propostas | fixar versão para artigo |
+| SRC-PRJ-003 / `docs/development/dev/MELHORIA.md` | a versão histórica divergia do código; o documento foi convertido em auditoria evolutiva | reauditar e atualizar quando código/testes mudarem |
+| `spo2-wrist-sensor/ReadME.md` | a versão anterior descrevia MAX30105 e fluxo RAW; o documento foi alinhado ao baseline | manter arquitetura sincronizada a cada alteração relevante |
+| README/RFC do repo | mistura ecossistema externo, proposta e estado implementado | separar explicitamente “existente no ecossistema”, “presente neste repositório” e “planejado” |
 
 ## 7. Revisão humana obrigatória
 
@@ -78,8 +84,9 @@ PPG de dedo é sensível a movimento, perfusão, posicionamento, luz, pressão d
 | SRC-LIT-005 | Dias, 2024, *Flow Psicofisiológico em Jogos Digitais* | tese | fundamento do DeepDDA, requisitos, prova de conceito, testes e limitações | fonte mais recente fornecida; não equivale a ensaio clínico |
 | SRC-PRJ-001 | Conversas do projeto, 2026-07-03 a 2026-07-15 | registro interno | decisões, observações, logs e dúvidas do desenvolvimento | não revisado por pares; trechos completos não estavam todos disponíveis nesta execução |
 | SRC-PRJ-002 | Repositório `PHV00/RFC-MelhoriaProjetoIBlueIt`, README, acessado em 2026-07-15 | documento vivo do projeto | objetivos, requisitos, KPIs e modelo de dados proposto | não fixado por hash nesta execução; conteúdo pode mudar |
-| SRC-PRJ-003 | `spo2-wrist-sensor/MELHORIA.md`, acessado em 2026-07-15 | análise estática interna | falhas identificadas no firmware e fluxo arquitetural desejado | pode estar desatualizado em relação ao binário/branch usado nos logs |
+| SRC-PRJ-003 | versão histórica de `docs/development/dev/MELHORIA.md` no commit `a74986d...` | análise estática interna histórica | rastrear problemas observados antes da atualização documental | diverge do código do mesmo baseline em vários itens; usar SRC-PRJ-005 para o estado atual |
 | SRC-PRJ-004 | Logs de oximetria reproduzidos em conversa de 2026-07-13 | observação interna | comportamento preliminar do protótipo | sensor/commit/condições não integralmente preservados; não é validação metrológica |
+| SRC-PRJ-005 | Código e configuração do commit `a74986d93098367b9e0b2085ed6d113f29ffa1d0` | artefato versionado do projeto | estado estático atual da implementação e inventário de testes | não houve build, execução HIL ou comparação com referência nesta auditoria |
 
 ### Convenção de localização
 

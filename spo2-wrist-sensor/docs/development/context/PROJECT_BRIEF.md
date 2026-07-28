@@ -2,6 +2,7 @@
 > Gerado em: 2026-07-15
 > Natureza: síntese rastreável de literatura, documentos do projeto, conversas e repositório público.
 > Regra de interpretação: conversas e documentos de projeto são evidência interna do processo, não evidência científica externa nem validação clínica.
+> Baseline de código auditado: commit `a74986d93098367b9e0b2085ed6d113f29ffa1d0`, por inspeção estática.
 
 
 # PROJECT_BRIEF
@@ -36,7 +37,8 @@ A finalidade clínica pretendida ainda não está formalmente fechada. O materia
 
 - Logs de 2026-07-13 mostraram alternância rápida de HR e SpO2, inclusive uma primeira leitura `valid=false` e leituras subsequentes marcadas válidas com baixa confiança. Isso sugere que o critério de validade ainda não representa estabilidade clínica. Fonte: SRC-PRJ-004. **PRELIMINAR**.
 - Um teste anterior identificou `part_id=0x15`, `revision_id=0x06`, compatível com MAX30105; posteriormente o hardware foi trocado para MAX30102. Resultados do módulo anterior não validam o atual. Fonte: SRC-PRJ-001. **CONFLITO TEMPORAL**.
-- A análise estática em `MELHORIA.md` declarou estimadores de HR/SpO2 não implementados e módulos não integrados ao controlador; os logs posteriores contêm valores calculados. Isso indica documento desatualizado, branch diferente ou alteração posterior. Fonte: SRC-PRJ-003 versus SRC-PRJ-004. **REQUER REVISÃO DO HEAD/COMMIT**.
+- A análise histórica em `MELHORIA.md` declarou estimadores de HR/SpO2 não implementados e módulos não integrados. A inspeção do commit `a74986d...` confirma que esses módulos agora possuem implementação e são chamados pelo controlador. A divergência foi classificada como evolução entre versões; ainda faltam build, testes e validação em hardware. Fontes: SRC-PRJ-003 e SRC-PRJ-005. **ESTADO ESTÁTICO ATUALIZADO**.
+- No baseline auditado, a curva de SpO₂ está explicitamente não calibrada e a telemetria ativa omite campos internos importantes, incluindo `clinical_valid`, calibração e motivos de invalidade. Isso deve ser tratado como pendência prioritária de implementação, não como contrato final do sistema. Fonte: SRC-PRJ-005. **PARCIAL**.
 
 ### 3.3 Hipóteses científicas
 
@@ -59,13 +61,13 @@ Incluem identificação do sensor, configuração variante-específica, drenagem
 
 ### 3.7 Decisões de engenharia
 
-A arquitetura adotada é em camadas: `drivers -> sensing -> processing -> safety -> transport/storage -> app`, com separação entre sinal bruto, estimativa e decisão. Ver ADR-001 a ADR-012 em `DECISIONS.md`.
+A arquitetura implementada no baseline está organizada em `drivers -> sensing -> processing -> safety -> transport/storage -> app`, com separação parcial entre sinal bruto, estimativa e decisão. Os supostos ADR-001 a ADR-012 continuam não verificáveis porque `DECISIONS.md` não existe; a arquitetura corrente deve ser conferida em `spo2-wrist-sensor/ReadME.md`, `docs/development/dev/Structure.md` e no código.
 
 ### 3.8 Resultados preliminares
 
 - Utilidade percebida do I Blue It histórico: 4,1/5 na dissertação, com 106 atores, 85 especialistas e 15 avaliações; isso não é desfecho clínico (SRC-LIT-001, PDF pp. 119-121).
 - DeepDDA: aprendizado e funcionamento de prova de conceito com dados sintéticos; não generalizável para pacientes (SRC-LIT-005, PDF pp. 125-149).
-- Firmware atual: aquisição e estimativas observadas em logs, ainda sem validação metrológica e com instabilidade aparente (SRC-PRJ-004).
+- Firmware atual: o código contém aquisição, qualidade, HR, SpO₂ experimental e confiança integrados ao controlador; logs anteriores sugerem execução, mas continuam sem referência e sem associação inequívoca ao commit auditado (SRC-PRJ-004/005).
 
 ### 3.9 Resultados confirmados
 
@@ -78,7 +80,7 @@ Neste pacote, “confirmado” significa reproduzível a partir de documentaçã
 
 ### 3.10 Dúvidas e conflitos
 
-Os conflitos CFLT-001 a CFLT-010 estão em `LIMITATIONS.md`. Os mais críticos são: identidade/versão do sensor, estado real do firmware, definição de validade do sinal, justificativa clínica dos limiares, intended use e ausência de protocolo de referência metrológica.
+Os conflitos CFLT-001 a CFLT-011 estão em `LIMITATIONS.md`. Os mais críticos são: identidade/versão do sensor, validade exposta pela telemetria, justificativa clínica dos limiares, intended use e ausência de protocolo de referência metrológica.
 
 ## 4. Critério de conclusão da fase atual
 
@@ -95,8 +97,9 @@ A fase técnica só deve ser considerada concluída quando houver: commit fixado
 | SRC-LIT-005 | Dias, 2024, *Flow Psicofisiológico em Jogos Digitais* | tese | fundamento do DeepDDA, requisitos, prova de conceito, testes e limitações | fonte mais recente fornecida; não equivale a ensaio clínico |
 | SRC-PRJ-001 | Conversas do projeto, 2026-07-03 a 2026-07-15 | registro interno | decisões, observações, logs e dúvidas do desenvolvimento | não revisado por pares; trechos completos não estavam todos disponíveis nesta execução |
 | SRC-PRJ-002 | Repositório `PHV00/RFC-MelhoriaProjetoIBlueIt`, README, acessado em 2026-07-15 | documento vivo do projeto | objetivos, requisitos, KPIs e modelo de dados proposto | não fixado por hash nesta execução; conteúdo pode mudar |
-| SRC-PRJ-003 | `spo2-wrist-sensor/MELHORIA.md`, acessado em 2026-07-15 | análise estática interna | falhas identificadas no firmware e fluxo arquitetural desejado | pode estar desatualizado em relação ao binário/branch usado nos logs |
+| SRC-PRJ-003 | versão histórica de `docs/development/dev/MELHORIA.md` no commit `a74986d...` | análise estática interna histórica | rastrear problemas observados antes da atualização documental | diverge do código do mesmo baseline em vários itens; usar SRC-PRJ-005 para o estado atual |
 | SRC-PRJ-004 | Logs de oximetria reproduzidos em conversa de 2026-07-13 | observação interna | comportamento preliminar do protótipo | sensor/commit/condições não integralmente preservados; não é validação metrológica |
+| SRC-PRJ-005 | Código e configuração do commit `a74986d93098367b9e0b2085ed6d113f29ffa1d0` | artefato versionado do projeto | estado estático atual da implementação e inventário de testes | não houve build, execução HIL ou comparação com referência nesta auditoria |
 
 ### Convenção de localização
 

@@ -77,6 +77,21 @@
 
 Os seguintes requisitos ainda precisam de valores aprovados: erro máximo de SpO2/HR, tempo de estabilização, cobertura válida mínima, falso válido máximo, latência de ação, persistência de queda e política por população. Não foram preenchidos artificialmente.
 
+## 5. Nota informativa sobre o baseline de implementação
+
+Esta seção não altera a força normativa dos requisitos. Ela evita interpretar a presença de módulos no commit `a74986d93098367b9e0b2085ed6d113f29ffa1d0` como atendimento integral.
+
+| Grupo | Estado estático atual | Pendência evolutiva principal |
+|---|---|---|
+| SR-F-001 a 005 | parcial | identificação explícita por variante, detecção de gaps e comprovação por testes/HIL |
+| SR-F-006 | ausente | preservação e exportação de RED/IR brutos com metadados |
+| SR-F-007 a 014 | parcial | validar limiares/estabilidade, faixa de erro e recuperação com replay e hardware |
+| SR-F-015 | parcial e com discrepância de contrato | transmitir `clinical_valid`, calibração, motivos, overflow, status e RAW opcional |
+| SR-F-016 a 022 | ausente neste repositório | integração com paciente/sessão/firmware, segurança, DeepDDA, dashboard, exportação e override |
+| SR-NF-001 a 018 | parcial/não verificado | testes, métricas e integração são necessários antes de declarar atendimento |
+
+Essas pendências descrevem o baseline auditado e devem ser atualizadas quando o código e a evidência evoluírem. Elas não rebaixam os requisitos nem definem limitações permanentes do produto.
+
 ## Catálogo de fontes
 
 | ID | Fonte | Tipo | Uso permitido neste pacote | Estado/revisão |
@@ -88,8 +103,9 @@ Os seguintes requisitos ainda precisam de valores aprovados: erro máximo de SpO
 | SRC-LIT-005 | Dias, 2024, *Flow Psicofisiológico em Jogos Digitais* | tese | fundamento do DeepDDA, requisitos, prova de conceito, testes e limitações | fonte mais recente fornecida; não equivale a ensaio clínico |
 | SRC-PRJ-001 | Conversas do projeto, 2026-07-03 a 2026-07-15 | registro interno | decisões, observações, logs e dúvidas do desenvolvimento | não revisado por pares; trechos completos não estavam todos disponíveis nesta execução |
 | SRC-PRJ-002 | Repositório `PHV00/RFC-MelhoriaProjetoIBlueIt`, README, acessado em 2026-07-15 | documento vivo do projeto | objetivos, requisitos, KPIs e modelo de dados proposto | não fixado por hash nesta execução; conteúdo pode mudar |
-| SRC-PRJ-003 | `spo2-wrist-sensor/MELHORIA.md`, acessado em 2026-07-15 | análise estática interna | falhas identificadas no firmware e fluxo arquitetural desejado | pode estar desatualizado em relação ao binário/branch usado nos logs |
+| SRC-PRJ-003 | versão histórica de `docs/development/dev/MELHORIA.md` no commit `a74986d...` | análise estática interna histórica | rastrear problemas observados antes da atualização documental | diverge do código do mesmo baseline em vários itens; usar SRC-PRJ-005 para o estado atual |
 | SRC-PRJ-004 | Logs de oximetria reproduzidos em conversa de 2026-07-13 | observação interna | comportamento preliminar do protótipo | sensor/commit/condições não integralmente preservados; não é validação metrológica |
+| SRC-PRJ-005 | Código e configuração do commit `a74986d93098367b9e0b2085ed6d113f29ffa1d0` | artefato versionado do projeto | estado estático atual da implementação e inventário de testes | não houve build, execução HIL ou comparação com referência nesta auditoria |
 
 ### Convenção de localização
 

@@ -2,13 +2,14 @@
 > Gerado em: 2026-07-15
 > Natureza: síntese rastreável de literatura, documentos do projeto, conversas e repositório público.
 > Regra de interpretação: conversas e documentos de projeto são evidência interna do processo, não evidência científica externa nem validação clínica.
+> Baseline de código auditado: commit `a74986d93098367b9e0b2085ed6d113f29ffa1d0`, por inspeção estática.
 
 
 # RESEARCH_PROTOCOL
 
 ## 1. Estado do protocolo
 
-**PROTOCOLO PROPOSTO - ainda não executado integralmente.** Partes de aquisição e testes exploratórios foram realizadas em conversas, mas não há conjunto completo de dados, referência simultânea, aprovação ética ou relatório de execução anexado.
+**PROTOCOLO PROPOSTO — ainda não executado integralmente.** O código atual contém partes necessárias para RP-01, como leitura de IDs, FIFO em lote, qualidade, HR, SpO₂ e confiança. Entretanto, não foram localizados testes automatizados, relatórios HIL, dataset completo, referência simultânea ou relatório de execução anexado. Presença de código não equivale à passagem de RP-01.
 
 ## 2. Objetivo primário
 
@@ -18,7 +19,7 @@
 
 | Fase | Escopo | Participantes | Saída | Estado |
 |---|---|---|---|---|
-| RP-01 | validação de driver/FIFO/sinal com simulador e bancada | nenhum humano | logs determinísticos, testes unitários e HIL | parcialmente iniciado |
+| RP-01 | validação de driver/FIFO/sinal com simulador e bancada | nenhum humano | logs determinísticos, testes unitários e HIL | implementação parcial; execução/evidência ausente |
 | RP-02 | teste técnico em voluntários hígidos | adultos, mediante aprovação aplicável | pares referência-protótipo e qualidade | não iniciado formalmente |
 | RP-03 | teste de usabilidade/segurança operacional com profissionais | fisioterapeutas/outros UFE | falhas de interface e decisões | não iniciado para módulo novo |
 | RP-04 | viabilidade em população clínica | pacientes definidos por protocolo | segurança, completude e viabilidade | fora da fase atual |
@@ -40,6 +41,8 @@ RP-01 testa HYP-001, HYP-002, HYP-005 e HYP-006. RP-02 testa HYP-003. RP-03 test
 `commit`, `build`, sensor/part/revision, placa, pinos I2C, endereço, sample rate, average, pulse width, ADC range, corrente RED/IR, modo FIFO, temperatura quando disponível, algoritmo e versão de calibração, filtros, tamanho/overlap da janela, posição do sensor, dispositivo de referência e versão, horário sincronizado.
 
 ## 7. Procedimento RP-01 - bancada e firmware
+
+Baseline inicial para a próxima execução: commit `a74986d93098367b9e0b2085ed6d113f29ffa1d0`. Antes do primeiro resultado, deve ser gerado um novo identificador de build e confirmada a identidade física do módulo. Se o código mudar, a execução deve registrar o novo commit; este baseline não deve ser reutilizado como se representasse versões futuras.
 
 1. Fixar commit e gerar artefato de build identificável.
 2. Executar autoteste: PART_ID, REV_ID, registradores, FIFO, LEDs e canais.
@@ -117,8 +120,9 @@ RP-01 deve passar antes de RP-02; RP-02 antes de usar SpO2 em decisões em tempo
 | SRC-LIT-005 | Dias, 2024, *Flow Psicofisiológico em Jogos Digitais* | tese | fundamento do DeepDDA, requisitos, prova de conceito, testes e limitações | fonte mais recente fornecida; não equivale a ensaio clínico |
 | SRC-PRJ-001 | Conversas do projeto, 2026-07-03 a 2026-07-15 | registro interno | decisões, observações, logs e dúvidas do desenvolvimento | não revisado por pares; trechos completos não estavam todos disponíveis nesta execução |
 | SRC-PRJ-002 | Repositório `PHV00/RFC-MelhoriaProjetoIBlueIt`, README, acessado em 2026-07-15 | documento vivo do projeto | objetivos, requisitos, KPIs e modelo de dados proposto | não fixado por hash nesta execução; conteúdo pode mudar |
-| SRC-PRJ-003 | `spo2-wrist-sensor/MELHORIA.md`, acessado em 2026-07-15 | análise estática interna | falhas identificadas no firmware e fluxo arquitetural desejado | pode estar desatualizado em relação ao binário/branch usado nos logs |
+| SRC-PRJ-003 | versão histórica de `docs/development/dev/MELHORIA.md` no commit `a74986d...` | análise estática interna histórica | rastrear problemas observados antes da atualização documental | diverge do código do mesmo baseline em vários itens; usar SRC-PRJ-005 para o estado atual |
 | SRC-PRJ-004 | Logs de oximetria reproduzidos em conversa de 2026-07-13 | observação interna | comportamento preliminar do protótipo | sensor/commit/condições não integralmente preservados; não é validação metrológica |
+| SRC-PRJ-005 | Código e configuração do commit `a74986d93098367b9e0b2085ed6d113f29ffa1d0` | artefato versionado do projeto | estado estático atual da implementação e inventário de testes | não houve build, execução HIL ou comparação com referência nesta auditoria |
 
 ### Convenção de localização
 

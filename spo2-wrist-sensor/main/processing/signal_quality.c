@@ -95,7 +95,7 @@ bool signal_quality_evaluate_window(
     if (out_quality == NULL) return false;
     memset(out_quality, 0, sizeof(*out_quality));
 
-    if (buffer == NULL || window_samples < 100u || window_samples > SAMPLE_BUFFER_SIZE || expected_sample_rate_hz <= 0.0f) {
+    if (buffer == NULL || window_samples < 100u || window_samples > SAMPLE_BUFFER_SIZE || expected_sample_rate_hz <= 0.0f) { // regras de aceite da amostra
         out_quality->invalid_reasons = PPG_INVALID_WINDOW_SHORT;
         return false;
     }
