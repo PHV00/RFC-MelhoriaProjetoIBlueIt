@@ -140,19 +140,32 @@ void app_controller_step(void) {
     spo2_result_t spo2 = {0};
     health_frame_t frame = {0};
 
-    bool quality_ready = signal_quality_evaluate_window(
+    sqi_eval_status_t quality_status = signal_quality_evaluate_window(
         &s_buffer,
         config_repo_sqi_window_samples(cfg),
         (float)cfg->sensor_sample_rate_hz,
+        &cfg->sqi,
         &quality
     );
-    if (!quality_ready) {
+
+    if (quality_status == SQI_EVAL_WAITING) {
         (void)app_state_machine_transition(APP_STATE_LOW_CONFIDENCE);
         return;
     }
+    if (quality_status == SQI_EVAL_ERROR) {
+        (void)app_state_machine_transition(APP_STATE_LOW_CONFIDENCE);
+        serial_telemetry_print_message("SQI", "Falha interna ao avaliar janela");
+        return;
+    }
 
-    (void)hr_estimator_compute(&s_buffer, &quality, &hr);
-    (void)spo2_estimator_compute_with_calibration(&s_buffer, &quality, &cfg->spo2_calibration, &spo2);
+    if (quality.state == PPG_QUALITY_VALID) {
+        (void)hr_estimator_compute(&s_buffer, &quality, &hr);
+        (void)spo2_estimator_compute_with_calibration(&s_buffer, &quality, &cfg->spo2_calibration, &spo2);
+    } else {
+        /* Fail-fast: uma janela rejeitada pelo G1 não chega aos estimadores. */
+        hr.status = ESTIMATOR_LOW_QUALITY;
+        spo2.status = ESTIMATOR_LOW_QUALITY;
+    }
 
     ppg_sample_t latest = {0};
     (void)sample_buffer_latest(&s_buffer, &latest);

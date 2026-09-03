@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "common/sqi_types.h"
+
 typedef struct {
     float a;
     float b;
@@ -14,12 +16,6 @@ typedef struct {
     bool allow_uncalibrated_estimate;
     uint32_t version;
 } spo2_calibration_t;
-
-typedef struct {
-    uint32_t window_ms;
-    uint32_t step_ms;
-    float minimum_quality_score;
-} sqi_config_t;
 
 typedef struct {
     uint8_t sensor_i2c_addr;
