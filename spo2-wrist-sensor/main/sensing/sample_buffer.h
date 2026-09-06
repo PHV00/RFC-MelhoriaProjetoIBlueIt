@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "app/app_types.h"
+#include "common/measurement_types.h"
 
 /* 5,12 s em 100 Hz: suficiente para uma janela fixa de 4 s e margem. */
 #define SAMPLE_BUFFER_SIZE 512u

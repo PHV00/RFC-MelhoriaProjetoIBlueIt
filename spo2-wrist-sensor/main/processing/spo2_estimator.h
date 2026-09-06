@@ -2,7 +2,7 @@
 
 #include <stdbool.h>
 
-#include "app/app_types.h"
+#include "common/measurement_types.h"
 #include "sensing/sample_buffer.h"
 #include "storage/config_repo.h"
 

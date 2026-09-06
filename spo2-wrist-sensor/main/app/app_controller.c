@@ -11,7 +11,7 @@
 #include "drivers/i2c_bus.h"
 #include "drivers/max3010x_driver.h"
 #include "processing/hr_estimator.h"
-#include "processing/signal_quality.h"
+#include "processing/sqi/signal_quality.h"
 #include "processing/spo2_estimator.h"
 #include "safety/confidence_engine.h"
 #include "sensing/ppg_sampler.h"
@@ -132,7 +132,7 @@ void app_controller_step(void) {
     }
 
     const system_config_t *cfg = config_repo_get();
-    if ((uint32_t)(now_ms - s_last_processing_ms) < cfg->processing_interval_ms) return;
+    if ((uint32_t)(now_ms - s_last_processing_ms) < cfg->sqi.step_ms) return;
     s_last_processing_ms = now_ms;
 
     signal_quality_t quality = {0};
@@ -142,7 +142,7 @@ void app_controller_step(void) {
 
     bool quality_ready = signal_quality_evaluate_window(
         &s_buffer,
-        cfg->processing_window_samples,
+        config_repo_sqi_window_samples(cfg),
         (float)cfg->sensor_sample_rate_hz,
         &quality
     );
@@ -162,7 +162,7 @@ void app_controller_step(void) {
         &spo2,
         latest.timestamp_ms,
         s_sampler.fifo_overflow_events,
-        cfg->minimum_quality_score,
+        cfg->sqi.minimum_quality_score,
         &frame
     );
 

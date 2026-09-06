@@ -1,6 +1,6 @@
 #pragma once
 
-#include "app/app_types.h"
+#include "common/measurement_types.h"
 
 #define TELEMETRY_PROTOCOL_VERSION 1
 

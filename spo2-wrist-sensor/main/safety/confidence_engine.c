@@ -98,5 +98,5 @@ bool confidence_engine_build_frame(
 ) {
     const system_config_t *cfg = config_repo_get();
     return confidence_engine_build_frame_ex(quality, hr, spo2, 0u, 0u,
-                                            cfg->minimum_quality_score, out_frame);
+                                            cfg->sqi.minimum_quality_score, out_frame);
 }
