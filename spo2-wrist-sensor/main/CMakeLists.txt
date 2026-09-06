@@ -7,7 +7,7 @@ idf_component_register(
         "drivers/max3010x_driver.c"
         "sensing/sample_buffer.c"
         "sensing/ppg_sampler.c"
-        "processing/signal_quality.c"
+        "processing/sqi/signal_quality.c"
         "processing/hr_estimator.c"
         "processing/spo2_estimator.c"
         "safety/confidence_engine.c"

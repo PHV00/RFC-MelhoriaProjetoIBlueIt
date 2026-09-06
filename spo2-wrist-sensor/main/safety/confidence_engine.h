@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "app/app_types.h"
+#include "common/measurement_types.h"
 
 bool confidence_engine_build_frame(
     const signal_quality_t *quality,

@@ -7,11 +7,17 @@ static const system_config_t g_config = {
     .i2c_freq_hz = 400000,
     .sensor_sample_rate_hz = 100,
     .acquisition_poll_ms = 10,
-    .processing_interval_ms = 500,
-    .processing_window_samples = 400,
     .led_red_pa = 0x24,
     .led_ir_pa = 0x24,
-    .minimum_quality_score = 0.55f,
+    .sqi = {
+        /* Mantém o comportamento do baseline durante a refatoração estrutural:
+         * 400 amostras a 100 Hz = 4 s, processadas a cada 500 ms.
+         * A mudança para a janela científica alvo será feita junto aos gates.
+         */
+        .window_ms = 4000u,
+        .step_ms = 500u,
+        .minimum_quality_score = 0.55f
+    },
     .spo2_calibration = {
         /* Curva apenas para demonstração de engenharia: SpO2 = 110 - 25R.
          * Substituir por coeficientes obtidos para o conjunto sensor + encapsulamento.
@@ -29,4 +35,13 @@ static const system_config_t g_config = {
 
 const system_config_t *config_repo_get(void) {
     return &g_config;
+}
+
+size_t config_repo_sqi_window_samples(const system_config_t *config) {
+    if (config == NULL || config->sensor_sample_rate_hz == 0u || config->sqi.window_ms == 0u) {
+        return 0u;
+    }
+
+    uint64_t scaled = (uint64_t)config->sensor_sample_rate_hz * (uint64_t)config->sqi.window_ms;
+    return (size_t)(scaled / 1000u);
 }

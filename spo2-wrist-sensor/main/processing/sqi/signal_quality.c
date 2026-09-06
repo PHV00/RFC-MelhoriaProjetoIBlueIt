@@ -1,4 +1,4 @@
-#include "processing/signal_quality.h"
+#include "processing/sqi/signal_quality.h"
 
 #include <math.h>
 #include <string.h>
@@ -95,7 +95,7 @@ bool signal_quality_evaluate_window(
     if (out_quality == NULL) return false;
     memset(out_quality, 0, sizeof(*out_quality));
 
-    if (buffer == NULL || window_samples < 100u || window_samples > SAMPLE_BUFFER_SIZE || expected_sample_rate_hz <= 0.0f) { // regras de aceite da amostra
+    if (buffer == NULL || window_samples < 100u || window_samples > SAMPLE_BUFFER_SIZE || expected_sample_rate_hz <= 0.0f) {
         out_quality->invalid_reasons = PPG_INVALID_WINDOW_SHORT;
         return false;
     }
@@ -173,6 +173,6 @@ bool signal_quality_evaluate_window(
 
 bool signal_quality_evaluate(const sample_buffer_t *buffer, signal_quality_t *out_quality) {
     const system_config_t *cfg = config_repo_get();
-    return signal_quality_evaluate_window(buffer, cfg->processing_window_samples,
+    return signal_quality_evaluate_window(buffer, config_repo_sqi_window_samples(cfg),
                                           (float)cfg->sensor_sample_rate_hz, out_quality);
 }
