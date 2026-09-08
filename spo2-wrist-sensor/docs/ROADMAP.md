@@ -9,7 +9,7 @@
 - [x] fail-fast antes de HR/SpO₂ para falhas do G1;
 - [x] testes unitários e fault injection do G1;
 - [ ] calibração científica dos thresholds do G1;
-- [ ] G2 — Pulsatilidade;
+- [~] G2 — Pulsatilidade: preparação e núcleo isolado iniciados;
 - [ ] G3 — Morfologia;
 - [ ] G4 — Coerência RED↔IR;
 - [ ] congelar perfil `NO_GRIP`;
@@ -28,7 +28,7 @@ A estrutura `processing/sqi/`, scaffolding de gates/features/preprocess, tipos c
 - [x] `g1_integrity_config_t`;
 - [x] 5 s de janela / 1 s de passo.
 
-A configuração ainda deverá crescer com estruturas específicas de G2–G4.
+A configuração ainda deverá crescer com estruturas específicas de G2–G4 somente após os contratos de cada gate serem estabilizados.
 
 ## Fase 2 — G1 Integridade — IMPLEMENTADO E FUNCIONALMENTE VALIDADO
 
@@ -46,22 +46,59 @@ A configuração ainda deverá crescer com estruturas específicas de G2–G4.
 
 Pendência desta fase: **calibrar cientificamente** `rail_margin_counts`, `minimum_mean_level`, `minimum_raw_range`, `maximum_clipping_fraction`, `minimum_continuity_fraction` e `maximum_interval_deviation_fraction`.
 
-## Fase 3 — Pré-processamento + G2 Pulsatilidade
+## Fase 3 — Pré-processamento + G2 Pulsatilidade — EM ANDAMENTO
 
 Objetivo: rejeitar janelas tecnicamente íntegras, porém sem comportamento pulsátil confiável.
 
-- [ ] criar visão processada sem alterar RAW;
-- [ ] remoção de baseline / HP próximo de 0,5 Hz como baseline científica;
-- [ ] amplitude/range pulsátil por canal;
-- [ ] threshold crossings;
-- [ ] autocorrelação e lag dominante;
-- [ ] plausibilidade do período;
-- [ ] regras RED e IR independentes;
-- [ ] fail-fast G2;
-- [ ] testes sintéticos, MAX30102 RAW e datasets externos;
-- [ ] calibração dos thresholds em conjunto de desenvolvimento e validação independente.
+### G2.0 — Preparação
 
-Referências centrais: Vadrevu & Manikandan; Reddy et al. como inspiração hierárquica.
+- [x] branch `feature/sqi-g2-pulsatility` criada a partir de `main` após merge do G1;
+- [x] guia técnico/científico `docs/sqi/G2_GATE_GUIDE.md`;
+- [x] contrato isolado `gate_pulsatility.h`;
+- [x] feature `threshold_crossing` implementada;
+- [x] feature de autocorrelação normalizada implementada;
+- [x] núcleo inicial do G2 implementado fora do pipeline produtivo;
+- [x] testes host iniciais adicionados;
+- [ ] executar e validar testes host no checkout local;
+
+### G2.1 — Pré-processamento
+
+- [ ] criar visão processada sem alterar RAW;
+- [ ] implementar e validar remoção de baseline/HP; baseline científica inicial: Butterworth HP 3ª ordem ~0,5 Hz conforme Vadrevu;
+- [ ] validar resposta do filtro offline versus implementação C;
+- [ ] medir custo no ESP32-C3;
+- [ ] congelar versão do preprocessamento antes da calibração;
+
+### G2.2 — Features e regras
+
+- [x] AC RMS/energia no núcleo inicial;
+- [x] threshold crossings;
+- [x] autocorrelação e lag dominante;
+- [x] cálculo de período equivalente em BPM;
+- [x] regras RED e IR independentes no núcleo isolado;
+- [ ] ampliar unit tests: RED ruim/IR bom, IR ruim/RED bom, ruído HF, limites e imutabilidade;
+- [ ] definir mapeamento `failure_mask -> sqi_fail_reason_t`;
+
+### G2.3 — Integração
+
+- [ ] adicionar configuração G2 ao `sqi_config_t` somente após baseline estável;
+- [ ] integrar `G1 PASS -> preprocess -> G2`;
+- [ ] `failed_gate = SQI_GATE_G2_PULSATILITY`;
+- [ ] fail-fast G2 antes de HR/SpO₂;
+- [ ] telemetria G2;
+- [ ] build + hardware real;
+
+### G2.4 — Calibração
+
+- [ ] calibrar amplitude/energia AC mínima;
+- [ ] calibrar limites de crossings;
+- [ ] calibrar ACF mínima;
+- [ ] justificar/validar faixa de período;
+- [ ] usar MAX30102 RAW + datasets externos de PPG/movimento;
+- [ ] desenvolvimento e hold-out separados por sessão/participante;
+- [ ] sensitivity/specificity/FAR/FRR + análise de sensibilidade.
+
+Referências centrais: Vadrevu & Manikandan; Reddy et al. para hierarquia on-device. Karlen e Orphanidou apoiam a noção de repetição/derivabilidade de HR; morfologia beat-to-beat permanece para G3.
 
 ## Fase 4 — Beat detector + G3 Morfologia
 
