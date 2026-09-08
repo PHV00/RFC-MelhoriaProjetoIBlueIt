@@ -1,118 +1,115 @@
-# Roadmap — Refatoração e implementação do SQI
+# Roadmap — Refatoração, SQI hierárquico e calibração
 
 ## Status geral
 
-- [x] atualizar o `ReadME.md` com o fluxo funcional e a organização alvo;
-- [x] documentar a arquitetura geral do firmware;
-- [x] documentar a arquitetura hierárquica do SQI em quatro gates;
-- [x] registrar decisões arquiteturais e de migração incremental;
-- [x] documentar a estrutura de configuração e versionamento de thresholds;
-- [x] documentar estratégia de testes por gate e integração;
-- [x] documentar o roadmap de implementação;
-- [x] registrar referências técnicas/científicas e o papel de cada trabalho;
-- [x] registrar que a primeira calibração será realizada sem o pegador anatômico;
-- [x] refatorar a estrutura de código sem alterar o algoritmo do SQI atual;
-- [x] executar build e smoke test da nova estrutura em ESP32-C3 + MAX30102;
-- [ ] implementar os gates;
-- [ ] calibrar thresholds com dados reais do MAX30102.
+- [x] arquitetura documental e modular;
+- [x] Fase 0 — refatoração estrutural;
+- [x] contrato de qualidade, snapshot e baseline 5 s / 1 s;
+- [x] G1 — Integridade;
+- [x] fail-fast antes de HR/SpO₂ para falhas do G1;
+- [x] testes unitários e fault injection do G1;
+- [ ] calibração científica dos thresholds do G1;
+- [ ] G2 — Pulsatilidade;
+- [ ] G3 — Morfologia;
+- [ ] G4 — Coerência RED↔IR;
+- [ ] congelar perfil `NO_GRIP`;
+- [ ] comparar perfil futuro `WITH_GRIP`.
 
-> A Fase 0 foi concluída como refatoração estrutural com regressão funcional. Isso não representa validação clínica, calibração do oxímetro ou implementação do novo SQI hierárquico.
+## Fase 0 — Refatoração estrutural — CONCLUÍDA
 
-## Fase 0 — Refatoração estrutural sem mudar o algoritmo — CONCLUÍDA
+A estrutura `processing/sqi/`, scaffolding de gates/features/preprocess, tipos compartilhados e documentação base foram criados e validados por build/smoke test.
 
-- [x] mover `signal_quality.*` para `processing/sqi/`;
-- [x] criar `gates/`, `features/` e `preprocess/`;
-- [x] criar o scaffolding de testes por gate, features e integração;
-- [x] atualizar includes e `CMakeLists.txt`;
-- [x] iniciar desacoplamento de tipos compartilhados de `app/` para `common/`;
-- [x] criar configuração inicial `sqi_config_t` preservando o comportamento temporal existente;
-- [x] compilar o projeto com ESP-IDF para ESP32-C3;
-- [x] confirmar que `processing/sqi/signal_quality.c` entra no build e a localização antiga não é compilada;
-- [x] executar smoke test no hardware com MAX30102;
-- [x] confirmar inicialização do sensor e processamento contínuo sem crash/watchdog observado;
-- [x] confirmar comportamento funcional com ausência, colocação e retirada do dedo;
-- [x] documentar contratos e ownership de cada módulo.
+## Fase 1 — Contrato e tipos — CONCLUÍDA para o G1
 
-### Evidência de regressão da Fase 0
+- [x] `SQI_EVAL_WAITING/COMPLETE/ERROR`;
+- [x] `PPG_QUALITY_UNKNOWN/VALID/INVALID`;
+- [x] `failed_gate` / `fail_reason`;
+- [x] `sqi_window_t` com snapshot RAW;
+- [x] `g1_integrity_config_t`;
+- [x] 5 s de janela / 1 s de passo.
 
-- target: ESP32-C3;
-- sensor: MAX30102/MAX3010x identificado pelo firmware;
-- taxa de amostragem observada: 100 Hz;
-- build: concluído com geração do binário da aplicação;
-- execução: telemetria de qualidade, FC, SpO₂ e estado final permaneceu operacional;
-- sem dedo: `LOW_CONFIDENCE`, `finger=false` e resultados fisiológicos não utilizáveis;
-- dedo presente: pipeline atual produziu avaliações de qualidade e resultados dos estimadores;
-- retirada do dedo: retorno a `LOW_CONFIDENCE` e `finger=false`;
-- não foram observados panic, watchdog ou loop de reset durante o smoke test.
+A configuração ainda deverá crescer com estruturas específicas de G2–G4.
 
-A equivalência validada nesta fase é funcional/estrutural. Não foi realizado teste de equivalência numérica bit a bit com reprodução do mesmo conjunto RAW antes e depois da refatoração.
+## Fase 2 — G1 Integridade — IMPLEMENTADO E FUNCIONALMENTE VALIDADO
 
-## Fase 1 — Contrato e tipos
+- [x] continuidade temporal;
+- [x] presença óptica por média RAW em RED e IR;
+- [x] flatline por `raw_range`;
+- [x] clipping/saturação próximo aos rails;
+- [x] failure mask cumulativa;
+- [x] motivo primário determinístico;
+- [x] telemetria;
+- [x] fail-fast;
+- [x] 18 unit tests;
+- [x] fault injection de flatline, clipping RED, clipping IR e descontinuidade;
+- [x] sanity check de retorno ao modo real.
 
-- [x] criar fisicamente `signal_quality_types.h` como ponto de evolução do contrato;
-- [ ] separar estado de avaliação de estado de qualidade;
-- [ ] criar `fail_reason` e `failed_gate`;
-- [x] iniciar migração de tipos compartilhados para `common/`;
-- [x] criar versão inicial de `sqi_config_t`;
-- [ ] evoluir `sqi_config_t` para configurações específicas de G1–G4;
-- [ ] definir snapshot único/imutável da janela (`sqi_window_t` ou equivalente);
-- [ ] alterar a baseline temporal para 5 s e passo de 1 s após o marco de regressão da Fase 0.
+Pendência desta fase: **calibrar cientificamente** `rail_margin_counts`, `minimum_mean_level`, `minimum_raw_range`, `maximum_clipping_fraction`, `minimum_continuity_fraction` e `maximum_interval_deviation_fraction`.
 
-> Os itens já marcados na Fase 1 representam apenas infraestrutura criada durante a refatoração. O novo contrato de decisão do SQI ainda não foi implementado.
+## Fase 3 — Pré-processamento + G2 Pulsatilidade
 
-## Fase 2 — G1 Integridade
+Objetivo: rejeitar janelas tecnicamente íntegras, porém sem comportamento pulsátil confiável.
 
-- [ ] snapshot único da janela;
-- [ ] continuidade temporal;
-- [ ] flatline / amplitude quase nula;
-- [ ] clipping/saturação RAW;
-- [ ] testes unitários;
-- [ ] telemetria do motivo da falha.
+- [ ] criar visão processada sem alterar RAW;
+- [ ] remoção de baseline / HP próximo de 0,5 Hz como baseline científica;
+- [ ] amplitude/range pulsátil por canal;
+- [ ] threshold crossings;
+- [ ] autocorrelação e lag dominante;
+- [ ] plausibilidade do período;
+- [ ] regras RED e IR independentes;
+- [ ] fail-fast G2;
+- [ ] testes sintéticos, MAX30102 RAW e datasets externos;
+- [ ] calibração dos thresholds em conjunto de desenvolvimento e validação independente.
 
-## Fase 3 — Pré-processamento + G2
+Referências centrais: Vadrevu & Manikandan; Reddy et al. como inspiração hierárquica.
 
-- [ ] detrending/HP para baseline;
-- [ ] threshold crossing;
-- [ ] autocorrelação;
-- [ ] pulsatilidade RED;
-- [ ] pulsatilidade IR;
-- [ ] fail-fast;
-- [ ] testes unitários e integração.
+## Fase 4 — Beat detector + G3 Morfologia
 
-## Fase 4 — Beat detector + G3
+Objetivo: avaliar se os pulsos detectados possuem forma e estabilidade compatíveis com PPG utilizável.
 
-- [ ] detecção de beats;
-- [ ] amplitude;
+- [ ] detector de beats reutilizável;
+- [ ] amplitude por beat;
 - [ ] largura;
 - [ ] rise time;
-- [ ] estabilidade entre beats;
-- [ ] testes.
+- [ ] quantidade de beats válidos;
+- [ ] variabilidade batimento a batimento;
+- [ ] regras de aceitação/rejeição;
+- [ ] testes e calibração.
 
-## Fase 5 — G4 RED ↔ IR
+Referências centrais: Sukor et al.; Fischer et al.; Orphanidou et al. como validação complementar.
 
-- [ ] comparação de período;
-- [ ] comparação de contagem;
-- [ ] alinhamento temporal;
-- [ ] métricas auxiliares;
-- [ ] testes.
+## Fase 5 — G4 Coerência RED↔IR
 
-## Fase 6 — Integração fisiológica
+Objetivo: confirmar que RED e IR descrevem o mesmo evento pulsátil.
 
-- [ ] impedir chamadas de estimadores em janelas inválidas;
-- [ ] ajustar `confidence_engine` para consumir qualidade já decidida;
-- [ ] atualizar `health_frame_t`;
-- [ ] atualizar telemetria.
+- [ ] período por canal;
+- [ ] diferença relativa de período;
+- [ ] contagem de beats por canal;
+- [ ] diferença de contagem;
+- [ ] alinhamento temporal de picos/eventos;
+- [ ] correlação como métrica auxiliar, se útil;
+- [ ] testes de canais coerentes e deliberadamente divergentes.
 
-## Fase 7 — Calibração sem pegador
+## Fase 6 — Decisão final e confidence
 
-- [ ] coletar base RAW representativa;
-- [ ] registrar falhas por gate;
-- [ ] ajustar thresholds provisórios;
-- [ ] congelar perfil `NO_GRIP`.
+- [ ] `VALID` somente após G1→G4;
+- [ ] score contínuo apenas como diagnóstico/confiança auxiliar;
+- [ ] revisar `minimum_quality_score` legado;
+- [ ] assegurar que `confidence_engine` não contradiga os gates obrigatórios.
+
+## Fase 7 — Calibração NO_GRIP
+
+- [ ] congelar configuração do MAX30102 e geometria óptica;
+- [ ] coletar RAW rotulado por sessões/participantes;
+- [ ] gerar features por janela de 5 s;
+- [ ] separar desenvolvimento e validação por sessão/participante;
+- [ ] selecionar thresholds por distribuição + ROC/PR/regra de erro aceitável;
+- [ ] análise de sensibilidade;
+- [ ] congelar e versionar perfil `NO_GRIP`.
 
 ## Fase 8 — Pegador anatômico
 
-- [ ] repetir coleta com pegador;
-- [ ] comparar distribuição de métricas;
-- [ ] criar perfil `WITH_GRIP` se necessário;
-- [ ] avaliar redução de falsos negativos/artefatos.
+- [ ] repetir protocolo com pegador;
+- [ ] comparar distribuições e erros;
+- [ ] manter thresholds se equivalentes ou criar `WITH_GRIP` se necessário;
+- [ ] medir redução de artefatos/falsas rejeições.

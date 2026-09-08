@@ -1,88 +1,59 @@
 # Referências técnicas e científicas do SQI
 
-Esta documentação resume como cada trabalho será usado na implementação. Ela não substitui a leitura dos artigos originais.
-
-## Vadrevu & Manikandan — Real-Time PPG Signal Quality Assessment System
-
-Uso no projeto:
-
-- arquitetura hierárquica;
-- janela de 5 s;
-- remoção de baseline;
-- amplitude;
-- threshold crossing;
-- autocorrelação;
-- descarte precoce de segmentos ruins.
-
-Aplicação principal: **G2 — Pulsatilidade**.
+Esta página registra **qual responsabilidade do software é sustentada por cada trabalho**. Thresholds dependentes de escala RAW não devem ser copiados cegamente entre sensores.
 
 ## Reddy, Manikandan & Murty — On-Device Integrated PPG Quality Assessment
 
-Uso no projeto:
+Aplicação: **G1 e arquitetura hierárquica**.
 
-- detecção precoce de sinal praticamente nulo;
-- detecção de saturação;
-- hierarquia para economizar processamento;
-- preocupação explícita com execução embarcada.
+Contribuições usadas: rejeição precoce de amplitude praticamente nula/saturação, hierarquia para economizar processamento, adaptação de thresholds à faixa dinâmica do módulo e execução embarcada.
 
-Aplicação principal: **G1 — Integridade**.
+## Vadrevu & Manikandan — Real-Time PPG Signal Quality Assessment System
+
+Aplicação principal: **G2 — Pulsatilidade**; apoio à arquitetura global.
+
+Contribuições usadas: janela de 5 s, remoção de baseline, amplitude, threshold crossings, autocorrelação, periodicidade e descarte hierárquico.
 
 ## Fischer et al. — Real-Time Pulse Waveform Segmentation and Artifact Detection
 
-Uso no projeto:
-
-- clipping antes da filtragem;
-- implementação embarcada em tempo real;
-- segmentação por pulso;
-- duração, amplitude e rise time;
-- listas de decisão simples.
-
 Aplicações: **G1 e G3**.
+
+Contribuições usadas: detectar clipping/artefatos antes de filtragens que os escondam, segmentação em tempo real, amplitude, duração e rise time, regras simples adequadas a sistemas embarcados.
 
 ## Sukor, Redmond & Lovell — Signal Quality Measures for Pulse Oximetry through Waveform Morphology Analysis
 
-Uso no projeto:
-
-- morfologia do pulso;
-- amplitude;
-- largura;
-- comparação/estabilidade entre pulsos.
-
 Aplicação principal: **G3 — Morfologia**.
+
+Contribuições usadas: amplitude, largura e estabilidade/consistência de pulsos para identificar segmentos cuja forma degrada a estimativa fisiológica.
 
 ## Karlen et al. — Photoplethysmogram Signal Quality Estimation using Repeated Gaussian Filters and Cross-Correlation
 
-Uso no projeto:
-
-- referência para SQI contínuo;
-- segmentação de pulso;
-- correlação entre pulsos consecutivos.
-
-Status: **reserva para V2**, caso a abordagem baseline não seja suficiente.
+Aplicações: referência de **SQI contínuo/template/correlação** e metodologia de avaliação. Pode complementar G3/V2, sem substituir a decisão hierárquica.
 
 ## Orphanidou et al. — Signal-Quality Indices for ECG and PPG
 
-Uso no projeto:
-
-- referência para qualidade binária;
-- plausibilidade temporal;
-- template matching;
-- ligação entre qualidade de PPG e confiabilidade da FC.
-
-Status: **reserva/validação complementar**.
+Aplicações: plausibilidade temporal, qualidade binária e template matching. Reserva importante para validar regras de beats e critérios globais de qualidade.
 
 ## Elgendi — Optimal Signal Quality Index for PPG Signals
 
-Uso no projeto:
+Aplicações: comparação de métricas estatísticas, skewness e discussão de SQIs. Serve como alternativa/experimento; perfusion index isolado não é usado como árbitro universal.
 
-- comparação entre SQIs estatísticos;
-- skewness como métrica candidata;
-- evidência de que perfusion index isolado não deve ser tratado como árbitro universal de qualidade.
+## MAX30102 — fabricante
 
-Status: **métrica experimental/V1.x**.
+O fabricante fundamenta limites físicos/configuração: resolução ADC, ranges, taxa, pulse width, LED e FIFO. Ele **não fornece um threshold universal de “PPG bom”**. Portanto `adc_min/max` podem ser hardware-derived; presença óptica, clipping tolerável e continuidade devem ser caracterizados no nosso sistema.
 
 ## Contexto I Blue It / 123-SGR
 
-A arquitetura 123-SGR coloca sinais fisiológicos involuntários no fluxo voltado à segurança, passando por tratamento de sinais antes da Grade de Adaptação. O módulo SQI deste firmware materializa a etapa técnica de validação do PPG antes de disponibilizar SpO₂/FC ao restante do ecossistema.
+O SQI materializa a etapa técnica que protege a cadeia fisiológica antes de disponibilizar FC/SpO₂ às camadas superiores. Ele não substitui regras terapêuticas, o Flow Psicofisiológico ou a Grade de Adaptação.
 
-O SQI não substitui regras terapêuticas nem o Flow Psicofisiológico. Ele responde apenas se o dado fisiológico possui qualidade técnica suficiente para ser usado pelas camadas superiores.
+## Mapeamento resumido
+
+| área | referências principais |
+|---|---|
+| hierarquia/fail-fast/embedded | Reddy; Vadrevu |
+| integridade RAW/clipping | Reddy; Fischer; fabricante MAX30102 |
+| pulsatilidade/ACF/crossings | Vadrevu |
+| morfologia de beats | Sukor; Fischer; Orphanidou |
+| template/correlação/SQI contínuo | Karlen; Orphanidou |
+| métricas estatísticas alternativas | Elgendi |
+| integração em reabilitação/jogo | I Blue It; 123-SGR; trabalhos do projeto |

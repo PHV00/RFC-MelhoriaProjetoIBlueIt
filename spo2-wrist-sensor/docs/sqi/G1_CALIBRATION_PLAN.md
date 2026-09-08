@@ -1,48 +1,103 @@
-# G1 threshold calibration plan
+# Plano científico de calibração dos thresholds do G1
 
-## Principle
+## 1. Princípio
 
-G1 separates technical signal integrity from pulsatility and morphology. Hardware-defined quantities are derived from the MAX30102 configuration; sensor-dependent thresholds are calibrated from labeled recordings; application latency parameters are justified by sensitivity/latency analysis.
+O G1 separa **integridade técnica** de pulsatilidade/morfologia. A literatura orienta quais features e arquitetura usar, mas não fornece um conjunto universal de contagens RAW para o nosso MAX30102. Valores absolutos dependem de ADC, range, LED, encapsulamento, pressão, dedo, iluminação e geometria.
 
-The literature does not provide a universal set of raw MAX30102 count thresholds. Reddy et al. and Vadrevu & Manikandan explicitly adapt amplitude thresholds to the sensing-module dynamic range. Karlen et al. recommend selecting thresholds from feature distributions/histograms and ROC analysis. Public PPG databases are useful for algorithm validation, but absolute DC levels and ADC-rail behavior are not portable across sensor modules, LED currents, ADC ranges, placement and optical mechanics.
+A metodologia adotada é:
 
-## Parameter provenance
+```text
+literatura → escolhe feature/estrutura
+hardware   → fixa limites físicos
+engenharia → fornece valor inicial seguro
+nossos dados → calibram threshold final
+hold-out   → valida generalização
+```
 
-| Parameter | Current value | Status | Finalization method |
-|---|---:|---|---|
-| `window_ms` | 5000 ms | literature-backed baseline | keep 5 s as baseline; optionally compare 3/5/8 s for latency vs errors |
-| `step_ms` | 1000 ms | engineering choice | profile processing time, FIFO margin and application latency |
-| `adc_min_value` | 0 | hardware-derived | fixed by unsigned ADC output |
-| `adc_max_value` | 262143 | hardware-derived | fixed by 18-bit MAX30102 mode |
-| `rail_margin_counts` | 1 | provisional | bench saturation sweep; characterize codes observed near both rails |
-| `minimum_mean_level` | 5000 | provisional | labeled `NO_CONTACT` vs usable contact distributions, per channel |
-| `minimum_raw_range` | 20 | provisional/conservative | characterize stuck/flat faults and lower tail of usable-window range |
-| `maximum_clipping_fraction` | 0.01 | provisional | inject/sweep clipping fractions and define tolerated corruption before downstream failure |
-| `minimum_continuity_fraction` | 0.95 | provisional | long acquisition runs + injected missing/duplicate intervals; choose tolerated loss budget |
-| `maximum_interval_deviation_fraction` | 0.40 | provisional | characterize reconstructed timestamp interval distribution under normal and stressed acquisition |
-| `minimum_quality_score` | 0.55 | legacy | do not calibrate as G1; replace/redefine after G2-G4 are complete |
+## 2. Congelar o perfil de aquisição
 
-## Local calibration dataset
+Antes da coleta registrar e manter fixos:
 
-Store RAW RED, RAW IR, timestamp and configuration metadata. At minimum label windows as `NO_CONTACT`, `STABLE_CONTACT`, `LIGHT_CONTACT`, `PARTIAL_CONTACT`, `PRESSURE`, `AMBIENT_LIGHT`, `MOTION`, `TRANSITION_IN`, `TRANSITION_OUT`, plus synthetic/bench `FLAT_FAULT`, `CLIP_LOW`, `CLIP_HIGH`, and timestamp fault classes.
+- sensor/placa e revisão;
+- 100 Hz;
+- pulse width/resolução ADC;
+- ADC range;
+- corrente RED e IR;
+- posição do sensor;
+- encapsulamento/óptica;
+- firmware/config version;
+- ausência do pegador: perfil inicial `NO_GRIP`.
 
-For each 5 s window compute RED/IR mean, range, clipping fraction and continuity. Do not split overlapping windows from the same recording or subject across calibration and validation sets. Use subject/session-grouped splits when multiple participants are available.
+Mudanças materiais nesses itens exigem reavaliação dos thresholds RAW.
 
-## Threshold selection
+## 3. Dataset local mínimo
 
-1. Freeze sensor configuration for a calibration profile (sample rate, pulse width, ADC range, LED currents and mechanics).
-2. Collect labeled development recordings across sessions, contact conditions and lighting.
-3. Plot class distributions and percentiles for each G1 feature.
-4. Select candidate thresholds using ROC/precision-recall analysis or a constrained rule such as maximizing retained usable windows while limiting acceptance of known-invalid windows.
-5. Evaluate candidates on held-out subjects/sessions; report sensitivity, specificity, false-accept and false-reject rates with confidence intervals.
-6. Perform a threshold sensitivity analysis around the chosen value; prefer stable plateaus over a narrowly optimal point.
-7. Freeze thresholds together with the exact sensor/configuration profile and version them.
-8. Recalibrate if LED current, ADC range, optical housing/contact geometry or sampling strategy changes materially.
+Registrar RAW RED, RAW IR, timestamp/seq e metadados. Rotular blocos/sessões como:
 
-## Public datasets
+`NO_CONTACT`, `STABLE_CONTACT`, `LIGHT_CONTACT`, `PARTIAL_CONTACT`, `PRESSURE`, `AMBIENT_LIGHT`, `MOTION`, `TRANSITION_IN`, `TRANSITION_OUT` e falhas controladas `FLAT_FAULT`, `CLIP_LOW/HIGH`, `TIMESTAMP_FAULT`.
 
-Use public databases primarily for G2/G3/G4 and external algorithm validation: PhysioNet BIDMC PPG, MIMIC waveform PPG, Wrist PPG During Exercise, PPG-DaLiA and similar datasets provide varied physiology/motion and references such as ECG. Do not use their absolute raw amplitude to set `minimum_mean_level`, `minimum_raw_range`, or ADC rail margins for the MAX30102 because their acquisition hardware/scaling differs.
+Idealmente coletar múltiplas sessões e participantes. Janelas de 5 s podem ser extraídas com passo de 1 s, mas janelas sobrepostas da mesma sessão devem permanecer no mesmo split.
 
-## Acquisition caveat
+## 4. Features a exportar por janela
 
-The MAX30102 does not timestamp individual FIFO samples. `ppg_sampler` reconstructs sample timestamps from the configured sample period and FIFO read timing. Therefore `continuity_fraction` measures continuity of the reconstructed acquisition stream, not oscillator-level sample jitter. Calibrate it using long firmware runs, FIFO/sequence diagnostics and controlled fault injection; do not present it as direct measurement of the sensor's instantaneous sampling jitter.
+- `red_mean`, `ir_mean`;
+- `red_min/max/range`, `ir_min/max/range`;
+- `red_clip_fraction`, `ir_clip_fraction`;
+- `continuity_fraction`;
+- descontinuidades e timestamps duplicados;
+- classe/label e identificador de sessão/participante.
+
+## 5. Divisão dos dados
+
+Preferência: split por participante. Se o número de participantes for pequeno, split por sessão. Nunca randomizar janelas sobrepostas individualmente entre desenvolvimento e teste.
+
+```text
+desenvolvimento → histogramas/thresholds candidatos
+hold-out         → avaliação final sem retuning
+```
+
+## 6. Seleção por parâmetro
+
+### `minimum_mean_level`
+
+Comparar `NO_CONTACT`/contato inválido com contato utilizável, por canal. Inspecionar percentis e sobreposição; testar candidatos em ROC/PR ou por uma restrição explícita de falsa aceitação. Um procedimento possível é buscar região entre cauda superior de `NO_CONTACT` e cauda inferior de `STABLE_CONTACT`, mas percentis como P99/P01 são estratégia de engenharia, não regra universal.
+
+### `minimum_raw_range`
+
+Manter o objetivo estrito de detectar flatline/stuck. Usar falhas sintéticas/bench e a cauda inferior de janelas reais válidas. Não aumentar o valor para rejeitar baixa pulsatilidade: isso é G2.
+
+### `rail_margin_counts`
+
+Executar sweep de proximidade aos rails e ensaios de saturação óptica/eletrônica. Testar margens 1, 2, 4, 8, 16, 32, 64, 128... e observar quais códigos aparecem quando o sensor já está claramente saturado.
+
+### `maximum_clipping_fraction`
+
+Aplicar sweep controlado, por exemplo 0%, 0,2%, 0,5%, 1%, 2%, 5%, 10%, e medir impacto nas fases posteriores/estimadores. Selecionar um orçamento máximo de corrupção justificável.
+
+### `minimum_continuity_fraction`
+
+Executar long runs normais e injetar taxas crescentes de intervalos ausentes/duplicados. Escolher limite que retenha aquisição nominal e rejeite perda suficiente para prejudicar análise temporal posterior.
+
+### `maximum_interval_deviation_fraction`
+
+Caracterizar a distribuição real de `dt` reconstruído pelo firmware e ensaios sob carga. Como o MAX30102 não fornece timestamp individual, esta métrica mede a continuidade do fluxo reconstruído, não jitter instantâneo do ADC.
+
+### `window_ms` e `step_ms`
+
+5 s é a baseline científica de desenvolvimento; 1 s é escolha de engenharia. Fazer análise de sensibilidade de latência e erro antes de qualquer mudança.
+
+## 7. Critérios de seleção
+
+Para cada candidato reportar, conforme o problema binário rotulado: sensibilidade, especificidade, false accept, false reject, matriz de confusão e intervalos de confiança quando a amostra permitir. A escolha deve privilegiar um plateau estável, não o melhor ponto de uma única sessão.
+
+## 8. Validação e congelamento
+
+Executar o candidato no hold-out, sem reajuste. Registrar versão de sensor/configuração, dataset, métricas e thresholds. Só então mudar o status de `provisional` para `empirically calibrated` e congelar `NO_GRIP`.
+
+## 9. Datasets públicos
+
+Bancos como Wrist PPG During Exercise, PPG-DaLiA, MIMIC/BIDMC podem apoiar G2/G3/G4 e validação algorítmica, mas não devem definir diretamente `minimum_mean_level`, `minimum_raw_range` ou rails do nosso MAX30102 devido a hardware/escala diferentes.
+
+## 10. Referências metodológicas
+
+Reddy e Vadrevu demonstram que thresholds associados à amplitude/faixa dinâmica precisam ser adaptados ao módulo. Karlen/Orphanidou apoiam avaliação quantitativa de qualidade e validação em dados separados. O fabricante MAX30102 define limites físicos, não um threshold de “PPG bom”.
