@@ -8,6 +8,7 @@ idf_component_register(
         "sensing/sample_buffer.c"
         "sensing/ppg_sampler.c"
         "processing/sqi/signal_quality.c"
+        "processing/sqi/gates/g1_integrity/gate_integrity.c"
         "processing/hr_estimator.c"
         "processing/spo2_estimator.c"
         "safety/confidence_engine.c"

@@ -10,13 +10,27 @@ static const system_config_t g_config = {
     .led_red_pa = 0x24,
     .led_ir_pa = 0x24,
     .sqi = {
-        /* Mantém o comportamento do baseline durante a refatoração estrutural:
-         * 400 amostras a 100 Hz = 4 s, processadas a cada 500 ms.
-         * A mudança para a janela científica alvo será feita junto aos gates.
+        /* Baseline científica adotada a partir da implementação dos gates. */
+        .window_ms = 5000u,
+        .step_ms = 1000u,
+        /* Mantido temporariamente para compatibilidade com o confidence_engine
+         * enquanto o SQI hierárquico substitui gradualmente o score legado.
          */
-        .window_ms = 4000u,
-        .step_ms = 500u,
-        .minimum_quality_score = 0.55f
+        .minimum_quality_score = 0.55f,
+        .g1_integrity = {
+            /* O driver configura o MAX3010x em 411 us / 18 bits. */
+            .adc_min_value = 0u,
+            .adc_max_value = 0x03FFFFu,
+            .rail_margin_counts = 1u,
+            /* Thresholds iniciais de engenharia. Devem ser calibrados no perfil
+             * NO_GRIP com dados RAW representativos antes de serem congelados.
+             */
+            .minimum_mean_level = 5000u,
+            .minimum_raw_range = 20u,
+            .maximum_clipping_fraction = 0.01f,
+            .minimum_continuity_fraction = 0.95f,
+            .maximum_interval_deviation_fraction = 0.40f
+        }
     },
     .spo2_calibration = {
         /* Curva apenas para demonstração de engenharia: SpO2 = 110 - 25R.

@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "common/sqi_types.h"
+
 typedef struct {
     uint32_t timestamp_ms;
     uint32_t seq;
@@ -36,6 +38,12 @@ typedef enum {
 } ppg_invalid_reason_t;
 
 typedef struct {
+    sqi_eval_status_t eval_status;
+    ppg_quality_state_t state;
+    sqi_gate_id_t failed_gate;
+    sqi_fail_reason_t fail_reason;
+    g1_integrity_result_t g1;
+
     bool signal_present;
     uint32_t invalid_reasons;
     size_t window_samples;

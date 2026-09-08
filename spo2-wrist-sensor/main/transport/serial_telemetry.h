@@ -2,7 +2,7 @@
 
 #include "common/measurement_types.h"
 
-#define TELEMETRY_PROTOCOL_VERSION 1
+#define TELEMETRY_PROTOCOL_VERSION 2
 
 void serial_telemetry_print_sample(const ppg_sample_t *sample);
 void serial_telemetry_print_frame(const char *state_str, const health_frame_t *frame);
