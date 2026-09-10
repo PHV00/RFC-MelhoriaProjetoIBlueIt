@@ -31,16 +31,21 @@ static const system_config_t g_config = {
             .minimum_continuity_fraction = 0.95f,
             .maximum_interval_deviation_fraction = 0.40f
         },
-        /* G2: 0,5 Hz / HP3 é a baseline de preprocessamento atualmente testada.
-         * Os demais valores são thresholds provisórios de engenharia usados para
-         * integração funcional. Eles NÃO são calibração científica final.
+        /* G2: HP Butterworth 3ª ordem / 0,5 Hz + features de ACF conforme
+         * Vadrevu & Manikandan. FZCP e Rmax partem dos valores publicados;
+         * crossings e limites fisiológicos continuam provisórios para o nosso
+         * MAX30102 a 100 Hz e precisam de calibração experimental NO_GRIP.
          */
         .g2_highpass_cutoff_hz = 0.5f,
         .g2_pulsatility = {
             .minimum_ac_rms = 10.0f,
             .minimum_crossings = 4u,
-            .maximum_crossings = 30u,
-            .minimum_acf_peak = 0.70f,
+            .maximum_crossings = 100u,
+            .minimum_acf_period_s = 0.20f,
+            .maximum_acf_period_s = 2.00f,
+            .minimum_fzcp_s = 0.05f,
+            .maximum_fzcp_s = 1.00f,
+            .minimum_acf_peak = 0.50f,
             .minimum_pulse_bpm = 40.0f,
             .maximum_pulse_bpm = 180.0f
         }
