@@ -39,6 +39,8 @@ typedef enum {
     SQI_FAIL_LOW_AC_RMS_IR,
     SQI_FAIL_CROSSINGS_RED,
     SQI_FAIL_CROSSINGS_IR,
+    SQI_FAIL_FZCP_RED,
+    SQI_FAIL_FZCP_IR,
     SQI_FAIL_LOW_ACF_RED,
     SQI_FAIL_LOW_ACF_IR,
     SQI_FAIL_PERIOD_RED,
@@ -98,14 +100,29 @@ typedef enum {
     G2_FAILURE_LOW_ACF_RED      = 1u << 4,
     G2_FAILURE_LOW_ACF_IR       = 1u << 5,
     G2_FAILURE_PERIOD_RED       = 1u << 6,
-    G2_FAILURE_PERIOD_IR        = 1u << 7
+    G2_FAILURE_PERIOD_IR        = 1u << 7,
+    G2_FAILURE_FZCP_RED         = 1u << 8,
+    G2_FAILURE_FZCP_IR          = 1u << 9
 } g2_pulsatility_failure_t;
 
 typedef struct {
     float minimum_ac_rms;
     uint32_t minimum_crossings;
     uint32_t maximum_crossings;
+
+    /* Faixa ampla em que a ACF procura Kmax; separada da faixa fisiológica
+     * aceita para que PERIOD_* possa detectar periodicidade fora do domínio.
+     */
+    float minimum_acf_period_s;
+    float maximum_acf_period_s;
+
+    /* FZCP e Rmax: baseline inspirada em Vadrevu & Manikandan (2019).
+     * Valores finais ainda dependem da calibração no MAX30102/NO_GRIP.
+     */
+    float minimum_fzcp_s;
+    float maximum_fzcp_s;
     float minimum_acf_peak;
+
     float minimum_pulse_bpm;
     float maximum_pulse_bpm;
 } g2_pulsatility_config_t;
@@ -117,12 +134,16 @@ typedef struct {
 
     float red_ac_rms;
     uint32_t red_crossings;
+    bool red_has_fzcp;
+    float red_fzcp_s;
     float red_acf_peak;
     size_t red_best_lag;
     float red_period_bpm;
 
     float ir_ac_rms;
     uint32_t ir_crossings;
+    bool ir_has_fzcp;
+    float ir_fzcp_s;
     float ir_acf_peak;
     size_t ir_best_lag;
     float ir_period_bpm;
