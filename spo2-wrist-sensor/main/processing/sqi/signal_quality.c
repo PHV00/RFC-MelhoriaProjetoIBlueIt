@@ -4,6 +4,8 @@
 #include <string.h>
 
 #include "processing/sqi/gates/g1_integrity/gate_integrity.h"
+#include "processing/sqi/gates/g2_pulsatility/gate_pulsatility.h"
+#include "processing/sqi/preprocess/ppg_preprocess.h"
 #include "storage/config_repo.h"
 
 #define MIN_DC_IR 5000.0f
@@ -135,6 +137,35 @@ static void populate_g1_failure_quality(
     quality->quality_score = 0.0f;
 }
 
+static void populate_g2_failure_quality(
+    signal_quality_t *quality,
+    const g1_integrity_result_t *g1,
+    const g2_pulsatility_result_t *g2,
+    const ppg_sample_t *samples,
+    size_t n,
+    float sample_rate_hz
+) {
+    quality->eval_status = SQI_EVAL_COMPLETE;
+    quality->state = PPG_QUALITY_INVALID;
+    quality->failed_gate = SQI_GATE_G2_PULSATILITY;
+    quality->fail_reason = g2->primary_reason;
+    quality->g1 = *g1;
+    quality->g2 = *g2;
+    quality->signal_present = true;
+    quality->invalid_reasons = PPG_INVALID_PULSATILITY;
+    quality->window_samples = n;
+    quality->sample_rate_hz = sample_rate_hz;
+    quality->window_duration_s = (float)(samples[n - 1u].timestamp_ms - samples[0].timestamp_ms) / 1000.0f;
+    quality->dc_ir = g1->ir_mean;
+    quality->dc_red = g1->red_mean;
+    quality->ac_ir = g2->ir_ac_rms;
+    quality->ac_red = g2->red_ac_rms;
+    quality->perfusion_index = g1->ir_mean > 1e-6f ? g2->ir_ac_rms / g1->ir_mean : 0.0f;
+    quality->continuity_score = g1->continuity_fraction;
+    quality->clipping_fraction = maxf(g1->red_clipping_fraction, g1->ir_clipping_fraction);
+    quality->quality_score = 0.0f;
+}
+
 sqi_eval_status_t signal_quality_evaluate_window(
     const sample_buffer_t *buffer,
     size_t window_samples,
@@ -177,6 +208,24 @@ sqi_eval_status_t signal_quality_evaluate_window(
         return SQI_EVAL_COMPLETE;
     }
 
+    if (!ppg_preprocess_highpass_butterworth3(
+            s_samples, n, expected_sample_rate_hz, config->g2_highpass_cutoff_hz,
+            s_red, s_ir)) {
+        return SQI_EVAL_ERROR;
+    }
+
+    g2_pulsatility_result_t g2 = {0};
+    if (!gate_pulsatility_evaluate(
+            s_red, s_ir, n, expected_sample_rate_hz,
+            &config->g2_pulsatility, &g2)) {
+        return SQI_EVAL_ERROR;
+    }
+
+    if (!g2.passed) {
+        populate_g2_failure_quality(out_quality, &g1, &g2, s_samples, n, expected_sample_rate_hz);
+        return SQI_EVAL_COMPLETE;
+    }
+
     float dc_ir = 0.0f, dc_red = 0.0f;
     detrend_linear(s_samples, n, true, s_ir, &dc_ir);
     detrend_linear(s_samples, n, false, s_red, &dc_red);
@@ -211,6 +260,7 @@ sqi_eval_status_t signal_quality_evaluate_window(
     out_quality->failed_gate = SQI_GATE_NONE;
     out_quality->fail_reason = SQI_FAIL_NONE;
     out_quality->g1 = g1;
+    out_quality->g2 = g2;
     out_quality->signal_present = signal_present;
     out_quality->invalid_reasons = reasons;
     out_quality->window_samples = n;
