@@ -50,3 +50,12 @@ PATH=/usr/bin:/bin "$HOST_CC" -B/usr/bin/ \
   -o "$BUILD_DIR/test_autocorrelation_equivalence"
 
 "$BUILD_DIR/test_autocorrelation_equivalence"
+
+PATH=/usr/bin:/bin "$HOST_CC" -B/usr/bin/ \
+  "${COMMON_FLAGS[@]}" \
+  "$ROOT_DIR/tests/sqi/g2_pulsatility/test_autocorrelation_vadrevu.c" \
+  "$ROOT_DIR/main/processing/sqi/features/autocorrelation.c" \
+  -lm \
+  -o "$BUILD_DIR/test_autocorrelation_vadrevu"
+
+"$BUILD_DIR/test_autocorrelation_vadrevu"
