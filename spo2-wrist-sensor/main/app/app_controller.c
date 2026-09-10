@@ -29,6 +29,7 @@ static uint32_t s_last_raw_ms;
 static uint32_t s_last_recovery_ms;
 static uint8_t s_consecutive_errors;
 static bool s_ready;
+static int64_t s_last_poll_start_us;
 
 static esp_err_t configure_sensor(const system_config_t *cfg) {
     esp_err_t err = max3010x_probe(&s_sensor);
@@ -63,6 +64,7 @@ static void attempt_recovery(uint32_t now_ms) {
         ppg_sampler_init(&s_sampler, &s_sensor, &s_buffer, cfg->sensor_sample_rate_hz);
         s_consecutive_errors = 0u;
         s_ready = true;
+        s_last_poll_start_us = 0;
         (void)app_state_machine_transition(APP_STATE_IDLE);
         serial_telemetry_print_message("RECOVERY", "Sensor reinicializado");
     } else {
@@ -93,6 +95,7 @@ void app_controller_init(void) {
 
     s_last_processing_ms = (uint32_t)(esp_timer_get_time() / 1000ULL);
     s_last_raw_ms = s_last_processing_ms;
+    s_last_poll_start_us = 0;
     s_ready = true;
     (void)app_state_machine_transition(APP_STATE_IDLE);
 }
@@ -103,6 +106,15 @@ void app_controller_step(void) {
         attempt_recovery(now_ms);
         return;
     }
+
+    const int64_t poll_start_us = esp_timer_get_time();
+    if (s_last_poll_start_us != 0) {
+        const int64_t poll_gap_us = poll_start_us - s_last_poll_start_us;
+        if (poll_gap_us >= 250000) {
+            ESP_LOGW(TAG, "SQI_PROFILE poll_gap_us=%lld", (long long)poll_gap_us);
+        }
+    }
+    s_last_poll_start_us = poll_start_us;
 
     size_t added = 0u;
     esp_err_t err = ppg_sampler_poll(&s_sampler, &added);
@@ -140,6 +152,7 @@ void app_controller_step(void) {
     spo2_result_t spo2 = {0};
     health_frame_t frame = {0};
 
+    const int64_t sqi_start_us = esp_timer_get_time();
     sqi_eval_status_t quality_status = signal_quality_evaluate_window(
         &s_buffer,
         config_repo_sqi_window_samples(cfg),
@@ -147,6 +160,16 @@ void app_controller_step(void) {
         &cfg->sqi,
         &quality
     );
+    const int64_t sqi_elapsed_us = esp_timer_get_time() - sqi_start_us;
+
+    if (quality_status != SQI_EVAL_WAITING) {
+        ESP_LOGI(TAG,
+                 "SQI_PROFILE eval_us=%lld status=%d state=%d failed_gate=%d",
+                 (long long)sqi_elapsed_us,
+                 (int)quality_status,
+                 (int)quality.state,
+                 (int)quality.failed_gate);
+    }
 
     if (quality_status == SQI_EVAL_WAITING) {
         (void)app_state_machine_transition(APP_STATE_LOW_CONFIDENCE);
