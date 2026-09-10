@@ -26,6 +26,18 @@ static bool config_is_valid(const g2_pulsatility_config_t *config) {
            config->maximum_pulse_bpm > config->minimum_pulse_bpm;
 }
 
+static sqi_fail_reason_t primary_reason_from_mask(uint32_t mask) {
+    if ((mask & G2_FAILURE_LOW_RMS_RED) != 0u) return SQI_FAIL_LOW_AC_RMS_RED;
+    if ((mask & G2_FAILURE_LOW_RMS_IR) != 0u) return SQI_FAIL_LOW_AC_RMS_IR;
+    if ((mask & G2_FAILURE_CROSSINGS_RED) != 0u) return SQI_FAIL_CROSSINGS_RED;
+    if ((mask & G2_FAILURE_CROSSINGS_IR) != 0u) return SQI_FAIL_CROSSINGS_IR;
+    if ((mask & G2_FAILURE_LOW_ACF_RED) != 0u) return SQI_FAIL_LOW_ACF_RED;
+    if ((mask & G2_FAILURE_LOW_ACF_IR) != 0u) return SQI_FAIL_LOW_ACF_IR;
+    if ((mask & G2_FAILURE_PERIOD_RED) != 0u) return SQI_FAIL_PERIOD_RED;
+    if ((mask & G2_FAILURE_PERIOD_IR) != 0u) return SQI_FAIL_PERIOD_IR;
+    return SQI_FAIL_NONE;
+}
+
 static bool evaluate_channel(
     const float *samples,
     size_t count,
@@ -95,12 +107,14 @@ bool gate_pulsatility_evaluate(
     const g2_pulsatility_config_t *config,
     g2_pulsatility_result_t *out_result
 ) {
-    if (red_processed == NULL || ir_processed == NULL || out_result == NULL ||
+    if (out_result == NULL) return false;
+    memset(out_result, 0, sizeof(*out_result));
+    out_result->primary_reason = SQI_FAIL_INVALID_ARGUMENT;
+
+    if (red_processed == NULL || ir_processed == NULL ||
         count < 3u || sample_rate_hz <= 0.0f || !config_is_valid(config)) {
         return false;
     }
-
-    memset(out_result, 0, sizeof(*out_result));
 
     if (!evaluate_channel(
             red_processed, count, sample_rate_hz, config,
@@ -133,5 +147,6 @@ bool gate_pulsatility_evaluate(
     }
 
     out_result->passed = out_result->failure_mask == G2_FAILURE_NONE;
+    out_result->primary_reason = primary_reason_from_mask(out_result->failure_mask);
     return true;
 }
