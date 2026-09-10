@@ -162,7 +162,7 @@ void app_controller_step(void) {
         (void)hr_estimator_compute(&s_buffer, &quality, &hr);
         (void)spo2_estimator_compute_with_calibration(&s_buffer, &quality, &cfg->spo2_calibration, &spo2);
     } else {
-        /* Fail-fast: uma janela rejeitada pelo G1 não chega aos estimadores. */
+        /* Fail-fast: qualquer gate obrigatório rejeitado bloqueia os estimadores. */
         hr.status = ESTIMATOR_LOW_QUALITY;
         spo2.status = ESTIMATOR_LOW_QUALITY;
     }
