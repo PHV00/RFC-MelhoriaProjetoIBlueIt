@@ -20,6 +20,7 @@ PATH=/usr/bin:/bin "$HOST_CC" -B/usr/bin/ \
   -std=c11 -Wall -Wextra -Werror -pedantic \
   -I"$ROOT_DIR/main" \
   "$ROOT_DIR/tests/sqi/g2_pulsatility/test_g2_pulsatility.c" \
+  "$ROOT_DIR/main/processing/sqi/preprocess/ppg_preprocess.c" \
   "$ROOT_DIR/main/processing/sqi/features/threshold_crossing.c" \
   "$ROOT_DIR/main/processing/sqi/features/autocorrelation.c" \
   "$ROOT_DIR/main/processing/sqi/gates/g2_pulsatility/gate_pulsatility.c" \
