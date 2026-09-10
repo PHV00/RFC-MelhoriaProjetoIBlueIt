@@ -33,6 +33,14 @@ static const char *fail_reason_to_string(sqi_fail_reason_t reason) {
         case SQI_FAIL_FLATLINE_IR: return "FLATLINE_IR";
         case SQI_FAIL_CLIPPING_RED: return "CLIPPING_RED";
         case SQI_FAIL_CLIPPING_IR: return "CLIPPING_IR";
+        case SQI_FAIL_LOW_AC_RMS_RED: return "LOW_AC_RMS_RED";
+        case SQI_FAIL_LOW_AC_RMS_IR: return "LOW_AC_RMS_IR";
+        case SQI_FAIL_CROSSINGS_RED: return "CROSSINGS_RED";
+        case SQI_FAIL_CROSSINGS_IR: return "CROSSINGS_IR";
+        case SQI_FAIL_LOW_ACF_RED: return "LOW_ACF_RED";
+        case SQI_FAIL_LOW_ACF_IR: return "LOW_ACF_IR";
+        case SQI_FAIL_PERIOD_RED: return "PERIOD_RED";
+        case SQI_FAIL_PERIOD_IR: return "PERIOD_IR";
         case SQI_FAIL_NONE:
         default: return "NONE";
     }
@@ -56,6 +64,9 @@ void serial_telemetry_print_frame(const char *state_str, const health_frame_t *f
         "\"g1\":{\"passed\":%s,\"mask\":%lu,\"continuity\":%.4f,"
         "\"red_mean\":%.1f,\"red_range\":%lu,\"red_clip\":%.4f,"
         "\"ir_mean\":%.1f,\"ir_range\":%lu,\"ir_clip\":%.4f},"
+        "\"g2\":{\"passed\":%s,\"mask\":%lu,"
+        "\"red_rms\":%.2f,\"red_cross\":%lu,\"red_acf\":%.4f,\"red_bpm\":%.1f,"
+        "\"ir_rms\":%.2f,\"ir_cross\":%lu,\"ir_acf\":%.4f,\"ir_bpm\":%.1f},"
         "\"hr\":{\"valid\":%s,\"bpm\":%.1f,\"confidence\":%.2f},"
         "\"spo2\":{\"valid\":%s,\"value\":%.1f,\"r\":%.3f,"
         "\"confidence\":%.2f}}\n",
@@ -78,6 +89,16 @@ void serial_telemetry_print_frame(const char *state_str, const health_frame_t *f
         frame->quality.g1.ir_mean,
         (unsigned long)frame->quality.g1.ir_range,
         frame->quality.g1.ir_clipping_fraction,
+        frame->quality.g2.passed ? "true" : "false",
+        (unsigned long)frame->quality.g2.failure_mask,
+        frame->quality.g2.red_ac_rms,
+        (unsigned long)frame->quality.g2.red_crossings,
+        frame->quality.g2.red_acf_peak,
+        frame->quality.g2.red_period_bpm,
+        frame->quality.g2.ir_ac_rms,
+        (unsigned long)frame->quality.g2.ir_crossings,
+        frame->quality.g2.ir_acf_peak,
+        frame->quality.g2.ir_period_bpm,
         frame->hr.valid ? "true" : "false",
         frame->hr.bpm,
         frame->hr.confidence,
