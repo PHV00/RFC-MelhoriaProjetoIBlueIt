@@ -217,7 +217,7 @@ sqi_eval_status_t signal_quality_evaluate_window(
     g2_pulsatility_result_t g2 = {0};
     if (!gate_pulsatility_evaluate(
             s_red, s_ir, n, expected_sample_rate_hz,
-            &config->g2_pulsatility, &g2)) {
+            &config->g2_pulsatility, s_ir_smooth, &g2)) {
         return SQI_EVAL_ERROR;
     }
 
