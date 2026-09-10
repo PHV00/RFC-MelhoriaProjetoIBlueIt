@@ -81,8 +81,10 @@ bool confidence_engine_build_frame_ex(
     uint32_t critical_quality_reasons = PPG_INVALID_NO_SIGNAL |
                                         PPG_INVALID_WINDOW_SHORT |
                                         PPG_INVALID_DISCONTINUITY |
-                                        PPG_INVALID_CLIPPING;
-    out_frame->valid = quality->signal_present &&
+                                        PPG_INVALID_CLIPPING |
+                                        PPG_INVALID_PULSATILITY;
+    out_frame->valid = quality->state == PPG_QUALITY_VALID &&
+                       quality->signal_present &&
                        quality->quality_score >= minimum_quality_score &&
                        hr->valid && spo2->valid &&
                        (quality->invalid_reasons & critical_quality_reasons) == 0u;
