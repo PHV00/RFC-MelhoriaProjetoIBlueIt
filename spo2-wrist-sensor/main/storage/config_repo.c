@@ -30,6 +30,19 @@ static const system_config_t g_config = {
             .maximum_clipping_fraction = 0.01f,
             .minimum_continuity_fraction = 0.95f,
             .maximum_interval_deviation_fraction = 0.40f
+        },
+        /* G2: 0,5 Hz / HP3 é a baseline de preprocessamento atualmente testada.
+         * Os demais valores são thresholds provisórios de engenharia usados para
+         * integração funcional. Eles NÃO são calibração científica final.
+         */
+        .g2_highpass_cutoff_hz = 0.5f,
+        .g2_pulsatility = {
+            .minimum_ac_rms = 10.0f,
+            .minimum_crossings = 4u,
+            .maximum_crossings = 30u,
+            .minimum_acf_peak = 0.70f,
+            .minimum_pulse_bpm = 40.0f,
+            .maximum_pulse_bpm = 180.0f
         }
     },
     .spo2_calibration = {
