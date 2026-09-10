@@ -16,9 +16,13 @@ fi
 echo "Host compiler: $HOST_CC"
 echo "Host assembler: $HOST_AS"
 
+COMMON_FLAGS=(
+  -std=c11 -Wall -Wextra -Werror -pedantic
+  -I"$ROOT_DIR/main"
+)
+
 PATH=/usr/bin:/bin "$HOST_CC" -B/usr/bin/ \
-  -std=c11 -Wall -Wextra -Werror -pedantic \
-  -I"$ROOT_DIR/main" \
+  "${COMMON_FLAGS[@]}" \
   "$ROOT_DIR/tests/sqi/g2_pulsatility/test_g2_pulsatility.c" \
   "$ROOT_DIR/main/processing/sqi/preprocess/ppg_preprocess.c" \
   "$ROOT_DIR/main/processing/sqi/features/threshold_crossing.c" \
@@ -28,3 +32,12 @@ PATH=/usr/bin:/bin "$HOST_CC" -B/usr/bin/ \
   -o "$BUILD_DIR/test_g2_pulsatility"
 
 "$BUILD_DIR/test_g2_pulsatility"
+
+PATH=/usr/bin:/bin "$HOST_CC" -B/usr/bin/ \
+  "${COMMON_FLAGS[@]}" \
+  "$ROOT_DIR/tests/sqi/g2_pulsatility/test_preprocess_frequency_response.c" \
+  "$ROOT_DIR/main/processing/sqi/preprocess/ppg_preprocess.c" \
+  -lm \
+  -o "$BUILD_DIR/test_preprocess_frequency_response"
+
+"$BUILD_DIR/test_preprocess_frequency_response"
