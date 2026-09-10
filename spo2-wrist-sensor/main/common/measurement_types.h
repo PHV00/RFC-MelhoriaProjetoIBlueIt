@@ -34,7 +34,8 @@ typedef enum {
     PPG_INVALID_LOW_CORRELATION   = 1u << 5,
     PPG_INVALID_FIFO_OVERFLOW     = 1u << 6,
     PPG_INVALID_CALIBRATION       = 1u << 7,
-    PPG_INVALID_DOMAIN            = 1u << 8
+    PPG_INVALID_DOMAIN            = 1u << 8,
+    PPG_INVALID_PULSATILITY       = 1u << 9
 } ppg_invalid_reason_t;
 
 typedef struct {
@@ -43,6 +44,7 @@ typedef struct {
     sqi_gate_id_t failed_gate;
     sqi_fail_reason_t fail_reason;
     g1_integrity_result_t g1;
+    g2_pulsatility_result_t g2;
 
     bool signal_present;
     uint32_t invalid_reasons;
