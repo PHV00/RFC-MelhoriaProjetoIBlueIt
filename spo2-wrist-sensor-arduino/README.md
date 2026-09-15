@@ -1,20 +1,22 @@
 # spo2-wrist-sensor-arduino
 
-Porta inicial do módulo de oximetria do I Blue It para **Arduino Nano R3 (ATmega328P)** usando o sensor **MAX30102**.
+Porta inicial do módulo de oximetria do I Blue It para **Arduino Uno R3 (ATmega328P)** usando o sensor **MAX30102**.
 
 ## Objetivo desta branch
 
 Esta implementação é uma etapa de teste de hardware e compatibilidade com o contrato histórico do I Blue It. Ela não substitui ainda a arquitetura SQI hierárquica implementada no firmware ESP32; o módulo ESP32 foi preservado separadamente em `spo2-wrist-sensor-esp32`.
 
-## Pinagem — Arduino Nano R3
+## Pinagem — Arduino Uno R3
 
-| MAX30102 | Arduino Nano R3 | Função |
+| MAX30102 | Arduino Uno R3 | Função |
 |---|---|---|
-| SDA | A4 | I2C dados |
-| SCL | A5 | I2C clock |
+| SDA | A4 ou pino SDA dedicado | I2C dados |
+| SCL | A5 ou pino SCL dedicado | I2C clock |
 | GND | GND | terra comum |
 | VIN/VCC | conforme o breakout | alimentação |
 | INT | não conectado | não utilizado nesta versão |
+
+No Uno R3, os pinos dedicados `SDA` e `SCL` próximos ao AREF são conectados ao mesmo barramento de `A4` e `A5`. Portanto, use **um par ou o outro**, não ambos ao mesmo tempo.
 
 O LED onboard D13 é usado como indicador de leitura de amostra.
 
@@ -83,7 +85,7 @@ spo2-wrist-sensor-esp32/
     firmware atual ESP32 preservado
 
 spo2-wrist-sensor-arduino/
-    adaptação inicial Arduino Nano/MAX30102
+    adaptação inicial Arduino Uno R3/MAX30102
 ```
 
 A validação Arduino deve ocorrer primeiro em bancada. Depois disso, os Gates/SQI do firmware ESP32 podem ser portados de forma incremental, respeitando as limitações de SRAM e processamento do ATmega328P.
