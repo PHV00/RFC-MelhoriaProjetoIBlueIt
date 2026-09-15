@@ -1,5 +1,5 @@
 /*
-  I Blue It v5 - Oximetria MAX30102 - Arduino Nano R3
+  I Blue It v5 - Oximetria MAX30102 - Arduino Uno R3
   Compatibilidade mantida com o firmware oficial:
     Serial: 115200 baud
     'E'/'e' -> responde "echox"
@@ -8,9 +8,9 @@
     Saída durante aquisição: FC,SpO2
     Exemplo: 72,97
 
-  Pinagem Arduino Nano clássico:
-    MAX30102 SDA -> A4
-    MAX30102 SCL -> A5
+  Pinagem Arduino Uno R3 (ATmega328P):
+    MAX30102 SDA -> A4 (ou pino SDA dedicado; é o mesmo barramento)
+    MAX30102 SCL -> A5 (ou pino SCL dedicado; é o mesmo barramento)
     MAX30102 GND -> GND
     MAX30102 VIN/VCC -> conforme o breakout utilizado
     INT -> não utilizado
@@ -63,7 +63,8 @@ void listenCommand(char cmd) {
 }
 
 bool initializeMAX30102() {
-  // No Nano clássico, Wire usa A4=SDA e A5=SCL.
+  // No Arduino Uno R3, Wire usa SDA=A4 e SCL=A5.
+  // Os pinos SDA/SCL dedicados da placa são eletricamente o mesmo barramento.
   if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) {
     return false;
   }
