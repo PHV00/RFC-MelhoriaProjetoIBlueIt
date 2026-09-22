@@ -139,6 +139,7 @@ void setup()
   particleSensor.setPulseAmplitudeGreen(0);
 
   gate1Reset();
+  packed18Reset();
   sqiWindowStartedAt = millis();
 
   Serial.println(F("=== SQI FLOW V5 BASELINE / GATE 01 ==="));
@@ -159,6 +160,10 @@ void loop()
     // O Gate 01 trabalha diretamente com RAW: nada e filtrado antes dele.
     gate1AddSample(red, ir);
 
+    // Teste paralelo: preserva as primeiras 100 amostras da janela em
+    // exatamente 3 bytes por canal/amostra e valida o round-trip 18-bit.
+    packed18StoreSample(red, ir);
+
     particleSensor.nextSample();
   }
 
@@ -167,6 +172,7 @@ void loop()
     const bool gate1Passed = gate1Evaluate();
 
     gate1PrintReport();
+    packed18PrintReport();
 
     if (gate1Passed)
     {
@@ -180,6 +186,7 @@ void loop()
     Serial.println(F("--------------------------------------------------"));
 
     gate1Reset();
+    packed18Reset();
     sqiWindowStartedAt = millis();
   }
 }
