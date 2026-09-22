@@ -23,6 +23,12 @@
  * O Gate 01 continua recebendo diretamente o RAW uint32_t original.
  */
 
+#ifndef ENABLE_PACKED18_STORAGE_TEST
+#define ENABLE_PACKED18_STORAGE_TEST 0
+#endif
+
+#if ENABLE_PACKED18_STORAGE_TEST
+
 struct Packed18
 {
   uint8_t b0;
@@ -170,3 +176,5 @@ void packed18PrintReport()
 
   Serial.println();
 }
+
+#endif // ENABLE_PACKED18_STORAGE_TEST
