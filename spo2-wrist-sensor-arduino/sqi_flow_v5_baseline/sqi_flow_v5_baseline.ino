@@ -9,9 +9,13 @@
  * recebe RED/IR da FIFO, alimenta os Gates na ordem e decide se a janela pode
  * seguir para a proxima etapa.
  *
- * Nesta primeira versao SOMENTE O GATE 01 esta implementado e executado.
- * Gate 02, Gate 03, Gate 04, SpO2 e integracao com I Blue It ficam para etapas
- * posteriores, apos validarmos experimentalmente o Gate 01.
+ * Nesta branch:
+ * - Gate 01 permanece como filtro de integridade RAW;
+ * - Gate 02 executa Reddy 2020 / FOPC-DS em modo DIAGNOSTICO;
+ * - Gate 03, Gate 04, SpO2 e integracao com I Blue It permanecem posteriores.
+ *
+ * O Gate 02 ainda nao decide PASS/FAIL: primeiro validamos a matematica e
+ * caracterizamos os valores reais no MAX30102.
  *
  * FUNDAMENTACAO DA ARQUITETURA
  * ---------------------------
@@ -90,10 +94,10 @@
 #include <Wire.h>
 #include "MAX30105.h"
 
-// Forward declaration needed by the Arduino 1.8.x .ino preprocessor when
-// ENABLE_PACKED18_STORAGE_TEST=1. It may auto-generate function prototypes
-// before the Packed18 definition in another sketch tab.
+// Forward declarations needed by the Arduino 1.8.x .ino preprocessor.
 struct Packed18;
+struct Gate2FopcState;
+struct Gate2FopcMetrics;
 
 /*
  * VALIDACOES INDEPENDENTES
@@ -105,6 +109,8 @@ struct Packed18;
  * armazenamento separadamente mudando somente esta chave para 1.
  */
 #define ENABLE_PACKED18_STORAGE_TEST 0
+#define ENABLE_GATE2_REDDY_DIAGNOSTIC 1
+#define ENABLE_GATE2_REDDY_SELF_TEST 1
 
 MAX30105 particleSensor;
 
@@ -155,14 +161,25 @@ void setup()
   particleSensor.setPulseAmplitudeGreen(0);
 
   gate1Reset();
+
+#if ENABLE_GATE2_REDDY_DIAGNOSTIC
+  gate2Reset();
+#endif
+
 #if ENABLE_PACKED18_STORAGE_TEST
   packed18Reset();
 #endif
+
+#if ENABLE_GATE2_REDDY_SELF_TEST
+  gate2RunSelfTest();
+#endif
+
   sqiWindowStartedAt = millis();
 
-  Serial.println(F("=== SQI FLOW V5 BASELINE / GATE 01 ==="));
-  Serial.println(F("MAX30102 OK. Janela=5s. Somente G1 ativo."));
-  Serial.println(F("Mantenha o dedo no sensor para validar o Gate 01."));
+  Serial.println(F("=== SQI FLOW V5 / G1 + G2 REDDY FOPC-DS ==="));
+  Serial.println(F("MAX30102 OK. Janela=5s."));
+  Serial.println(F("G2 em modo diagnostico: sem PASS/FAIL."));
+  Serial.println(F("Reddy thresholds sao referencia, nao decisao final."));
 }
 
 void loop()
@@ -177,6 +194,11 @@ void loop()
 
     // O Gate 01 trabalha diretamente com RAW: nada e filtrado antes dele.
     gate1AddSample(red, ir);
+
+#if ENABLE_GATE2_REDDY_DIAGNOSTIC
+    // G2 Reddy FOPC-DS tambem trabalha em streaming, sem buffer de janela.
+    gate2AddSample(red, ir);
+#endif
 
 #if ENABLE_PACKED18_STORAGE_TEST
     // Teste independente de storage: preserva as primeiras 100 amostras
@@ -198,7 +220,12 @@ void loop()
 
     if (gate1Passed)
     {
-      Serial.println(F("PIPELINE: G1 PASS -> aguardando implementacao do G2"));
+#if ENABLE_GATE2_REDDY_DIAGNOSTIC
+      gate2PrintReport();
+      Serial.println(F("PIPELINE: G1 PASS -> G2 REDDY DIAGNOSTIC"));
+#else
+      Serial.println(F("PIPELINE: G1 PASS -> G2 desabilitado"));
+#endif
     }
     else
     {
@@ -208,6 +235,11 @@ void loop()
     Serial.println(F("--------------------------------------------------"));
 
     gate1Reset();
+
+#if ENABLE_GATE2_REDDY_DIAGNOSTIC
+    gate2Reset();
+#endif
+
 #if ENABLE_PACKED18_STORAGE_TEST
     packed18Reset();
 #endif
