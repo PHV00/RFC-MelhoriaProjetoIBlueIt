@@ -292,3 +292,40 @@ archive/sqi-v2-arduino-g1-18bit
 ```
 
 Depois que a V2/G1 for mergeada, `feature/arduino-sqi-gate1` também deve ser removida e a próxima etapa deve nascer da `main`.
+
+
+---
+
+## Legado adicional preservado antes da limpeza
+
+Para garantir recuperação mesmo das branches antigas com commits exclusivos que não devem voltar para a linha principal, foram criadas cópias arquivadas.
+
+### Safety module antigo
+
+```text
+archive/legacy-safety-module
+```
+
+Commit:
+
+```text
+baaeae0d2fa92a9e10962d304baa23a4a2d28f28
+```
+
+Uso: apenas arqueologia/regressão histórica. Não deve ser usado como base de produção.
+
+### Porta Arduino pós-merge antiga
+
+```text
+archive/legacy-spo2-arduino-port-post-merge
+```
+
+Commit:
+
+```text
+3ce81b7f5f84bf48600a4e62f22387414b86dd31
+```
+
+Uso: preservar o estado pós-merge anterior ao ajuste definitivo de organização feito depois pelo PR #21.
+
+Com essas referências, a exclusão das branches de trabalho originais não remove o acesso ao conteúdo histórico.
