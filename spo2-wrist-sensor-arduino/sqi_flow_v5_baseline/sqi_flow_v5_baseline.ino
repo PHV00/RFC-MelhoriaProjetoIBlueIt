@@ -169,7 +169,7 @@ void setup()
 
   Serial.println(F("=== SQI FLOW V5 / G1 + G2 DIAGNOSTIC ==="));
   Serial.println(F("MAX30102 OK. G1=5s; G2 analisa 100 amostras (~4s)."));
-  Serial.println(F("G2 apenas mede AC/DC, crossings e ACF; sem PASS/FAIL."));
+  Serial.println(F("G2 mede amplitude, crossings e ACF; sem PASS/FAIL."));
 }
 
 void loop()
