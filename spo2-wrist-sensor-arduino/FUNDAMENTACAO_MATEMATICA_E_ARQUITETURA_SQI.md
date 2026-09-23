@@ -462,7 +462,14 @@ DC alto + componente pulsátil mensurável
 
 A V1/ESP32 já possui cálculo RMS.
 
-A branch diagnóstica atual do Uno contém temporariamente `MAD/DC` como proxy. **Esse proxy não deve ser tratado como a implementação final do método de Vadrevu. Antes da validação do G2, a intenção é substituir essa etapa pela formulação alinhada ao baseline AC/RMS.**
+Na branch diagnóstica atual do Uno o `MAD/DC` exploratório foi removido. O firmware agora calcula:
+
+```text
+absoluteAmplitude = max(|x[i] - mean|)
+AC_RMS            = sqrt(mean((x[i] - mean)^2))
+```
+
+A primeira métrica representa a família de amplitude de forma explícita no port; `AC_RMS` é mantido como métrica auxiliar herdada da V1. Nenhum threshold de decisão está congelado.
 
 ## 4.4 Threshold crossings
 
@@ -537,19 +544,23 @@ lag ~ período         -> pulsos alinhados    -> correlação maior
 
 ### Estado do código
 
-A V1/ESP32 utiliza a normalização com:
-
-```text
-sqrt(energyA * energyB)
-```
-
-A branch diagnóstica inicial do Uno usa atualmente um denominador aproximado:
+A aproximação exploratória por:
 
 ```text
 (energyA + energyB)/2
 ```
 
-para evitar `sqrt`/float. **Essa aproximação ainda não deve ser usada para caracterizar thresholds nem ser apresentada como reprodução do método-base. Antes dos testes finais do G2, devemos decidir se mantemos a formulação normalizada da V1 ou demonstramos formalmente equivalência suficiente de uma aproximação.**
+foi removida antes da caracterização experimental.
+
+A branch diagnóstica atual do Uno usa a normalização:
+
+```text
+              sum(a[i] * b[i])
+R(k) = --------------------------------
+       sqrt(sum(a[i]^2)) * sqrt(sum(b[i]^2))
+```
+
+sem criar buffers `float[100]`. As energias e o numerador são acumulados em 64 bits; `float` é usado apenas na etapa de raiz/normalização. A saída é escalada para `[-1000,+1000]` para telemetria.
 
 ## 4.6 Melhor lag
 
@@ -620,7 +631,17 @@ FZCP_s = FZCP_lag / fs
 
 ### Estado metodológico
 
-A métrica existe na implementação V1. Antes de portá-la como requisito obrigatório do Uno, devemos conferir seu papel exato no método-base selecionado e registrar essa correspondência. Até isso ser feito, ela deve ser tratada como **feature de referência da V1**, não como requisito já fechado do G2 Arduino.
+A métrica existe na implementação V1. Fontes secundárias que descrevem o método de Vadrevu indicam que o primeiro zero-crossing da ACF, o pico máximo e o lag desse pico são usados para caracterizar a ACF.
+
+Por isso, a branch diagnóstica atual passou a extrair:
+
+```text
+FZCP
+ACF peak
+peak lag
+```
+
+mas ainda **sem thresholds de PASS/FAIL**. O próximo passo é caracterizar essas grandezas no nosso MAX30102.
 
 ## 4.9 Arquitetura de memória do G2
 
@@ -879,10 +900,24 @@ Packed18 lossless
 G2 de pulsatilidade
 ```
 
-A branch diagnóstica atual contém uma primeira implementação exploratória, mas duas partes ainda devem ser alinhadas ao método-base antes de coletarmos thresholds:
+O port diagnóstico foi alinhado antes da coleta de thresholds. Atualmente ele extrai, sem decidir qualidade:
 
-1. substituir `MAD/DC` por AC/RMS como métrica principal;
-2. decidir a autocorrelação normalizada final, preferencialmente a formulação já usada na V1, ou demonstrar equivalência suficiente de qualquer aproximação escolhida.
+```text
+absolute amplitude
+AC RMS auxiliar
+threshold crossing count/rate
+ACF normalizada
+FZCP
+ACF peak
+peak lag
+periodicidade derivada
+tempo de execução no ATmega328P
+```
+
+A validação experimental deve agora responder duas perguntas independentes:
+
+1. as features separam adequadamente dedo estável de transientes/movimento?
+2. o custo de CPU é compatível com a FIFO e com a futura execução conjunta com PITACO?
 
 ## Ainda não implementado
 
@@ -902,3 +937,26 @@ REMOVIDO / ADIADO
 ```
 
 Isso permite rastrear a origem matemática de cada decisão e evita que otimizações de hardware sejam confundidas com requisitos publicados.
+
+
+---
+
+# 11. Matriz de rastreabilidade específica do G2 — Vadrevu -> V1 -> Uno
+
+| Elemento | Evidência no trabalho-base / literatura de apoio | V1 ESP32 | Port Uno/Nano atual | Classificação |
+|---|---|---|---|---|
+| decisão hierárquica | descrita no trabalho-base | sim | G1 antes de G2; G2 ainda diagnóstico | **ADAPTADO** |
+| amplitude | feature explicitamente descrita | AC RMS | `absoluteAmplitude` + AC RMS auxiliar | **REPLICADO/ADAPTADO** |
+| threshold crossing rate | feature explicitamente descrita | crossing count | count + taxa em permille | **REPLICADO** |
+| autocorrelação | feature explicitamente descrita | ACF normalizada | ACF normalizada sob demanda | **REPLICADO** |
+| primeiro zero-crossing da ACF | descrito em fontes secundárias do método; existe na V1 | FZCP | FZCP | **REPLICADO COM RASTREABILIDADE SECUNDÁRIA** |
+| pico máximo da ACF | descrito em fontes secundárias; existe na V1 | peak correlation | `ACFpeak_permille` | **REPLICADO** |
+| lag do pico | descrito em fontes secundárias; existe na V1 | best lag | `peakLag` | **REPLICADO** |
+| período derivado | consequência matemática do lag | BPM/período | `period_cpm` diagnóstico | **DERIVADO** |
+| Butterworth da V1 | presente na implementação histórica | sim | não nesta versão | **ADIADO** |
+| Hamming da V1 | presente na implementação histórica da ACF | sim | não nesta versão | **ADIADO** |
+| Packed18 | não pertence ao método-base | não | sim | **ADAPTAÇÃO DE HARDWARE** |
+| RED + IR separados | não assumido como requisito universal do método-base | disponível no projeto | ambos processados | **ADAPTAÇÃO PARA OXIMETRIA** |
+| thresholds finais | dependem do método/dados | configuráveis | ainda inexistentes | **A CARACTERIZAR** |
+
+A regra de escrita acadêmica é citar a origem de cada elemento e não atribuir ao artigo escolhas que pertencem ao port para ATmega328P.
