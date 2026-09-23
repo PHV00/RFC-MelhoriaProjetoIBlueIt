@@ -23,11 +23,15 @@
  * O Gate 01 continua recebendo diretamente o RAW uint32_t original.
  */
 
+#ifndef ENABLE_PACKED18_BUFFER
+#define ENABLE_PACKED18_BUFFER 0
+#endif
+
 #ifndef ENABLE_PACKED18_STORAGE_TEST
 #define ENABLE_PACKED18_STORAGE_TEST 0
 #endif
 
-#if ENABLE_PACKED18_STORAGE_TEST
+#if ENABLE_PACKED18_BUFFER
 
 struct Packed18
 {
@@ -77,6 +81,23 @@ void packed18Reset()
 
   packed18ExpectedRedSum = 0;
   packed18ExpectedIrSum = 0;
+}
+
+uint16_t packed18GetCount()
+{
+  return packed18Count;
+}
+
+uint32_t packed18GetRed(uint16_t index)
+{
+  if (index >= packed18Count) return 0;
+  return packed18Decode(packedRedBuffer[index]);
+}
+
+uint32_t packed18GetIr(uint16_t index)
+{
+  if (index >= packed18Count) return 0;
+  return packed18Decode(packedIrBuffer[index]);
 }
 
 void packed18StoreSample(uint32_t red, uint32_t ir)
@@ -134,6 +155,7 @@ int packed18FreeRam()
 }
 #endif
 
+#if ENABLE_PACKED18_STORAGE_TEST
 void packed18PrintReport()
 {
   uint32_t decodedRedSum = 0;
@@ -176,5 +198,6 @@ void packed18PrintReport()
 
   Serial.println();
 }
-
 #endif // ENABLE_PACKED18_STORAGE_TEST
+
+#endif // ENABLE_PACKED18_BUFFER
