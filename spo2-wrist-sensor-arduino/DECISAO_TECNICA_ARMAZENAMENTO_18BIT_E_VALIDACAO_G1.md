@@ -38,6 +38,16 @@ TOTAL = 600 bytes
 
 Isso reduz em 25% o custo dos buffers quando comparado com dois vetores `uint32_t[100]`, preservando exatamente os dados de 18 bits.
 
+Em termos do ATmega328P (2 KB de SRAM), a economia absoluta é de **200 bytes**, equivalente a aproximadamente **9,8% de toda a SRAM física do microcontrolador**:
+
+```text
+uint32_t: 800 B
+Packed18: 600 B
+economia: 200 B = 25% do buffer = ~9,8% da SRAM total do ATmega328P
+```
+
+O objetivo não é "economizar um componente", mas reduzir pressão de memória para manter a solução viável no mesmo Arduino Uno/Nano ATmega328P sem descartar informação do ADC de 18 bits.
+
 ## 3. O que esta decisão NÃO significa
 
 Esta decisão:
@@ -214,7 +224,102 @@ Objetivo: observar médias e ranges quando o acoplamento óptico piora. Não há
 
 Objetivo: verificar se o G1 permanece restrito à integridade básica. Uma janela pode ainda passar no G1 e ser rejeitada depois por baixa pulsatividade no G2.
 
-## 10. Critério para encerrar a validação inicial do G1
+## 10. Resultados experimentais obtidos
+
+### 10.1 Aquisição RAW
+
+A montagem com Arduino Nano/ATmega328P e MAX30102 apresentou, em bancada:
+
+```text
+sem dedo:
+RED ~500-650
+IR  ~450-600
+
+dedo estável:
+RED ~106000-115000
+IR  ~118000-131000
+```
+
+Os valores com dedo ultrapassam 65535 de forma recorrente, confirmando experimentalmente que um armazenamento direto em `uint16_t` não é suficiente para preservar o RAW configurado em 18 bits.
+
+A aquisição também apresentou aproximadamente 125 amostras a cada janela de 5 s, coerente com a configuração de 100 Hz e média de 4 amostras no FIFO (~25 amostras/s efetivas).
+
+### 10.2 Validação do Gate 01
+
+Foram observados os seguintes comportamentos:
+
+```text
+sem dedo estável:
+G1_RESULT=FAIL
+reason=RED_LOW_SIGNAL
+
+dedo estável:
+G1_RESULT=PASS
+reason=NONE
+sat=0
+```
+
+Exemplos registrados:
+
+```text
+SEM DEDO
+RED mean=618 range=32
+IR  mean=503 range=37
+=> FAIL / RED_LOW_SIGNAL
+
+DEDO ESTÁVEL
+RED mean=109840 range=6228
+IR  mean=122963 range=10101
+=> PASS
+
+DEDO ESTÁVEL
+RED mean=107192 range=2509
+IR  mean=118998 range=2775
+=> PASS
+```
+
+Janelas contendo colocação/remoção do dedo podem passar no G1 porque misturam valores baixos e altos, produzindo média e faixa dinâmica elevadas. Esse comportamento é aceito nesta etapa: o G1 testa integridade básica, não estabilidade morfológica nem periodicidade fisiológica. Essas condições devem ser filtradas pelos Gates 02 e 03.
+
+Não foi observada saturação nas condições normais ensaiadas (`sat=0`).
+
+### 10.3 Validação do armazenamento Packed18
+
+Com `ENABLE_PACKED18_STORAGE_TEST=1`, foram registrados repetidamente:
+
+```text
+PACK18_RESULT=PASS
+samples=100
+bytes_per_sample=3
+buffers_bytes=600
+mismatch=0
+freeRAM=913
+```
+
+Em janelas com dedo estável também foi observado:
+
+```text
+RED>65535=100
+IR>65535=100
+mismatch=0
+```
+
+Portanto, nas 100 amostras armazenadas de cada canal, todas excederam 16 bits e ainda assim foram reconstruídas sem divergência. Isso constitui a validação de bancada da transformação:
+
+```text
+RAW18 -> 3 bytes -> RAW18
+```
+
+com `mismatch=0`.
+
+A medição de `freeRAM=913` caracteriza apenas esta configuração de teste e não deve ser tratada como orçamento disponível integral para os próximos Gates ou para o algoritmo de SpO2.
+
+### 10.4 Observações de startup e transição
+
+Foi observada ocasionalmente uma amostra inicial `0,0` e caracteres inválidos antes do cabeçalho serial durante reset. A saída subsequente permaneceu íntegra. Para a versão de integração, recomenda-se descartar a primeira janela ou aplicar um pequeno período de warm-up antes da primeira decisão de qualidade.
+
+Também foi observado que janelas de transição entre "sem dedo" e "com dedo" podem passar pelo G1. Isso reforça a necessidade da hierarquia G1 -> G2 -> G3 -> G4 em vez de sobrecarregar o Gate 01 com critérios que pertencem às etapas seguintes.
+
+## 11. Critério para encerrar a validação inicial do G1
 
 A validação inicial de bancada é considerada satisfatória quando:
 
@@ -226,17 +331,17 @@ A validação inicial de bancada é considerada satisfatória quando:
 
 Após isso, os dados de contato parcial e pressão devem ser usados para refinar thresholds, antes de tratá-los como estáveis.
 
-## 11. Próximos passos
+## 12. Próximos passos
 
-1. Revalidar o Gate 01 isoladamente.
-2. Testar o armazenamento de 18 bits em 3 bytes separadamente.
-3. Refinar os thresholds do G1 com dados reais.
-4. Implementar e validar o Gate 02.
+1. Congelar o Gate 01 como baseline de integridade de bancada, mantendo os thresholds explicitamente provisórios.
+2. Manter o Packed18 como estratégia validada de armazenamento lossless para a janela.
+3. Projetar e implementar o Gate 02 (pulsatilidade).
+4. Validar G2 com dedo estável, transições, movimento e contato ruim.
 5. Implementar e validar o Gate 03.
 6. Implementar e validar o Gate 04.
 7. Somente então integrar FC/SpO2 e o contrato final com o I Blue It.
 
-## 12. Justificativa acadêmica
+## 13. Justificativa acadêmica
 
 A representação em 3 bytes é uma decisão de engenharia motivada pela restrição de SRAM do ATmega328P. Ela não é apresentada como uma exigência da literatura.
 
