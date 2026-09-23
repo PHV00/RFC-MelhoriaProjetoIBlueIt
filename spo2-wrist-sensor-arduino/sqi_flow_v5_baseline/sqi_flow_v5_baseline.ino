@@ -90,21 +90,28 @@
 #include <Wire.h>
 #include "MAX30105.h"
 
-// Forward declaration needed by the Arduino 1.8.x .ino preprocessor when
-// ENABLE_PACKED18_STORAGE_TEST=1. It may auto-generate function prototypes
-// before the Packed18 definition in another sketch tab.
+// Forward declarations needed by the Arduino 1.8.x .ino preprocessor when
+// it auto-generates function prototypes across multiple .ino tabs.
 struct Packed18;
+struct Gate2Metrics;
 
 /*
- * VALIDACOES INDEPENDENTES
- * ------------------------
- * 0 = valida o Gate 01 isoladamente, sem reservar os 600 B do buffer 18-bit.
- * 1 = habilita tambem o teste de armazenamento lossless em 3 bytes/amostra.
+ * MODOS DE BANCADA
+ * ----------------
+ * O G1 ja foi validado. Nesta branch o G2 roda somente em modo DIAGNOSTICO:
+ * calcula metricas, mas ainda NAO decide PASS/FAIL.
  *
- * Para a revalidacao metodologica do G1, manter em 0. Depois, testar o
- * armazenamento separadamente mudando somente esta chave para 1.
+ * O buffer Packed18 e necessario ao G2. O relatorio de round-trip pode ficar
+ * desligado para reduzir ruido na serial; o armazenamento continua ativo.
  */
 #define ENABLE_PACKED18_STORAGE_TEST 0
+#define ENABLE_GATE2_DIAGNOSTIC 1
+
+#if ENABLE_PACKED18_STORAGE_TEST || ENABLE_GATE2_DIAGNOSTIC
+  #define ENABLE_PACKED18_BUFFER 1
+#else
+  #define ENABLE_PACKED18_BUFFER 0
+#endif
 
 MAX30105 particleSensor;
 
@@ -155,14 +162,14 @@ void setup()
   particleSensor.setPulseAmplitudeGreen(0);
 
   gate1Reset();
-#if ENABLE_PACKED18_STORAGE_TEST
+#if ENABLE_PACKED18_BUFFER
   packed18Reset();
 #endif
   sqiWindowStartedAt = millis();
 
-  Serial.println(F("=== SQI FLOW V5 BASELINE / GATE 01 ==="));
-  Serial.println(F("MAX30102 OK. Janela=5s. Somente G1 ativo."));
-  Serial.println(F("Mantenha o dedo no sensor para validar o Gate 01."));
+  Serial.println(F("=== SQI FLOW V5 / G1 + G2 DIAGNOSTIC ==="));
+  Serial.println(F("MAX30102 OK. G1=5s; G2 analisa 100 amostras (~4s)."));
+  Serial.println(F("G2 apenas mede AC/DC, crossings e ACF; sem PASS/FAIL."));
 }
 
 void loop()
@@ -178,9 +185,9 @@ void loop()
     // O Gate 01 trabalha diretamente com RAW: nada e filtrado antes dele.
     gate1AddSample(red, ir);
 
-#if ENABLE_PACKED18_STORAGE_TEST
-    // Teste independente de storage: preserva as primeiras 100 amostras
-    // da janela em exatamente 3 bytes por canal/amostra.
+#if ENABLE_PACKED18_BUFFER
+    // Preserva as primeiras 100 amostras da janela em 3 bytes/canal.
+    // Esse mesmo bloco e reutilizado pelo G2, sem criar uint32_t[100].
     packed18StoreSample(red, ir);
 #endif
 
@@ -192,23 +199,29 @@ void loop()
     const bool gate1Passed = gate1Evaluate();
 
     gate1PrintReport();
+
 #if ENABLE_PACKED18_STORAGE_TEST
     packed18PrintReport();
 #endif
 
     if (gate1Passed)
     {
-      Serial.println(F("PIPELINE: G1 PASS -> aguardando implementacao do G2"));
+#if ENABLE_GATE2_DIAGNOSTIC
+      gate2AnalyzeAndPrint();
+      Serial.println(F("PIPELINE: G1 PASS -> G2 DIAGNOSTIC (sem decisao ainda)"));
+#else
+      Serial.println(F("PIPELINE: G1 PASS -> G2 desabilitado"));
+#endif
     }
     else
     {
-      Serial.println(F("PIPELINE: INVALID -> janela rejeitada no G1"));
+      Serial.println(F("PIPELINE: INVALID -> janela rejeitada no G1; G2 nao executado"));
     }
 
     Serial.println(F("--------------------------------------------------"));
 
     gate1Reset();
-#if ENABLE_PACKED18_STORAGE_TEST
+#if ENABLE_PACKED18_BUFFER
     packed18Reset();
 #endif
     sqiWindowStartedAt = millis();
