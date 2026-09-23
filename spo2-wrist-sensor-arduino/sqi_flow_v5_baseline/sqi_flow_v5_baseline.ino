@@ -90,6 +90,11 @@
 #include <Wire.h>
 #include "MAX30105.h"
 
+// Forward declaration needed by the Arduino 1.8.x .ino preprocessor when
+// ENABLE_PACKED18_STORAGE_TEST=1. It may auto-generate function prototypes
+// before the Packed18 definition in another sketch tab.
+struct Packed18;
+
 /*
  * VALIDACOES INDEPENDENTES
  * ------------------------
