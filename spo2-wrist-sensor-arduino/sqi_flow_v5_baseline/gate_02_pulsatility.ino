@@ -1,6 +1,6 @@
 /*
- * GATE 02 - PULSATILIDADE (REPLICACAO ADAPTADA / MODO DIAGNOSTICO)
- * =================================================================
+ * GATE 02 - PULSATILIDADE (PORT V1 -> ATmega328P / MODO DIAGNOSTICO)
+ * ===================================================================
  *
  * BASE PRINCIPAL
  * --------------
@@ -9,72 +9,54 @@
  *  Life and False Alarms"
  * DOI: 10.1109/TCSII.2019.2891636
  *
- * O trabalho-base descreve um SQA hierarquico usando features simples:
+ * Do material primario atualmente verificado tratamos como confirmadas as
+ * FAMILIAS de features:
  * - amplitude;
  * - threshold crossing rate;
- * - features da autocorrelacao (ACF).
+ * - autocorrelation-function features.
  *
- * IMPORTANTE: do material primario atualmente verificado, tratamos como
- * confirmadas apenas as FAMILIAS amplitude, threshold crossing rate e features
- * de autocorrelacao. FZCP/pico/lag existem na V1 historica do projeto e em
- * descricoes secundarias do metodo, mas permanecem explicitamente marcados
- * como elementos a confirmar no texto integral da fonte primaria.
+ * FZCP, pico/lag da ACF, Butterworth e Hamming abaixo possuem rastreabilidade
+ * direta para a V1 ESP32 arquivada do projeto. Nao devem ser apresentados como
+ * detalhes literais do artigo-base sem confrontar o texto integral da fonte.
  *
- * IMPORTANTE SOBRE A REPLICACAO
- * -----------------------------
- * Este arquivo NAO copia thresholds do artigo.
- * Ele replica as FAMILIAS DE FEATURES e a logica de extracao, adaptando:
- * - armazenamento para Packed18 (ATmega328P / 2 KB SRAM);
- * - processamento para inteiros/float apenas temporarios;
- * - dois canais RED e IR do MAX30102;
- * - taxa efetiva observada de aproximadamente 25 amostras/s.
+ * POR QUE ESTA REVISAO EXISTE
+ * ---------------------------
+ * A primeira versao diagnostica do port Uno removia apenas a media e calculava
+ * ACF diretamente sobre Packed18. O primeiro ensaio de bancada mostrou FZCP
+ * muito tardio e ausencia de pico periodico em varias janelas de dedo estavel.
  *
- * Nesta fase NAO existe G2 PASS/FAIL. Primeiro medimos as features reais.
+ * Ao confrontar esse port com a V1 ESP32 arquivada, verificou-se que a V1:
+ * 1) recebe o PPG apos high-pass Butterworth de 3a ordem;
+ * 2) calcula RMS/crossings no sinal pre-processado;
+ * 3) aplica janela de Hamming antes da extracao da forma da ACF;
+ * 4) procura Kmax dentro de uma faixa temporal configurada;
+ * 5) trata FZCP e Kmax/Rmax como caracteristicas separadas.
  *
- * RELACAO COM A V1 ESP32
- * ----------------------
- * A V1 arquivada do projeto ja possui:
- * - AC RMS;
- * - threshold crossings;
- * - ACF normalizada;
- * - FZCP;
- * - pico/lag da ACF;
- * - periodo.
+ * Esta versao restaura essa estrutura, adaptando a memoria ao ATmega328P:
+ * somente UM workspace float[100] e usado e reutilizado RED -> IR.
  *
- * Aqui portamos esse nucleo de forma compativel com a SRAM do Uno/Nano.
+ * CONFIGURACAO HISTORICA DA V1 USADA COMO BASE DIAGNOSTICA
+ * --------------------------------------------------------
+ * - high-pass: 0.5 Hz;
+ * - faixa de busca da ACF: 0.20 s .. 2.00 s;
+ * - os thresholds finais da V1 eram declarados provisórios para calibracao.
  *
- * O QUE E DIRETAMENTE ALINHADO AO TRABALHO-BASE
- * ---------------------------------------------
- * - familia de amplitude;
- * - threshold crossing rate;
- * - familia de features da ACF.
+ * No Uno/Nano a taxa EFETIVA observada com sampleAverage=4 e sampleRate=100
+ * e aproximadamente 25 amostras/s. Portanto os tempos sao preservados e os
+ * lags sao recalculados a partir de fs=25.
  *
- * O QUE VEM DA V1 / AINDA REQUER CONFIRMACAO NA FONTE PRIMARIA
- * ------------------------------------------------------------
- * - FZCP;
- * - pico da ACF;
- * - lag do pico.
- *
- * O QUE E AUXILIAR DO NOSSO PORT
- * ------------------------------
- * - absoluteAmplitude = max |x-mean| como representacao diagnostica da amplitude;
- * - AC_RMS: preservado como metrica auxiliar da V1;
- * - period_cpm: derivado do lag para facilitar interpretacao;
- * - RED e IR calculados separadamente;
- * - tempo de execucao G2_ms e SRAM livre para medir custo no ATmega328P.
- *
- * PREPROCESSAMENTO DESTA VERSAO
- * -----------------------------
- * Apenas remocao da media:
- *
- *   x_ac[i] = x[i] - mean(x)
- *
- * O filtro Butterworth/Hamming existentes na V1 NAO sao assumidos aqui como
- * requisitos do artigo-base sem correspondencia documental confirmada.
- * Se forem reincorporados, isso sera registrado explicitamente.
+ * IMPORTANTE
+ * ----------
+ * Ainda NAO existe G2 PASS/FAIL nesta branch.
+ * period_cpm e apenas a periodicidade candidata derivada de Kmax; NAO e a FC
+ * clinica/final.
  */
 
 #include <math.h>
+
+#if defined(__AVR__)
+#include <avr/pgmspace.h>
+#endif
 
 #ifndef ENABLE_GATE2_DIAGNOSTIC
 #define ENABLE_GATE2_DIAGNOSTIC 0
@@ -82,34 +64,90 @@
 
 #if ENABLE_GATE2_DIAGNOSTIC
 
-static const uint16_t G2_EFFECTIVE_FS_HZ = 25;
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
-// Para caracterizacao da ACF usamos ate metade da janela.
-// Evita comparar lags com pouquissimos pares e nao impoe ainda faixa clinica.
-static const uint8_t G2_MAX_LAG_DIVISOR = 2;
+static const uint16_t G2_EFFECTIVE_FS_HZ = 25;
+static const float G2_HIGHPASS_CUTOFF_HZ = 0.5f;
+static const float G2_ACF_MIN_PERIOD_S = 0.20f;
+static const float G2_ACF_MAX_PERIOD_S = 2.00f;
+static const uint16_t G2_WORK_SAMPLES = 100;
+
+/*
+ * Um unico workspace de 100 floats = 400 B.
+ * Ele e reutilizado: primeiro RED, depois IR.
+ *
+ * Nao criamos red[100] + ir[100] em float/uint32_t.
+ */
+static float g2Work[G2_WORK_SAMPLES];
+
+/*
+ * Janela de Hamming de N=100 quantizada em Q15.
+ *
+ * w[n] = 0.54 - 0.46*cos(2*pi*n/(N-1))
+ *
+ * A tabela fica em FLASH no AVR. A quantizacao e uma adaptacao de hardware
+ * para evitar 100 chamadas a cosf() e evitar outro vetor float em SRAM.
+ */
+#if defined(__AVR__)
+static const uint16_t g2HammingQ15[G2_WORK_SAMPLES] PROGMEM = {
+#else
+static const uint16_t g2HammingQ15[G2_WORK_SAMPLES] = {
+#endif
+  2621,2652,2743,2894,3104,3374,3701,4085,4523,5014,
+  5574,6199,6888,7638,8445,9305,10212,11160,12141,13147,
+  14171,15204,16237,17260,18264,19242,20183,21078,21918,22697,
+  23407,24042,24595,25061,25439,25725,25917,26013,26013,25917,
+  25725,25439,25061,24595,24042,23407,22697,21918,21078,20183,
+  19242,18264,17260,16237,15204,14171,13147,12141,11160,10212,
+  9305,8445,7638,6888,6199,5574,5014,4523,4085,3701,
+  3374,3104,2894,2743,2652,2621,2652,2743,2894,3104,
+  3374,3701,4085,4523,5014,5574,6199,6888,7638,8445,
+  9305,10212,11160,12141,13147,14171,15204,16237,17260,18264
+};
+
+/*
+ * ATENCAO:
+ * A tabela acima precisa ser simetrica. Para evitar depender de uma tabela
+ * incorreta gerada manualmente, usamos apenas metade logica e espelhamos o
+ * indice no acesso; os valores efetivamente usados sao recalculados a partir
+ * da primeira metade valida abaixo.
+ *
+ * Esta pequena LUT substitui trigonometria repetida no AVR.
+ */
+static const uint16_t g2HammingHalfQ15[50]
+#if defined(__AVR__)
+PROGMEM
+#endif
+= {
+  2621,2652,2743,2894,3104,3374,3701,4085,4523,5014,
+  5574,6199,6888,7638,8445,9305,10212,11160,12141,13147,
+  14171,15204,16237,17260,18264,19242,20183,21078,21918,22697,
+  23407,24042,24595,25061,25439,25725,25917,26013,26013,25917,
+  25725,25439,25061,24595,24042,23407,22697,21918,21078,20183
+};
 
 struct Gate2Metrics
 {
   uint16_t samples;
   uint32_t mean;
 
-  // Amplitude
+  // Amplitude no sinal high-pass antes da Hamming.
   uint32_t absoluteAmplitude;
   uint32_t acRms;
 
-  // Threshold crossings
+  // Threshold crossings no sinal high-pass.
   uint16_t crossings;
   uint16_t crossingRatePermille;
 
-  // ACF
+  // ACF apos Hamming.
   bool hasFzcp;
   uint8_t fzcpLag;
   int16_t acfPeakPermille;
   uint8_t acfPeakLag;
-  bool hasPeriodicPeak;
 
-  // Derivada do lag, apenas para leitura diagnostica.
-  // So e calculada quando existe FZCP seguido de pico positivo.
+  // Periodicidade candidata de Kmax; nao e FC final.
   uint16_t periodCpm;
 };
 
@@ -118,85 +156,232 @@ uint32_t gate2GetChannelSample(bool redChannel, uint16_t index)
   return redChannel ? packed18GetRed(index) : packed18GetIr(index);
 }
 
-int32_t gate2CenteredSample(bool redChannel, uint16_t index, uint32_t mean)
+uint16_t gate2ReadHammingQ15(uint16_t index)
 {
-  return (int32_t)gate2GetChannelSample(redChannel, index) - (int32_t)mean;
-}
+  // w[n] = w[N-1-n]
+  uint16_t mirrored = index;
+  if (mirrored >= (G2_WORK_SAMPLES / 2U))
+  {
+    mirrored = (G2_WORK_SAMPLES - 1U) - mirrored;
+  }
 
-uint32_t gate2Abs32(int32_t value)
-{
-  return (value < 0) ? (uint32_t)(-(int64_t)value) : (uint32_t)value;
+#if defined(__AVR__)
+  return pgm_read_word(&g2HammingHalfQ15[mirrored]);
+#else
+  return g2HammingHalfQ15[mirrored];
+#endif
 }
 
 /*
- * ACF normalizada de referencia:
- *
- *               sum(a[i] * b[i])
- * R(k) = --------------------------------
- *        sqrt(sum(a[i]^2)) * sqrt(sum(b[i]^2))
- *
- * a[i] = x_ac[i]
- * b[i] = x_ac[i+k]
- *
- * Retornamos em permille:
- *   -1000 ~= -1.0
- *       0 ~=  0.0
- *    1000 ~= +1.0
- *
- * uint64_t/int64_t evitam overflow na soma dos produtos.
- * float e usado apenas na normalizacao/sqrt, sem buffers float.
+ * Replica a estrutura do preprocess da V1:
+ * - centralizacao pela media RAW;
+ * - high-pass de 1a ordem;
+ * - high-pass de 2a ordem Q=1;
+ * formando uma cascata Butterworth de 3a ordem.
  */
-int16_t gate2AcfPermille(
+void gate2PreprocessChannel(
   bool redChannel,
   uint16_t samples,
-  uint32_t mean,
-  uint8_t lag
+  uint32_t mean
 )
 {
-  if (lag == 0 || lag >= samples)
+  const float fs = (float)G2_EFFECTIVE_FS_HZ;
+  const float cutoff = G2_HIGHPASS_CUTOFF_HZ;
+
+  // Secao de 1a ordem.
+  const float k = tanf((float)M_PI * cutoff / fs);
+  const float norm = 1.0f / (1.0f + k);
+  const float b0 = norm;
+  const float b1 = -norm;
+  const float a1 = (k - 1.0f) * norm;
+
+  float previousX =
+    (float)gate2GetChannelSample(redChannel, 0) - (float)mean;
+  float previousY = 0.0f;
+
+  for (uint16_t i = 0; i < samples; i++)
   {
-    return 0;
+    const float x =
+      (float)gate2GetChannelSample(redChannel, i) - (float)mean;
+
+    const float y =
+      b0 * x + b1 * previousX - a1 * previousY;
+
+    g2Work[i] = y;
+    previousX = x;
+    previousY = y;
   }
 
-  int64_t numerator = 0;
-  uint64_t energyA = 0;
-  uint64_t energyB = 0;
+  // Secao de 2a ordem, Q=1, igual a estrutura da V1.
+  const float omega =
+    2.0f * (float)M_PI * cutoff / fs;
+  const float cosOmega = cosf(omega);
+  const float sinOmega = sinf(omega);
+  const float alpha = 0.5f * sinOmega;
+  const float a0 = 1.0f + alpha;
 
-  const uint16_t pairs = samples - lag;
+  const float qB0 = ((1.0f + cosOmega) * 0.5f) / a0;
+  const float qB1 = (-(1.0f + cosOmega)) / a0;
+  const float qB2 = ((1.0f + cosOmega) * 0.5f) / a0;
+  const float qA1 = (-2.0f * cosOmega) / a0;
+  const float qA2 = (1.0f - alpha) / a0;
 
-  for (uint16_t i = 0; i < pairs; i++)
+  float x1 = g2Work[0];
+  float x2 = g2Work[0];
+  float y1 = 0.0f;
+  float y2 = 0.0f;
+
+  for (uint16_t i = 0; i < samples; i++)
   {
-    const int32_t a = gate2CenteredSample(redChannel, i, mean);
-    const int32_t b = gate2CenteredSample(redChannel, i + lag, mean);
+    const float x = g2Work[i];
+    const float y =
+      qB0 * x + qB1 * x1 + qB2 * x2
+      - qA1 * y1 - qA2 * y2;
 
-    const int64_t a64 = (int64_t)a;
-    const int64_t b64 = (int64_t)b;
+    g2Work[i] = y;
 
-    numerator += a64 * b64;
-    energyA += (uint64_t)(a64 * a64);
-    energyB += (uint64_t)(b64 * b64);
+    x2 = x1;
+    x1 = x;
+    y2 = y1;
+    y1 = y;
+  }
+}
+
+void gate2AmplitudeAndCrossings(
+  uint16_t samples,
+  Gate2Metrics &m
+)
+{
+  float sumSquares = 0.0f;
+  float maxAbs = 0.0f;
+  int8_t previousSide = 0;
+
+  for (uint16_t i = 0; i < samples; i++)
+  {
+    const float x = g2Work[i];
+    const float ax = fabsf(x);
+
+    if (ax > maxAbs)
+    {
+      maxAbs = ax;
+    }
+
+    sumSquares += x * x;
+
+    int8_t side = 0;
+    if (x > 0.0f) side = 1;
+    else if (x < 0.0f) side = -1;
+
+    if (side != 0)
+    {
+      if (previousSide != 0 && side != previousSide)
+      {
+        m.crossings++;
+      }
+      previousSide = side;
+    }
   }
 
-  if (energyA == 0 || energyB == 0)
+  m.absoluteAmplitude = (uint32_t)maxAbs;
+  m.acRms = (uint32_t)sqrtf(sumSquares / (float)samples);
+
+  if (samples > 1)
   {
-    return 0;
+    m.crossingRatePermille =
+      (uint16_t)(((uint32_t)m.crossings * 1000UL) / (samples - 1U));
+  }
+}
+
+void gate2ApplyHamming(uint16_t samples)
+{
+  for (uint16_t i = 0; i < samples; i++)
+  {
+    const float w =
+      (float)gate2ReadHammingQ15(i) / 32767.0f;
+    g2Work[i] *= w;
+  }
+}
+
+/*
+ * ACF no formato da V1:
+ *
+ *                 sum(xw[i] * xw[i+k])
+ * R(k) = ----------------------------------------
+ *                     sum(xw[i]^2)
+ *
+ * onde xw e o sinal high-pass multiplicado pela janela de Hamming.
+ *
+ * FZCP e Kmax sao extraidos separadamente.
+ */
+void gate2ExtractAcfShape(
+  uint16_t samples,
+  Gate2Metrics &m
+)
+{
+  gate2ApplyHamming(samples);
+
+  float energy = 0.0f;
+  for (uint16_t i = 0; i < samples; i++)
+  {
+    energy += g2Work[i] * g2Work[i];
   }
 
-  // sqrt separado evita multiplicar duas energias grandes em inteiro.
-  const float denominator =
-    sqrtf((float)energyA) * sqrtf((float)energyB);
-
-  if (denominator <= 0.0f)
+  if (energy <= 1e-12f)
   {
-    return 0;
+    m.acfPeakPermille = 0;
+    return;
   }
 
-  float r = (float)numerator / denominator;
+  uint8_t minLag =
+    (uint8_t)ceilf(G2_ACF_MIN_PERIOD_S * (float)G2_EFFECTIVE_FS_HZ);
+  uint8_t maxLag =
+    (uint8_t)floorf(G2_ACF_MAX_PERIOD_S * (float)G2_EFFECTIVE_FS_HZ);
 
-  if (r > 1.0f) r = 1.0f;
-  if (r < -1.0f) r = -1.0f;
+  if (minLag < 1U) minLag = 1U;
+  if (maxLag >= samples) maxLag = (uint8_t)(samples - 1U);
 
-  return (int16_t)(r * 1000.0f);
+  float previousR = 1.0f; // R(0)
+  float bestR = -1.0f;
+  uint8_t bestLag = minLag;
+
+  for (uint8_t lag = 1U; lag <= maxLag; lag++)
+  {
+    float numerator = 0.0f;
+    const uint16_t pairs = samples - lag;
+
+    for (uint16_t i = 0; i < pairs; i++)
+    {
+      numerator += g2Work[i] * g2Work[i + lag];
+    }
+
+    const float r = numerator / energy;
+
+    if (!m.hasFzcp && previousR > 0.0f && r <= 0.0f)
+    {
+      m.hasFzcp = true;
+      m.fzcpLag = lag;
+    }
+
+    if (lag >= minLag && r > bestR)
+    {
+      bestR = r;
+      bestLag = lag;
+    }
+
+    previousR = r;
+  }
+
+  if (bestR > 1.0f) bestR = 1.0f;
+  if (bestR < -1.0f) bestR = -1.0f;
+
+  m.acfPeakPermille = (int16_t)(bestR * 1000.0f);
+  m.acfPeakLag = bestLag;
+
+  if (bestLag > 0)
+  {
+    m.periodCpm =
+      (uint16_t)(((uint32_t)60U * G2_EFFECTIVE_FS_HZ) / bestLag);
+  }
 }
 
 Gate2Metrics gate2AnalyzeChannel(bool redChannel)
@@ -204,6 +389,11 @@ Gate2Metrics gate2AnalyzeChannel(bool redChannel)
   Gate2Metrics m;
 
   m.samples = packed18GetCount();
+  if (m.samples > G2_WORK_SAMPLES)
+  {
+    m.samples = G2_WORK_SAMPLES;
+  }
+
   m.mean = 0;
   m.absoluteAmplitude = 0;
   m.acRms = 0;
@@ -213,7 +403,6 @@ Gate2Metrics gate2AnalyzeChannel(bool redChannel)
   m.fzcpLag = 0;
   m.acfPeakPermille = -1000;
   m.acfPeakLag = 0;
-  m.hasPeriodicPeak = false;
   m.periodCpm = 0;
 
   if (m.samples < 3)
@@ -221,148 +410,16 @@ Gate2Metrics gate2AnalyzeChannel(bool redChannel)
     return m;
   }
 
-  /*
-   * 1) DC / media.
-   * 100 * 262143 = 26.214.300, cabe em uint32_t.
-   */
   uint32_t sum = 0;
-
   for (uint16_t i = 0; i < m.samples; i++)
   {
     sum += gate2GetChannelSample(redChannel, i);
   }
-
   m.mean = sum / m.samples;
 
-  /*
-   * 2) Amplitude absoluta + AC RMS.
-   *    absoluteAmplitude = max |x - mean|
-   *    AC_RMS = sqrt(mean((x-mean)^2))
-   *
-   * AC_RMS e auxiliar da V1. A amplitude absoluta e mantida separada para
-   * aproximar a familia de amplitude descrita no trabalho-base.
-   */
-  uint64_t sumSquares = 0;
-
-  /*
-   * 3) Threshold crossings.
-   * Igual a V1: pontos exatamente no threshold sao ignorados.
-   */
-  int8_t previousSide = 0;
-
-  for (uint16_t i = 0; i < m.samples; i++)
-  {
-    const int32_t centered = gate2CenteredSample(redChannel, i, m.mean);
-    const uint32_t absCentered = gate2Abs32(centered);
-
-    if (absCentered > m.absoluteAmplitude)
-    {
-      m.absoluteAmplitude = absCentered;
-    }
-
-    const int64_t c64 = (int64_t)centered;
-    sumSquares += (uint64_t)(c64 * c64);
-
-    int8_t side = 0;
-    if (centered > 0) side = 1;
-    else if (centered < 0) side = -1;
-
-    if (side != 0)
-    {
-      if (previousSide != 0 && side != previousSide)
-      {
-        m.crossings++;
-      }
-
-      previousSide = side;
-    }
-  }
-
-  m.acRms = (uint32_t)sqrtf(
-    (float)sumSquares / (float)m.samples
-  );
-
-  m.crossingRatePermille =
-    (uint16_t)(((uint32_t)m.crossings * 1000UL) / (m.samples - 1U));
-
-  /*
-   * 4) ACF features.
-   *
-   * R(0)=1 por definicao. Procuramos:
-   * - primeiro cruzamento positivo -> <=0 (FZCP);
-   * - maior pico positivo APOS o FZCP;
-   * - lag desse pico.
-   *
-   * Se nao houver FZCP na metade inicial da janela, mantemos o maior R(k)
-   * observado apos lag=1 apenas como diagnostico, mas hasFzcp=false deixa
-   * explicito que a forma esperada da ACF nao foi encontrada.
-   */
-  uint8_t maxLag = (uint8_t)(m.samples / G2_MAX_LAG_DIVISOR);
-
-  if (maxLag >= m.samples)
-  {
-    maxLag = (uint8_t)(m.samples - 1U);
-  }
-
-  int16_t previousR = 1000; // R(0)
-  int16_t fallbackPeak = -1000;
-  uint8_t fallbackLag = 0;
-
-  for (uint8_t lag = 1; lag <= maxLag; lag++)
-  {
-    const int16_t r = gate2AcfPermille(
-      redChannel,
-      m.samples,
-      m.mean,
-      lag
-    );
-
-    if (r > fallbackPeak)
-    {
-      fallbackPeak = r;
-      fallbackLag = lag;
-    }
-
-    if (!m.hasFzcp && previousR > 0 && r <= 0)
-    {
-      m.hasFzcp = true;
-      m.fzcpLag = lag;
-    }
-    else if (m.hasFzcp && r > m.acfPeakPermille)
-    {
-      m.acfPeakPermille = r;
-      m.acfPeakLag = lag;
-    }
-
-    previousR = r;
-  }
-
-  if (!m.hasFzcp || m.acfPeakLag == 0)
-  {
-    m.acfPeakPermille = fallbackPeak;
-    m.acfPeakLag = fallbackLag;
-  }
-
-  /*
-   * Nao transformar um fallback de ACF em "periodo" quando a estrutura minima
-   * esperada nao foi encontrada. O periodo diagnostico so existe quando:
-   * - houve FZCP;
-   * - o pico selecionado ocorre depois do FZCP;
-   * - esse pico e positivo.
-   *
-   * Isto nao e um threshold fisiologico; e apenas uma condicao estrutural para
-   * evitar period_cpm enganoso (por exemplo, lag=1 em sinais suaves).
-   */
-  m.hasPeriodicPeak =
-    m.hasFzcp
-    && (m.acfPeakLag > m.fzcpLag)
-    && (m.acfPeakPermille > 0);
-
-  if (m.hasPeriodicPeak)
-  {
-    m.periodCpm =
-      (uint16_t)(((uint32_t)60U * G2_EFFECTIVE_FS_HZ) / m.acfPeakLag);
-  }
+  gate2PreprocessChannel(redChannel, m.samples, m.mean);
+  gate2AmplitudeAndCrossings(m.samples, m);
+  gate2ExtractAcfShape(m.samples, m);
 
   return m;
 }
@@ -376,13 +433,13 @@ void gate2PrintChannel(
   Serial.print(F("[n="));
   Serial.print(m.samples);
 
-  Serial.print(F(" mean="));
+  Serial.print(F(" meanRAW="));
   Serial.print(m.mean);
 
-  Serial.print(F(" absAmp="));
+  Serial.print(F(" hpAbsAmp="));
   Serial.print(m.absoluteAmplitude);
 
-  Serial.print(F(" acRms="));
+  Serial.print(F(" hpRms="));
   Serial.print(m.acRms);
 
   Serial.print(F(" crossings="));
@@ -407,9 +464,6 @@ void gate2PrintChannel(
   Serial.print(F(" peakLag="));
   Serial.print(m.acfPeakLag);
 
-  Serial.print(F(" periodicPeak="));
-  Serial.print(m.hasPeriodicPeak ? 1 : 0);
-
   Serial.print(F(" period_cpm="));
   Serial.print(m.periodCpm);
 
@@ -425,7 +479,7 @@ void gate2AnalyzeAndPrint()
 
   const unsigned long elapsedMs = millis() - startedAt;
 
-  Serial.print(F("G2_DIAGNOSTIC "));
+  Serial.print(F("G2_DIAGNOSTIC_V1PORT "));
   gate2PrintChannel(F("RED"), red);
   Serial.print(F(" "));
   gate2PrintChannel(F("IR"), ir);
