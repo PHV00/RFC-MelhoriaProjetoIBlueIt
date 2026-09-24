@@ -14,9 +14,11 @@
  * - threshold crossing rate;
  * - features da autocorrelacao (ACF).
  *
- * Fontes secundarias que descrevem o metodo de Vadrevu indicam como features
- * da ACF o primeiro cruzamento por zero (FZCP), o pico maximo e o lag desse
- * pico.
+ * IMPORTANTE: do material primario atualmente verificado, tratamos como
+ * confirmadas apenas as FAMILIAS amplitude, threshold crossing rate e features
+ * de autocorrelacao. FZCP/pico/lag existem na V1 historica do projeto e em
+ * descricoes secundarias do metodo, mas permanecem explicitamente marcados
+ * como elementos a confirmar no texto integral da fonte primaria.
  *
  * IMPORTANTE SOBRE A REPLICACAO
  * -----------------------------
@@ -43,17 +45,23 @@
  *
  * O QUE E DIRETAMENTE ALINHADO AO TRABALHO-BASE
  * ---------------------------------------------
- * - amplitude absoluta (aqui: max |x-mean|, como metrica diagnostica);
- * - threshold crossing count/rate;
- * - ACF;
- * - FZCP, pico da ACF e lag do pico.
+ * - familia de amplitude;
+ * - threshold crossing rate;
+ * - familia de features da ACF.
+ *
+ * O QUE VEM DA V1 / AINDA REQUER CONFIRMACAO NA FONTE PRIMARIA
+ * ------------------------------------------------------------
+ * - FZCP;
+ * - pico da ACF;
+ * - lag do pico.
  *
  * O QUE E AUXILIAR DO NOSSO PORT
  * ------------------------------
+ * - absoluteAmplitude = max |x-mean| como representacao diagnostica da amplitude;
  * - AC_RMS: preservado como metrica auxiliar da V1;
  * - period_cpm: derivado do lag para facilitar interpretacao;
  * - RED e IR calculados separadamente;
- * - tempo de execucao G2_ms para medir custo no ATmega328P.
+ * - tempo de execucao G2_ms e SRAM livre para medir custo no ATmega328P.
  *
  * PREPROCESSAMENTO DESTA VERSAO
  * -----------------------------
@@ -98,8 +106,10 @@ struct Gate2Metrics
   uint8_t fzcpLag;
   int16_t acfPeakPermille;
   uint8_t acfPeakLag;
+  bool hasPeriodicPeak;
 
   // Derivada do lag, apenas para leitura diagnostica.
+  // So e calculada quando existe FZCP seguido de pico positivo.
   uint16_t periodCpm;
 };
 
@@ -203,6 +213,7 @@ Gate2Metrics gate2AnalyzeChannel(bool redChannel)
   m.fzcpLag = 0;
   m.acfPeakPermille = -1000;
   m.acfPeakLag = 0;
+  m.hasPeriodicPeak = false;
   m.periodCpm = 0;
 
   if (m.samples < 3)
@@ -332,7 +343,22 @@ Gate2Metrics gate2AnalyzeChannel(bool redChannel)
     m.acfPeakLag = fallbackLag;
   }
 
-  if (m.acfPeakLag > 0)
+  /*
+   * Nao transformar um fallback de ACF em "periodo" quando a estrutura minima
+   * esperada nao foi encontrada. O periodo diagnostico so existe quando:
+   * - houve FZCP;
+   * - o pico selecionado ocorre depois do FZCP;
+   * - esse pico e positivo.
+   *
+   * Isto nao e um threshold fisiologico; e apenas uma condicao estrutural para
+   * evitar period_cpm enganoso (por exemplo, lag=1 em sinais suaves).
+   */
+  m.hasPeriodicPeak =
+    m.hasFzcp
+    && (m.acfPeakLag > m.fzcpLag)
+    && (m.acfPeakPermille > 0);
+
+  if (m.hasPeriodicPeak)
   {
     m.periodCpm =
       (uint16_t)(((uint32_t)60U * G2_EFFECTIVE_FS_HZ) / m.acfPeakLag);
@@ -381,6 +407,9 @@ void gate2PrintChannel(
   Serial.print(F(" peakLag="));
   Serial.print(m.acfPeakLag);
 
+  Serial.print(F(" periodicPeak="));
+  Serial.print(m.hasPeriodicPeak ? 1 : 0);
+
   Serial.print(F(" period_cpm="));
   Serial.print(m.periodCpm);
 
@@ -403,6 +432,9 @@ void gate2AnalyzeAndPrint()
 
   Serial.print(F(" G2_ms="));
   Serial.print(elapsedMs);
+
+  Serial.print(F(" freeRAM="));
+  Serial.print(packed18FreeRam());
 
   Serial.println();
 }
