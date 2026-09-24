@@ -9,9 +9,14 @@
  * recebe RED/IR da FIFO, alimenta os Gates na ordem e decide se a janela pode
  * seguir para a proxima etapa.
  *
- * Nesta primeira versao SOMENTE O GATE 01 esta implementado e executado.
- * Gate 02, Gate 03, Gate 04, SpO2 e integracao com I Blue It ficam para etapas
- * posteriores, apos validarmos experimentalmente o Gate 01.
+ * ESTADO DESTA BRANCH
+ * --------------------
+ * Gate 01 ja foi validado em bancada.
+ * Gate 02 esta implementado em modo diagnostico e agora e caracterizado antes
+ * de receber thresholds de PASS/FAIL.
+ * Gate 03 nao sera incorporado automaticamente: seu ganho incremental sera
+ * avaliado posteriormente. Gate 04, SpO2 e integracao com I Blue It permanecem
+ * como etapas seguintes.
  *
  * FUNDAMENTACAO DA ARQUITETURA
  * ---------------------------
@@ -115,8 +120,10 @@ struct Gate2Metrics;
 
 MAX30105 particleSensor;
 
-// Baseline do projeto: janela temporal de 5 s.
-// Reddy 2020 e Vadrevu 2019 utilizam janelas de 5 s em suas abordagens.
+// Baseline atual do projeto: janela temporal de 5 s, mantida da validacao do G1.
+// O G2 usa as primeiras 100 amostras Packed18 da janela (~4 s a ~25 amostras/s).
+// Essa diferenca e intencional nesta fase de caracterizacao e sera reavaliada
+// antes da integracao final.
 const unsigned long SQI_WINDOW_MS = 5000UL;
 
 unsigned long sqiWindowStartedAt = 0;
