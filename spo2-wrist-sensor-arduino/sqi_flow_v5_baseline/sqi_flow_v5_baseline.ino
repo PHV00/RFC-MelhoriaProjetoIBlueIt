@@ -120,10 +120,9 @@ struct Gate2Metrics;
 
 MAX30105 particleSensor;
 
-// Baseline atual do projeto: janela temporal de 5 s, mantida da validacao do G1.
-// O G2 usa as primeiras 100 amostras Packed18 da janela (~4 s a ~25 amostras/s).
-// Essa diferenca e intencional nesta fase de caracterizacao e sera reavaliada
-// antes da integracao final.
+// G1 e G2 trabalham sobre a mesma janela temporal de 5 s.
+// Com sampleAverage=4 e sampleRate=100, observamos ~25 amostras/s;
+// por isso o Packed18 reserva 125 amostras para o G2 Vadrevu.
 const unsigned long SQI_WINDOW_MS = 5000UL;
 
 unsigned long sqiWindowStartedAt = 0;
@@ -175,8 +174,8 @@ void setup()
   sqiWindowStartedAt = millis();
 
   Serial.println(F("=== SQI FLOW V5 / G1 + G2 DIAGNOSTIC ==="));
-  Serial.println(F("MAX30102 OK. G1=5s; G2 analisa 100 amostras (~4s)."));
-  Serial.println(F("G2 mede amplitude, crossings e ACF; sem PASS/FAIL."));
+  Serial.println(F("MAX30102 OK. G1=5s; G2 Vadrevu=125 amostras (~5s)."));
+  Serial.println(F("G2 trace R1..R6; ainda sem decisao na pipeline."));
 }
 
 void loop()
@@ -193,8 +192,8 @@ void loop()
     gate1AddSample(red, ir);
 
 #if ENABLE_PACKED18_BUFFER
-    // Preserva as primeiras 100 amostras da janela em 3 bytes/canal.
-    // Esse mesmo bloco e reutilizado pelo G2, sem criar uint32_t[100].
+    // Preserva as primeiras 125 amostras (~5 s) em 3 bytes/canal.
+    // O G2 reutiliza esse bloco sem criar uint32_t[125].
     packed18StoreSample(red, ir);
 #endif
 
