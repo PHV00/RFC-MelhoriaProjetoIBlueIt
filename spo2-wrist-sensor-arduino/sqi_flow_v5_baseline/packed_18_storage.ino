@@ -14,7 +14,7 @@
  *   byte 2: bits 16..17 (os 6 bits superiores ficam zerados)
  *
  * Consequencia:
- *   100 RED + 100 IR = 100 * 3 * 2 = 600 bytes
+ *   125 RED + 125 IR = 125 * 3 * 2 = 750 bytes
  *
  * Esta camada e usada NESTA ETAPA apenas para verificar que:
  *   RAW18 -> 3 bytes -> RAW18
@@ -41,7 +41,7 @@ struct Packed18
 };
 
 static const uint32_t PACKED18_MASK = 0x3FFFFUL; // 18 bits
-static const uint16_t PACKED18_BUFFER_SAMPLES = 100;
+static const uint16_t PACKED18_BUFFER_SAMPLES = 125;
 
 static Packed18 packedRedBuffer[PACKED18_BUFFER_SAMPLES];
 static Packed18 packedIrBuffer[PACKED18_BUFFER_SAMPLES];
@@ -102,7 +102,7 @@ uint32_t packed18GetIr(uint16_t index)
 
 void packed18StoreSample(uint32_t red, uint32_t ir)
 {
-  // O buffer de 100 amostras e apenas a janela de verificacao de storage.
+  // O buffer de 125 amostras representa ~5 s na taxa efetiva observada (~25 Hz).
   // O G1 continua processando TODAS as amostras da janela temporal de 5 s.
   if (packed18Count >= PACKED18_BUFFER_SAMPLES)
   {
