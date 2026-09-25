@@ -112,7 +112,14 @@ struct Gate2Metrics;
 #define ENABLE_PACKED18_STORAGE_TEST 0
 #define ENABLE_GATE2_DIAGNOSTIC 1
 
-#if ENABLE_PACKED18_STORAGE_TEST || ENABLE_GATE2_DIAGNOSTIC
+/*
+ * Somente para calibracao de lambda_MAA:
+ * quando G1 rejeita a janela, executa APENAS o trace barato Xmax do G2.
+ * Isso nao transforma G1 FAIL em PASS e nao executa a ACF cara.
+ */
+#define ENABLE_GATE2_LAMBDA_CALIBRATION 1
+
+#if ENABLE_PACKED18_STORAGE_TEST || ENABLE_GATE2_DIAGNOSTIC || ENABLE_GATE2_LAMBDA_CALIBRATION
   #define ENABLE_PACKED18_BUFFER 1
 #else
   #define ENABLE_PACKED18_BUFFER 0
@@ -189,6 +196,9 @@ void setup()
   Serial.println(F("=== SQI FLOW V5 / G1 + G2 DIAGNOSTIC ==="));
   Serial.println(F("MAX30102 OK. G1=5s; G2 Vadrevu=125 amostras (~5s)."));
   Serial.println(F("G2 trace R1..R6; ainda sem decisao na pipeline."));
+#if ENABLE_GATE2_LAMBDA_CALIBRATION
+  Serial.println(F("CAL lambda_MAA ativo: G1 FAIL imprime Xmax sem ACF."));
+#endif
 }
 
 void loop()
@@ -253,7 +263,12 @@ void loop()
     }
     else
     {
+#if ENABLE_GATE2_LAMBDA_CALIBRATION
+      gate2PrintLambdaCalibration();
+      Serial.println(F("PIPELINE: INVALID -> G1 FAIL; trace Xmax somente para calibracao"));
+#else
       Serial.println(F("PIPELINE: INVALID -> janela rejeitada no G1; G2 nao executado"));
+#endif
     }
 
     Serial.println(F("--------------------------------------------------"));
