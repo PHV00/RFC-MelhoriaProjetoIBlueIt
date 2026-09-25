@@ -711,6 +711,81 @@ void gate2Rule06Evaluate(Gate2Metrics &m)
     m.dntc2 <= m.lambdaNtc2;
 }
 
+/*
+ * CALIBRACAO DE lambda_MAA
+ * ------------------------
+ * Durante a caracterizacao precisamos observar Xmax inclusive nas janelas que
+ * o G1 rejeita (por exemplo, sem dedo). Para isso existe uma rota BARATA que
+ * executa apenas o preprocessamento e as features R1/R2/R3; ela NAO calcula
+ * Hamming/ACF/R4/R5/R6 e NAO altera a decisao da pipeline.
+ */
+Gate2Metrics gate2AnalyzeCheapChannel(bool redChannel)
+{
+  Gate2Metrics m = {};
+
+  m.samples = packed18GetCount();
+  if (m.samples > G2_WORK_SAMPLES)
+  {
+    m.samples = G2_WORK_SAMPLES;
+  }
+
+  m.completeWindow = m.samples == G2_WORK_SAMPLES;
+
+  if (m.samples < 3)
+  {
+    m.rule1Fail = true;
+    m.rule2FailProvisional = true;
+    m.rule3Fail = true;
+    return m;
+  }
+
+  m.meanRaw = gate2MeanRaw(redChannel, m.samples);
+  gate2PreprocessAndExtractCheapFeatures(redChannel, m);
+  gate2Rule01Evaluate(m);
+  gate2Rule02Evaluate(m);
+  gate2Rule03Evaluate(m);
+
+  return m;
+}
+
+void gate2PrintLambdaCalibration()
+{
+  const unsigned long startedAt = millis();
+
+  const Gate2Metrics red = gate2AnalyzeCheapChannel(true);
+  const Gate2Metrics ir = gate2AnalyzeCheapChannel(false);
+
+  const unsigned long elapsedMs = millis() - startedAt;
+
+  Serial.print(F("G2_LAMBDA_CAL "));
+  Serial.print(F("RED[n="));
+  Serial.print(red.samples);
+  Serial.print(F(" meanRAW="));
+  Serial.print(red.meanRaw);
+  Serial.print(F(" Xmax="));
+  Serial.print(red.xmax);
+  Serial.print(F("] "));
+
+  Serial.print(F("IR[n="));
+  Serial.print(ir.samples);
+  Serial.print(F(" meanRAW="));
+  Serial.print(ir.meanRaw);
+  Serial.print(F(" Xmax="));
+  Serial.print(ir.xmax);
+  Serial.print(F("] "));
+
+  Serial.print(F("currentLambda="));
+  Serial.print(G2_LAMBDA_MAA_COUNTS);
+
+  Serial.print(F(" cal_ms="));
+  Serial.print(elapsedMs);
+
+  Serial.print(F(" freeRAM="));
+  Serial.print(packed18FreeRam());
+
+  Serial.println();
+}
+
 Gate2Metrics gate2AnalyzeChannel(bool redChannel)
 {
   Gate2Metrics m = {};
