@@ -33,12 +33,18 @@
  * ADAPTACOES EXPLICITAS DO PORT
  * -----------------------------
  * 1) lambda_MAA do artigo (=5 no sistema de 10 bits) NAO e copiado como
- *    threshold final. Nesta branch usamos somente um ponto de partida
- *    proporcional ao range digital:
+ *    threshold final. A primeira tentativa de escalar diretamente 5/1023 para
+ *    18 bits (~1281 counts) foi REJEITADA pelos dados de bancada: janelas sem
+ *    dedo ficaram em Xmax=28..45, enquanto janelas estabilizadas com dedo
+ *    apresentaram no canal mais fraco (RED) Xmax=120..242.
  *
- *      lambda_MAA ~= 5/1023 * 262143 ~= 1281 counts
+ *    Para o proximo ensaio usamos SOMENTE um threshold PROVISORIO de bancada,
+ *    definido como o ponto medio inteiro do intervalo de separacao observado:
  *
- *    Esse valor e PROVISORIO e precisa ser calibrado no MAX30102.
+ *      lambda_MAA = floor((45 + 120) / 2) = 82 counts
+ *
+ *    Esse valor NAO e threshold final/clinico. Ele serve para reexecutar
+ *    R1/R2/R3 e verificar se a separacao persiste em novas coletas.
  *
  * 2) Quadros locais de 100 ms do R2 sao representados por bins temporais
  *    de 100 ms. A 25 Hz cada bin contem 2 ou 3 amostras, alternadamente.
@@ -114,14 +120,14 @@ static const uint16_t G2_NTC1_MAX = 100U;
 // Threshold de amplitude: adaptacao PROVISORIA 10 bits -> 18 bits
 // ---------------------------------------------------------------------------
 
-static const uint32_t G2_ARTICLE_ADC_MAX = 1023UL;
-static const uint32_t G2_MAX30102_ADC_MAX = 262143UL;
 static const uint32_t G2_ARTICLE_LAMBDA_MAA = 5UL;
 
-static const uint32_t G2_LAMBDA_MAA_COUNTS =
-  (G2_ARTICLE_LAMBDA_MAA * G2_MAX30102_ADC_MAX
-   + (G2_ARTICLE_ADC_MAX / 2UL))
-  / G2_ARTICLE_ADC_MAX; // ~1281; PROVISORIO
+// Threshold PROVISORIO de bancada para o MAX30102.
+// Sessao de calibracao:
+//   sem dedo: Xmax max observado = 45
+//   dedo estabilizado, canal limitante RED: Xmax min observado = 120
+//   ponto medio inteiro = floor((45 + 120) / 2) = 82
+static const uint32_t G2_LAMBDA_MAA_COUNTS = 82UL;
 
 // ---------------------------------------------------------------------------
 // Adaptacao de memoria
