@@ -62,6 +62,12 @@
  * 6) O artigo tem uma desigualdade tipograficamente inconsistente na Eq. 9.
  *    O texto define PPI de 0.2 a 2.0 s; portanto R5 usa esse intervalo.
  *
+ * 7) "Maximum peak (Rmax) and its lag (Kmax)" e implementado como o maior
+ *    MAXIMO LOCAL da ACF apos o FZCP, dentro de 0.2..2.0 s. Esta e uma
+ *    interpretacao operacional necessaria para nao confundir a cauda
+ *    descendente de R[0]=1 com um pico periodico. O artigo nomeia Rmax/Kmax,
+ *    mas nao fornece pseudocodigo para a busca do pico.
+ *
  * IMPORTANTE
  * ----------
  * Esta branch continua DIAGNOSTICA. As regras sao calculadas e impressas,
@@ -564,16 +570,46 @@ void gate2ExtractAcfFeatures(Gate2Metrics &m)
   if (minLag < 1U) minLag = 1U;
   if (maxLag >= m.samples) maxLag = (uint8_t)(m.samples - 1U);
 
-  int16_t previousR = 1000; // R[0] = 1
-  int16_t bestR = -1000;
-  uint8_t bestLag = 0;
+  /*
+   * R[0] = 1 e a ACF normalmente sai desse pico trivial descendo.
+   *
+   * O erro da versao anterior era escolher simplesmente o maior R[k] na faixa
+   * 0.2..2.0 s. Isso frequentemente selecionava o PRIMEIRO lag permitido
+   * (k=5 => 200 ms => 300 cpm), mesmo sem existir um pico ali.
+   *
+   * Agora detectamos picos locais:
+   *
+   *   R[k-1] < R[k] >= R[k+1]
+   *
+   * e, como interpretacao operacional da sequencia R4 -> R5 de Vadrevu,
+   * aceitamos candidatos somente APOS o primeiro zero-crossing da ACF.
+   */
+  int16_t rPrev2 = 1000; // R[0]
+  int16_t rPrev1 =
+    gate2AcfPermilleAtLag(m.samples, 1U, totalEnergy);
 
-  for (uint8_t lag = 1U; lag <= maxLag; lag++)
+  if (rPrev2 > 0 && rPrev1 <= 0)
+  {
+    m.hasFzcp = true;
+    m.fzcpLag = 1U;
+    m.fzcpMs = (uint16_t)(1000UL / G2_EFFECTIVE_FS_HZ);
+  }
+
+  int16_t bestPeakR = -1000;
+  uint8_t bestPeakLag = 0;
+
+  uint8_t scanEnd = maxLag;
+  if ((uint16_t)maxLag + 1U < m.samples)
+  {
+    scanEnd = maxLag + 1U; // look-ahead para testar pico em maxLag
+  }
+
+  for (uint8_t lag = 2U; lag <= scanEnd; lag++)
   {
     const int16_t r =
       gate2AcfPermilleAtLag(m.samples, lag, totalEnergy);
 
-    if (!m.hasFzcp && previousR > 0 && r <= 0)
+    if (!m.hasFzcp && rPrev1 > 0 && r <= 0)
     {
       m.hasFzcp = true;
       m.fzcpLag = lag;
@@ -582,26 +618,44 @@ void gate2ExtractAcfFeatures(Gate2Metrics &m)
       );
     }
 
-    if (lag >= minLag && r > bestR)
+    const uint8_t candidateLag = lag - 1U;
+    const bool isLocalPeak =
+      rPrev1 > rPrev2
+      && rPrev1 >= r;
+
+    const bool inPeriodRange =
+      candidateLag >= minLag
+      && candidateLag <= maxLag;
+
+    const bool afterFzcp =
+      m.hasFzcp
+      && candidateLag > m.fzcpLag;
+
+    if (isLocalPeak && inPeriodRange && afterFzcp)
     {
-      bestR = r;
-      bestLag = lag;
+      if (bestPeakLag == 0 || rPrev1 > bestPeakR)
+      {
+        bestPeakR = rPrev1;
+        bestPeakLag = candidateLag;
+      }
     }
 
-    previousR = r;
+    rPrev2 = rPrev1;
+    rPrev1 = r;
   }
 
-  m.rmaxPermille = bestR;
-  m.kmaxLag = bestLag;
+  // Sem maximo local periodico: R5 deve falhar em vez de inventar Kmax=5.
+  m.rmaxPermille = bestPeakLag > 0 ? bestPeakR : -1000;
+  m.kmaxLag = bestPeakLag;
 
-  if (bestLag > 0)
+  if (bestPeakLag > 0)
   {
     m.kmaxMs = (uint16_t)(
-      ((uint32_t)bestLag * 1000UL) / G2_EFFECTIVE_FS_HZ
+      ((uint32_t)bestPeakLag * 1000UL) / G2_EFFECTIVE_FS_HZ
     );
 
     m.periodCpm = (uint16_t)(
-      ((uint32_t)60U * G2_EFFECTIVE_FS_HZ) / bestLag
+      ((uint32_t)60U * G2_EFFECTIVE_FS_HZ) / bestPeakLag
     );
   }
 }
