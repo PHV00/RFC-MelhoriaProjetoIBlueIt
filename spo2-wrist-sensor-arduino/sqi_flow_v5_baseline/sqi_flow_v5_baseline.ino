@@ -127,6 +127,18 @@ const unsigned long SQI_WINDOW_MS = 5000UL;
 
 unsigned long sqiWindowStartedAt = 0;
 
+/*
+ * Priming somente de STARTUP.
+ *
+ * O primeiro ensaio do G2 mostrou zeros dentro da primeira janela, produzidos
+ * na inicializacao/FIFO. Esses zeros nao representam uma decisao fisiologica.
+ * Para nao inventar um "warm-up de X segundos", descartamos apenas amostras
+ * iniciais enquanto qualquer canal ainda vier exatamente zero. Assim que RED
+ * e IR entregam uma primeira amostra nao-zero, iniciamos uma janela nova de
+ * 5 s. Depois disso, zeros reais permanecem visiveis ao G1 normalmente.
+ */
+bool sqiAcquisitionPrimed = false;
+
 void setup()
 {
   Serial.begin(115200);
@@ -172,6 +184,7 @@ void setup()
   packed18Reset();
 #endif
   sqiWindowStartedAt = millis();
+  sqiAcquisitionPrimed = false;
 
   Serial.println(F("=== SQI FLOW V5 / G1 + G2 DIAGNOSTIC ==="));
   Serial.println(F("MAX30102 OK. G1=5s; G2 Vadrevu=125 amostras (~5s)."));
@@ -187,6 +200,25 @@ void loop()
   {
     const uint32_t red = particleSensor.getFIFORed();
     const uint32_t ir  = particleSensor.getFIFOIR();
+
+    if (!sqiAcquisitionPrimed)
+    {
+      if (red == 0UL || ir == 0UL)
+      {
+        particleSensor.nextSample();
+        continue;
+      }
+
+      // Primeira amostra fisicamente adquirida nos dois canais: comeca uma
+      // janela limpa. Isto ocorre apenas uma vez apos o reset.
+      sqiAcquisitionPrimed = true;
+      gate1Reset();
+#if ENABLE_PACKED18_BUFFER
+      packed18Reset();
+#endif
+      sqiWindowStartedAt = millis();
+      Serial.println(F("ACQ_PRIMED: primeira janela inicia sem zeros de startup."));
+    }
 
     // O Gate 01 trabalha diretamente com RAW: nada e filtrado antes dele.
     gate1AddSample(red, ir);
