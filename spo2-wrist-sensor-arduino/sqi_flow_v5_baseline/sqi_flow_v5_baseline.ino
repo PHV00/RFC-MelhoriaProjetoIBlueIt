@@ -90,6 +90,22 @@
 #include <Wire.h>
 #include "MAX30105.h"
 
+// Forward declaration needed by the Arduino 1.8.x .ino preprocessor when
+// ENABLE_PACKED18_STORAGE_TEST=1. It may auto-generate function prototypes
+// before the Packed18 definition in another sketch tab.
+struct Packed18;
+
+/*
+ * VALIDACOES INDEPENDENTES
+ * ------------------------
+ * 0 = valida o Gate 01 isoladamente, sem reservar os 600 B do buffer 18-bit.
+ * 1 = habilita tambem o teste de armazenamento lossless em 3 bytes/amostra.
+ *
+ * Para a revalidacao metodologica do G1, manter em 0. Depois, testar o
+ * armazenamento separadamente mudando somente esta chave para 1.
+ */
+#define ENABLE_PACKED18_STORAGE_TEST 0
+
 MAX30105 particleSensor;
 
 // Baseline do projeto: janela temporal de 5 s.
@@ -139,6 +155,9 @@ void setup()
   particleSensor.setPulseAmplitudeGreen(0);
 
   gate1Reset();
+#if ENABLE_PACKED18_STORAGE_TEST
+  packed18Reset();
+#endif
   sqiWindowStartedAt = millis();
 
   Serial.println(F("=== SQI FLOW V5 BASELINE / GATE 01 ==="));
@@ -159,6 +178,12 @@ void loop()
     // O Gate 01 trabalha diretamente com RAW: nada e filtrado antes dele.
     gate1AddSample(red, ir);
 
+#if ENABLE_PACKED18_STORAGE_TEST
+    // Teste independente de storage: preserva as primeiras 100 amostras
+    // da janela em exatamente 3 bytes por canal/amostra.
+    packed18StoreSample(red, ir);
+#endif
+
     particleSensor.nextSample();
   }
 
@@ -167,6 +192,9 @@ void loop()
     const bool gate1Passed = gate1Evaluate();
 
     gate1PrintReport();
+#if ENABLE_PACKED18_STORAGE_TEST
+    packed18PrintReport();
+#endif
 
     if (gate1Passed)
     {
@@ -180,6 +208,9 @@ void loop()
     Serial.println(F("--------------------------------------------------"));
 
     gate1Reset();
+#if ENABLE_PACKED18_STORAGE_TEST
+    packed18Reset();
+#endif
     sqiWindowStartedAt = millis();
   }
 }
