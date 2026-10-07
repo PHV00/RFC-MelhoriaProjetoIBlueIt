@@ -1,0 +1,13 @@
+idf_component_register(
+    SRCS
+        "main.c"
+        "../../../main/drivers/i2c_bus.c"
+        "../../../main/drivers/max3010x_driver.c"
+    INCLUDE_DIRS
+        "."
+        "../../../main"
+    REQUIRES
+        driver
+        esp_adc
+        esp_timer
+)
