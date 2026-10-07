@@ -1,0 +1,131 @@
+Command: /home/pedro/.espressif/python_env/idf6.0_py3.12_env/bin/python /home/pedro/esp/esp-idf/tools/idf_monitor.py -p /dev/ttyACM0 -b 115200 --toolchain-prefix riscv32-esp-elf- --target esp32c3 --revision 3 --decode-panic backtrace /home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/tests/basic_pneumo/build/basic_pneumo.elf /home/pedro/Documentos/git/portifolio/RFC-MelhoriaProjetoIBlueIt-/spo2-wrist-sensor/tests/basic_pneumo/build/bootloader/bootloader.elf -m '/home/pedro/.espressif/python_env/idf6.0_py3.12_env/bin/python' '/home/pedro/esp/esp-idf/tools/idf.py' '-p' '/dev/ttyACM0'
+[0;32mI (102) esp_image: segment 3: paddr=00020020 vaddr=42000020 sizeESP-ROM:esp32c3-api1-20210207[0m
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xd (SPI_FAST_FLASH_BOOT)
+Saved PC:0x403831cc
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5830,len:0x155c
+load:0x403cbf10,len:0xce0
+load:0x403ce710,len:0x2fbc
+entry 0x403cbf1a
+[0;32mI (24) boot: ESP-IDF v6.0 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time Oct  6 2026 23:55:36[0m
+[0;32mI (25) boot: chip revision: v0.4[0m
+[0;32mI (25) boot: efuse block revision: v1.3[0m
+[0;32mI (28) boot.esp32c3: SPI Speed      : 80MHz[0m
+[0;32mI (32) boot.esp32c3: SPI Mode       : DIO[0m
+[0;32mI (35) boot.esp32c3: SPI Flash Size : 2MB[0m
+[0;32mI (39) boot: Enabling RNG early entropy source...[0m
+[0;32mI (44) boot: Partition Table:[0m
+[0;32mI (46) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (53) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (59) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (66) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (72) boot: End of partition table[0m
+[0;32mI (75) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=08b34h ( 35636) map[0m
+[0;32mI (88) esp_image: segment 1: paddr=00018b5c vaddr=3fc89a00 size=01928h (  6440) load[0m
+[0;32mI (91) esp_image: segment 2: paddr=0001a48c vaddr=40380000 size=05b8ch ( 23436) load[0m
+[0;32mI (102) esp_image: segment 3: paddr=00020020 vaddr=42000020 size=12664h ( 75364) map[0m
+[0;32mI (117) esp_image: segment 4: paddr=0003268c vaddr=40385b8c size=03db0h ( 15792) load[0m
+[0;32mI (120) esp_image: segment 5: paddr=00036444 vaddr=50000000 size=00024h (    36) load[0m
+[0;32mI (124) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (126) boot: Disabling RNG early entropy source...[0m
+[0;32mI (142) cpu_start: Unicore app[0m
+[0;32mI (150) cpu_start: GPIO 20 and 21 are used as console UART I/O pins[0m
+[0;32mI (151) cpu_start: Pro cpu start user code[0m
+[0;32mI (151) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (152) app_init: Application information:[0m
+[0;32mI (156) app_init: Project name:     basic_pneumo[0m
+[0;32mI (161) app_init: App version:      f71bd1b-dirty[0m
+[0;32mI (165) app_init: Compile time:     Oct  6 2026 23:55:26[0m
+[0;32mI (170) app_init: ELF file SHA256:  6b3fc304b...[0m
+[0;32mI (174) app_init: ESP-IDF:          v6.0[0m
+[0;32mI (178) efuse_init: Min chip rev:     v0.3[0m
+[0;32mI (182) efuse_init: Max chip rev:     v1.99 [0m
+[0;32mI (186) efuse_init: Chip rev:         v0.4[0m
+[0;32mI (190) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (196) heap_init: At 3FC8C320 len 00033CE0 (207 KiB): RAM[0m
+[0;32mI (201) heap_init: At 3FCC0000 len 0001C710 (113 KiB): Retention RAM[0m
+[0;32mI (207) heap_init: At 3FCDC710 len 00002950 (10 KiB): Retention RAM[0m
+[0;32mI (213) heap_init: At 50000024 len 00001FC4 (7 KiB): RTCRAM[0m
+[0;32mI (219) spi_flash: detected chip: generic[0m
+[0;32mI (222) spi_flash: flash io: dio[0m
+[0;33mW (225) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;32mI (238) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (244) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (251) main_task: Started on CPU0[0m
+[0;32mI (251) main_task: Calling app_main()[0m
+[0;32mI (251) PITACO_TEST: Teste XGZP6897A + ESP32-C3[0m
+[0;32mI (261) PITACO_TEST: ADC calibrado.[0m
+RAW: 1435 | GPIO0: 1019 mV | XGZP estimado: 2513.5 mV
+RAW: 1450 | GPIO0: 1029 mV | XGZP estimado: 2538.2 mV
+RAW: 1434 | GPIO0: 1018 mV | XGZP estimado: 2511.1 mV
+RAW: 1434 | GPIO0: 1018 mV | XGZP estimado: 2511.1 mV
+RAW: 1436 | GPIO0: 1019 mV | XGZP estimado: 2513.5 mV
+RAW: 1434 | GPIO0: 1018 mV | XGZP estimado: 2511.1 mV
+RAW: 1422 | GPIO0: 1009 mV | XGZP estimado: 2488.9 mV
+RAW: 1433 | GPIO0: 1017 mV | XGZP estimado: 2508.6 mV
+RAW: 1432 | GPIO0: 1016 mV | XGZP estimado: 2506.1 mV
+RAW: 1433 | GPIO0: 1017 mV | XGZP estimado: 2508.6 mV
+RAW:   24 | GPIO0:   18 mV | XGZP estimado: 44.4 mV
+RAW:  922 | GPIO0:  658 mV | XGZP estimado: 1623.1 mV
+RAW:  459 | GPIO0:  330 mV | XGZP estimado: 814.0 mV
+RAW:    0 | GPIO0:    0 mV | XGZP estimado: 0.0 mV
+RAW:    1 | GPIO0:    0 mV | XGZP estimado: 0.0 mV
+RAW:   26 | GPIO0:   19 mV | XGZP estimado: 46.9 mV
+RAW:    5 | GPIO0:    4 mV | XGZP estimado: 9.9 mV
+RAW: 1436 | GPIO0: 1019 mV | XGZP estimado: 2513.5 mV
+RAW: 1432 | GPIO0: 1016 mV | XGZP estimado: 2506.1 mV
+RAW: 1432 | GPIO0: 1016 mV | XGZP estimado: 2506.1 mV
+RAW: 1433 | GPIO0: 1017 mV | XGZP estimado: 2508.6 mV
+RAW: 1432 | GPIO0: 1016 mV | XGZP estimado: 2506.1 mV
+RAW: 1433 | GPIO0: 1017 mV | XGZP estimado: 2508.6 mV
+RAW: 1432 | GPIO0: 1016 mV | XGZP estimado: 2506.1 mV
+RAW: 1430 | GPIO0: 1015 mV | XGZP estimado: 2503.7 mV
+RAW: 1434 | GPIO0: 1018 mV | XGZP estimado: 2511.1 mV
+RAW: 1451 | GPIO0: 1030 mV | XGZP estimado: 2540.7 mV
+RAW: 1416 | GPIO0: 1005 mV | XGZP estimado: 2479.0 mV
+RAW: 1434 | GPIO0: 1018 mV | XGZP estimado: 2511.1 mV
+RAW: 1433 | GPIO0: 1017 mV | XGZP estimado: 2508.6 mV
+RAW: 1418 | GPIO0: 1006 mV | XGZP estimado: 2481.5 mV
+RAW: 1435 | GPIO0: 1019 mV | XGZP estimado: 2513.5 mV
+RAW: 1417 | GPIO0: 1006 mV | XGZP estimado: 2481.5 mV
+RAW: 1433 | GPIO0: 1017 mV | XGZP estimado: 2508.6 mV
+RAW: 1435 | GPIO0: 1019 mV | XGZP estimado: 2513.5 mV
+RAW: 1433 | GPIO0: 1017 mV | XGZP estimado: 2508.6 mV
+RAW: 1433 | GPIO0: 1017 mV | XGZP estimado: 2508.6 mV
+RAW: 1433 | GPIO0: 1017 mV | XGZP estimado: 2508.6 mV
+RAW: 1438 | GPIO0: 1021 mV | XGZP estimado: 2518.5 mV
+RAW: 1400 | GPIO0:  993 mV | XGZP estimado: 2449.4 mV
+RAW: 1416 | GPIO0: 1005 mV | XGZP estimado: 2479.0 mV
+RAW: 1419 | GPIO0: 1007 mV | XGZP estimado: 2483.9 mV
+RAW: 1417 | GPIO0: 1006 mV | XGZP estimado: 2481.5 mV
+RAW: 1384 | GPIO0:  982 mV | XGZP estimado: 2422.3 mV
+RAW: 1439 | GPIO0: 1021 mV | XGZP estimado: 2518.5 mV
+RAW: 1432 | GPIO0: 1016 mV | XGZP estimado: 2506.1 mV
+RAW: 1432 | GPIO0: 1016 mV | XGZP estimado: 2506.1 mV
+RAW: 1433 | GPIO0: 1017 mV | XGZP estimado: 2508.6 mV
+RAW: 1420 | GPIO0: 1007 mV | XGZP estimado: 2483.9 mV
+RAW: 1414 | GPIO0: 1004 mV | XGZP estimado: 2476.5 mV
+RAW: 1433 | GPIO0: 1017 mV | XGZP estimado: 2508.6 mV
+RAW: 1454 | GPIO0: 1032 mV | XGZP estimado: 2545.6 mV
+RAW: 1434 | GPIO0: 1018 mV | XGZP estimado: 2511.1 mV
+RAW: 1437 | GPIO0: 1020 mV | XGZP estimado: 2516.0 mV
+RAW: 1436 | GPIO0: 1019 mV | XGZP estimado: 2513.5 mV
+RAW: 1451 | GPIO0: 1030 mV | XGZP estimado: 2540.7 mV
+RAW: 1420 | GPIO0: 1007 mV | XGZP estimado: 2483.9 mV
+RAW: 1439 | GPIO0: 1021 mV | XGZP estimado: 2518.5 mV
+RAW: 1416 | GPIO0: 1005 mV | XGZP estimado: 2479.0 mV
+RAW: 1407 | GPIO0:  998 mV | XGZP estimado: 2461.7 mV
+RAW: 1421 | GPIO0: 1009 mV | XGZP estimado: 2488.9 mV
+RAW: 1433 | GPIO0: 1017 mV | XGZP estimado: 2508.6 mV
+RAW: 1465 | GPIO0: 1040 mV | XGZP estimado: 2565.3 mV
+RAW: 1421 | GPIO0: 1009 mV | XGZP estimado: 2488.9 mV
+RAW: 1434 | GPIO0: 1018 mV | XGZP estimado: 2511.1 mV
+RAW: 1432 | GPIO0: 1016 mV | XGZP estimado: 2506.1 mV
+RAW: 1432 | GPIO0: 1016 mV | XGZP estimado: 2506.1 mV
+RAW: 1433 | GPIO0: 1017 mV | XGZP estimado: 2508.6 mV
+RAW: 1385 | GPIO0:  983 mV | XGZP estimado: 2424.7 mV
+RAW: 1431 | GPIO0: 1016 mV | XGZP estimado: 2506.1 mV
+RAW: 1435 | GPIO0: 1019 mV |

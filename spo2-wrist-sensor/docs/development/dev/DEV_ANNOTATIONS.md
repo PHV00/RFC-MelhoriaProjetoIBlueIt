@@ -13,7 +13,7 @@ idf.py -p /dev/ttyACM0 flash monitor
 
 fluxo dos dados:
 
-1. Coletar amostra bruta
+1. Coletar amostra brutaidf.py -p /dev/ttyACM0 flash monitor
 2. Validar erro de comunicação
 3. Adicionar timestamp e sequência
 4. Inserir no buffer circular
