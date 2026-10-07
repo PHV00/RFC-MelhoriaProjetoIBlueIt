@@ -56,6 +56,25 @@ Ele reporta:
 
 Isso permite validar a integração elétrica antes de congelar a função tensão -> pressão.
 
+## Target obrigatório: ESP32-C3
+
+Este teste usa o esquema de calibração ADC por `curve fitting`, suportado pelo ESP32-C3.
+Se nenhum target for escolhido, o ESP-IDF usa `esp32` clássico por padrão, o que leva
+a erros como:
+
+```text
+unknown type name 'adc_cali_curve_fitting_config_t'
+implicit declaration of function 'adc_cali_create_scheme_curve_fitting'
+```
+
+O arquivo `sdkconfig.defaults` desta pasta fixa `CONFIG_IDF_TARGET="esp32c3"`
+para novas configurações. Se já existir `build/` ou `sdkconfig` gerado para ESP32
+clássico, execute `idf.py set-target esp32c3` uma vez para limpar e regenerar a
+configuração.
+
+Uma compilação correta para o C3 usa a toolchain `riscv32-esp-elf`, e não
+`xtensa-esp32-elf`.
+
 ## Build / flash
 
 A partir desta pasta:
@@ -63,7 +82,19 @@ A partir desta pasta:
 ```bash
 idf.py set-target esp32c3
 idf.py build
-idf.py flash monitor
+idf.py -p /dev/ttyACM0 flash monitor
+```
+
+Para conferir o target antes de compilar:
+
+```bash
+grep CONFIG_IDF_TARGET sdkconfig
+```
+
+O esperado é:
+
+```text
+CONFIG_IDF_TARGET="esp32c3"
 ```
 
 ## Saída
