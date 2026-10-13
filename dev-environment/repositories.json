@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "description": "Repositorios independentes, commits iniciais imutaveis. Nenhuma atualizacao destrutiva automatica.",
+  "repositories": [
+    {
+      "name": "UDESC-LARVA/iblueit-psychophysiological-flow",
+      "url": "https://github.com/UDESC-LARVA/iblueit-psychophysiological-flow.git",
+      "folder": "iblueit-psychophysiological-flow",
+      "branch": "main",
+      "baselineCommit": "ac7b75aa4437132ed3f4281165dc5cefe7b9cb6c",
+      "role": "unity-original-windows"
+    },
+    {
+      "name": "PHV00/iblueit-psychophysiological-flow-linux-port",
+      "url": "https://github.com/PHV00/iblueit-psychophysiological-flow-linux-port.git",
+      "folder": "iblueit-psychophysiological-flow-linux-port",
+      "branch": "main",
+      "baselineCommit": "ac7b75aa4437132ed3f4281165dc5cefe7b9cb6c",
+      "role": "unity-experimental-fork"
+    },
+    {
+      "name": "PHV00/RFC-MelhoriaProjetoIBlueIt",
+      "url": "https://github.com/PHV00/RFC-MelhoriaProjetoIBlueIt.git",
+      "folder": "RFC-MelhoriaProjetoIBlueIt",
+      "branch": "main",
+      "baselineCommit": "be19d659e9063c2684f74a3105a031cc795b5557",
+      "role": "oximetry-arduino-esp32"
+    },
+    {
+      "name": "UDESC-LARVA/iblueit-server-side",
+      "url": "https://github.com/UDESC-LARVA/iblueit-server-side.git",
+      "folder": "iblueit-server-side",
+      "branch": "main",
+      "baselineCommit": "feec10c73b68a24a82a44569ef1eb72200653faf",
+      "role": "api-functions-mongo"
+    },
+    {
+      "name": "UDESC-LARVA/iblueit-health-Infocharts",
+      "url": "https://github.com/UDESC-LARVA/iblueit-health-Infocharts.git",
+      "folder": "iblueit-health-Infocharts",
+      "branch": "main",
+      "baselineCommit": "fcfa1b477ce9533b0c25dde67f12e472b134dfe1",
+      "role": "react-dashboard"
+    }
+  ]
+}

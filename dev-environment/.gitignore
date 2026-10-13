@@ -1,0 +1,4 @@
+docker/.env
+docker/.env.*
+!docker/.env.example
+.local/
