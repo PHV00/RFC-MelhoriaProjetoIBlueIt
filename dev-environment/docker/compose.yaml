@@ -1,0 +1,47 @@
+name: iblueit-dev
+
+services:
+  mongo:
+    image: mongo:6.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:?Execute init-docker.ps1}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:?Execute init-docker.ps1}
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  # EXPERIMENTAL: Azure Functions v3/Node12 do upstream tem dependencias antigas.
+  legacy-api:
+    profiles: ["legacy-api"]
+    build:
+      context: ../../../iblueit-server-side
+      dockerfile: Dockerfile
+    environment:
+      FUNCTIONS_WORKER_RUNTIME: node
+      MongoDbAtlas: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongo:27017/iblueit?authSource=admin
+      URL_API_IA: http://host.docker.internal:5000
+    ports:
+      - "127.0.0.1:7071:80"
+    depends_on:
+      - mongo
+
+  # EXPERIMENTAL: testar compatibilidade React/Node e conexao API.
+  dashboard:
+    profiles: ["dashboard"]
+    image: node:18.20.8-bookworm
+    working_dir: /app
+    volumes:
+      - ../../../iblueit-health-Infocharts:/app
+      - dashboard-modules:/app/node_modules
+    command: sh -c "npm ci && npm start"
+    environment:
+      HOST: 0.0.0.0
+      REACT_APP_BASE_URL_I_BLUE_IT: http://localhost:7071/api
+      WATCHPACK_POLLING: "true"
+    ports:
+      - "127.0.0.1:3000:3000"
+
+volumes:
+  mongo-data:
+  dashboard-modules:
