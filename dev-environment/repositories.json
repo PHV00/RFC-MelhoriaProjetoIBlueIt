@@ -41,6 +41,15 @@
       "branch": "main",
       "baselineCommit": "fcfa1b477ce9533b0c25dde67f12e472b134dfe1",
       "role": "react-dashboard"
+    },
+    {
+      "name": "PHV00/PITACO_ESP32",
+      "url": "https://github.com/PHV00/PITACO_ESP32.git",
+      "folder": "PITACO_ESP32",
+      "branch": "main",
+      "baselineCommit": "3f0047677b34a59d63468f4cf38c8798128d71f9",
+      "role": "pitaco-esp32-private-bridge",
+      "optional": true
     }
   ]
 }

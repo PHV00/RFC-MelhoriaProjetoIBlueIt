@@ -1,0 +1,10 @@
+# Python 3.11 / Windows: instalacao isolada, versoes provisórias.
+# Validar na bancada e gerar lock de dependencias posteriormente.
+bleak>=0.22,<1
+customtkinter>=5.2,<6
+esptool>=4.7,<5
+matplotlib>=3.8,<4
+Pillow>=10,<12
+pyserial>=3.5,<4
+pywin32>=306
+WMI>=1.5,<2

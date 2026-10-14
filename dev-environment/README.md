@@ -1,6 +1,6 @@
 # I Blue It: ambiente reproduzivel para Windows 11
 
-Esta estrutura coordena os cinco repositorios por **Git direto**, preservando repositorios, historicos, permissoes, branches e commits. Nao e monorepo nem copia codigo dos outros projetos.
+Esta estrutura coordena os cinco repositorios principais e, opcionalmente, o repositorio privado PITACO Bridge por **Git direto**, preservando repositorios, historicos, permissoes, branches e commits. Nao e monorepo nem copia codigo dos outros projetos.
 
 ## Preparacao inicial do Windows
 
@@ -22,7 +22,7 @@ cd .\RFC-MelhoriaProjetoIBlueIt\dev-environment
 
 Se a politica de PowerShell bloquear arquivos, revise o script e use apenas nesta sessao: Set-ExecutionPolicy -Scope Process RemoteSigned. Pode ser necessario reiniciar o PowerShell apos instalar ferramentas.
 
-O script clona os cinco repositorios como pastas irmas. NUNCA executa pull, reset, checkout ou stash em diretorio ja existente. Uma instalacao repetida preserva trabalho local. Use -WorkspaceRoot para alterar a pasta destino.
+O script clona os cinco repositorios principais como pastas irmas. O sexto repositorio (PITACO privado) so sera clonado usando -WithPitacoBridge. NUNCA executa pull, reset, checkout ou stash em diretorio ja existente. Uma instalacao repetida preserva trabalho local. Use -WorkspaceRoot para alterar a pasta destino.
 
 O manifesto registra branches e commits exatos. A opcao -PinBaselines clona e fixa os novos repositorios no commit de referencia em HEAD destacado (antes de desenvolver, crie ou selecione uma branch). Sem esta opcao, clona a branch atual e registra o baseline para comparacao. Atualizacoes de cada projeto sao deliberadamente manuais.
 
@@ -32,7 +32,7 @@ WinGet: Git, VS Code, Unity Hub e Python 3.11; Docker Desktop somente se -Instal
 
 Use **iblueit-psychophysiological-flow** como referencia Windows. Mantenha **iblueit-psychophysiological-flow-linux-port** separado. O original usa caminhos absolutos do ML-Agents no manifest; isso ainda requer correcao controlada numa branch Windows, sem alterar o modelo ONNX/DeepDDA.
 
-O servidor usa Node.js 12.16.1, Azure Functions 3 e MongoDB; sao dependencias antigas. Nao instale Node 12 globalmente no Windows. O dashboard usa React 16 com react-scripts 5. Faltam identificar um repositorio do Bridge PITACO 2.0 Python e o modulo de predicao/IA mencionado na documentacao upstream; nao estao cobertos pelos cinco repositorios.
+O servidor usa Node.js 12.16.1, Azure Functions 3 e MongoDB; sao dependencias antigas. Nao instale Node 12 globalmente no Windows. O dashboard usa React 16 com react-scripts 5. O Bridge PITACO ESP32 e opcional e exige acesso ao repositorio privado. O modulo externo de predicao/IA mencionado no upstream ainda nao integra o instalador.
 
 ## Docker local: primeira fase
 
@@ -49,10 +49,30 @@ docker compose --env-file docker/.env -f docker/compose.yaml --profile legacy-ap
 docker compose --env-file docker/.env -f docker/compose.yaml --profile dashboard up -d
 ~~~
 
+## PITACO Bridge ESP32 — modo Windows (opcional)
+
+Este setup nao inclui nem publica arquivos do repositorio privado, firmware ou binarios. Apenas o clona por Git, se o usuario tiver permissao. Ele permanece como pasta irma.
+
+No PowerShell, dentro da pasta `dev-environment`:
+
+~~~powershell
+.\setup.ps1 -WithPitacoBridge
+.\windows\launch-pitaco-bridge.ps1
+~~~
+
+`-WithPitacoBridge` clona `PHV00/PITACO_ESP32` (se necessario), verifica o aplicativo Python e cria um ambiente virtual Python 3.11 em `dev-environment/.local/pitaco-bridge/.venv`. Instala dependencias **somente no ambiente virtual**; o repositorio privado fica sem arquivos gerados pelo instalador. Requer Git autorizado e Internet para pip. O script nao faz pull/reset/checkout/stash sobre diretorios Git preexistentes. Opcionalmente: `.\setup.ps1 -InstallTools -WithPitacoBridge` para instalar ferramentas antes, reabrindo o PowerShell se o PATH nao tiver sido atualizado.
+
+A GUI original pode solicitar privilegios de administrador para portas COM virtuais. **O repositorio privado consultado nao contem o executavel auxiliar de com0com**, portanto a configuracao de portas virtuais pode requerer instalacao manual separada. O setup nao instala drivers, nao grava firmware, nao conecta BLE/USB e nao inicia a GUI automaticamente. Revise pedidos de elevacao antes de confirmar. Para BLE e portas COM, a Unity deve ficar fora do modo Play durante os testes de acesso exclusivo.
+
+**Validacao ainda pendente:** o Bridge atual converte pressao (Pa) em fluxo (L/min) antes de encaminhar dados, mas a Unity espera pressao. Nao efetue calibracao fisiologica nem interprete medidas como clinicas antes de validar as unidades e a conversao de ponta a ponta. Use somente dados ficticios e de bancada.
+
+Dependencias Python listadas em `windows/pitaco-bridge-requirements.txt` possuem limites provisórios e devem ser validadas e fixadas apos o primeiro teste no Windows real.
+
 ## Diagnostico
 
 ~~~powershell
 .\setup.ps1 -VerifyOnly
+.\setup.ps1 -VerifyOnly -WithPitacoBridge
 ~~~
 
 Verifica ferramentas e repositorios de forma nao destrutiva, mas NAO comprova que Unity, backend, oximetria, PITACO ou gameplay funcionem.
@@ -66,13 +86,14 @@ C:\dev\iblueit\
   iblueit-psychophysiological-flow-linux-port\
   iblueit-server-side\
   iblueit-health-Infocharts\
+  PITACO_ESP32\                         # opcional, repositorio privado
 ~~~
 
 ## Proximas fases
 
 1. Validar scripts num Windows 11 real, Unity e estado das dependencias.
 2. Containerizar e testar API/dashboard de maneira segura; falta IA/predicao do setup.
-3. Identificar e integrar a fonte do Bridge, firmware e drivers usados na bancada.
+3. Validar o Bridge privado e os drivers/portas seriais utilizados na bancada.
 4. Testes de ponta a ponta, equivalencia de sinais fisiologicos e distribuicao nativa.
 
 A fase atual e infraestrutura inicial, **nao porte concluido nem ambiente testado**.

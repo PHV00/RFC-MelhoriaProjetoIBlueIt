@@ -5,6 +5,7 @@ param(
     [switch]$InstallTools,
     [switch]$InstallDocker,
     [switch]$PinBaselines,
+    [switch]$WithPitacoBridge,
     [switch]$VerifyOnly
 )
 Set-StrictMode -Version Latest
@@ -16,7 +17,7 @@ if (-not $WorkspaceRoot) {
 $WorkspaceRoot = [IO.Path]::GetFullPath($WorkspaceRoot)
 $manifest = Get-Content -LiteralPath (Join-Path $PSScriptRoot "repositories.json") -Raw | ConvertFrom-Json
 if ($VerifyOnly) {
-    & (Join-Path $PSScriptRoot "windows\verify.ps1") -WorkspaceRoot $WorkspaceRoot
+    & (Join-Path $PSScriptRoot "windows\verify.ps1") -WorkspaceRoot $WorkspaceRoot -WithPitacoBridge:$WithPitacoBridge
     return
 }
 if ($InstallTools) {
@@ -30,6 +31,10 @@ if (-not (Test-Path -LiteralPath $WorkspaceRoot)) {
 }
 Write-Host "Workspace: $WorkspaceRoot"
 foreach ($entry in $manifest.repositories) {
+    if ($entry.PSObject.Properties.Name -contains 'optional' -and $entry.optional -and -not $WithPitacoBridge) {
+        Write-Host "[OPCIONAL] $($entry.name): use -WithPitacoBridge para incluir."
+        continue
+    }
     $destination = Join-Path $WorkspaceRoot $entry.folder
     if (Test-Path -LiteralPath $destination) {
         if (-not (Test-Path -LiteralPath (Join-Path $destination ".git"))) {
@@ -50,5 +55,8 @@ foreach ($entry in $manifest.repositories) {
         if ($LASTEXITCODE -ne 0) { throw "Falha ao fixar baseline $($entry.name)" }
     }
 }
-& (Join-Path $PSScriptRoot "windows\verify.ps1") -WorkspaceRoot $WorkspaceRoot
-Write-Host "Git preparado. Compilacao Unity, API, dashboard e hardware ainda requerem validacao." -ForegroundColor Cyan
+if ($WithPitacoBridge) {
+    & (Join-Path $PSScriptRoot 'windows\init-pitaco-bridge.ps1') -WorkspaceRoot $WorkspaceRoot
+}
+& (Join-Path $PSScriptRoot "windows\verify.ps1") -WorkspaceRoot $WorkspaceRoot -WithPitacoBridge:$WithPitacoBridge
+Write-Host "Git preparado. O PITACO e a calibracao fisica exigem testes manuais." -ForegroundColor Cyan
